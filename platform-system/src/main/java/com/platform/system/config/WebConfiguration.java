@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 /**
  * coupons in com.alex.web.config
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2019/7/14
  */
 @Configuration(proxyBeanMethods = false)

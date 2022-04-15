@@ -34,7 +34,7 @@ bootBuildImage {
 
 dependencies {
 
-    implementation(project(":country-commons"))
+    implementation(project(":platform-commons"))
 
     implementation("com.github.binarywang:weixin-java-miniapp:${weixinVersion}")
     implementation("com.github.binarywang:weixin-java-pay:${weixinVersion}")

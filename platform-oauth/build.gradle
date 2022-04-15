@@ -33,7 +33,7 @@ bootBuildImage {
 
 dependencies {
 
-    implementation(project(":country-commons"))
+    implementation(project(":platform-commons"))
 
     implementation("org.springframework.security:spring-security-crypto")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")

@@ -34,7 +34,7 @@ bootBuildImage {
 
 dependencies {
 
-    implementation(project(":country-commons"))
+    implementation(project(":platform-commons"))
 
     implementation("cn.hutool:hutool-poi:${hutoolVersion}")
     implementation("org.apache.poi:poi-ooxml:5.2.+")

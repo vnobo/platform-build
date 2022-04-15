@@ -1,6 +1,6 @@
 rootProject.name = "platform-build"
 
-include "country-oauth"
-include "country-gateway"
-include "country-system"
-include "country-commons"
+include "platform-oauth"
+include "platform-gateway"
+include "platform-system"
+include "platform-commons"

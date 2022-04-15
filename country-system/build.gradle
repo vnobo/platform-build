@@ -1,0 +1,65 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+bootBuildImage {
+    buildCache {
+        volume {
+            name = "cache-${rootProject.name}-${project.name}.build"
+        }
+    }
+    launchCache {
+        volume {
+            name = "cache-${rootProject.name}-${project.name}.launch"
+        }
+    }
+    tags = [System.getenv("DOCKER_URL") + "/countryside/${project.name}:latest"]
+    imageName = System.getenv("DOCKER_URL") + "/countryside/${project.name}:${project.version}"
+    publish = true
+    pullPolicy = "IF_NOT_PRESENT"
+    environment = [
+            //"HTTP_PROXY"                  : "socks5://192.168.1.2:65324",
+            //"HTTPS_PROXY"                 : "socks5://192.168.1.2:65324",
+            "BPE_DELIM_JAVA_TOOL_OPTIONS" : " ",
+            "BPE_APPEND_JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF-8 -XX:MaxDirectMemorySize=512M"
+    ]
+    docker.publishRegistry {
+        username = System.getenv("DOCKER_USERNAME")
+        password = System.getenv("DOCKER_PASSWORD")
+        url = System.getenv("DOCKER_URL")
+        email = "5199840@qq.com"
+    }
+}
+
+
+dependencies {
+
+    implementation(project(":country-commons"))
+
+    implementation("cn.hutool:hutool-poi:${hutoolVersion}")
+    implementation("org.apache.poi:poi-ooxml:5.2.+")
+
+    implementation 'com.deepoove:poi-tl:1.11.+'
+
+    implementation("io.minio:minio:${minioVersion}")
+    implementation("com.squareup.okhttp3:okhttp:4.9.+")
+
+    implementation 'com.google.zxing:zxing-parent:3.4.+'
+    implementation 'com.google.zxing:core:3.4.+'
+    implementation 'com.google.zxing:javase:3.4.+'
+
+    implementation("com.alibaba.cloud:aliyun-sms-spring-boot-starter")
+
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'io.r2dbc:r2dbc-postgresql'
+    implementation 'io.r2dbc:r2dbc-pool'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.alibaba.cloud:aliyun-spring-boot-dependencies:1.0.0"
+    }
+}

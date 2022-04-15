@@ -1,0 +1,48 @@
+plugins {
+    id "org.springframework.boot"
+}
+
+bootBuildImage {
+    buildCache {
+        volume {
+            name = "cache-${rootProject.name}-${project.name}.build"
+        }
+    }
+    launchCache {
+        volume {
+            name = "cache-${rootProject.name}-${project.name}.launch"
+        }
+    }
+    tags = [System.getenv("DOCKER_URL") + "/countryside/${project.name}:latest"]
+    imageName = System.getenv("DOCKER_URL") + "/countryside/${project.name}:${project.version}"
+    publish = true
+    pullPolicy = "IF_NOT_PRESENT"
+    builder = "paketobuildpacks/builder:full"
+    environment = [
+            //"HTTP_PROXY"                  : "socks5://192.168.1.2:65324",
+            //"HTTPS_PROXY"                 : "socks5://192.168.1.2:65324",
+            "BPE_DELIM_JAVA_TOOL_OPTIONS" : " ",
+            "BPE_APPEND_JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF-8 "
+    ]
+    docker.publishRegistry {
+        username = System.getenv("DOCKER_USERNAME")
+        password = System.getenv("DOCKER_PASSWORD")
+        url = System.getenv("DOCKER_URL")
+        email = "5199840@qq.com"
+    }
+}
+
+dependencies {
+
+    implementation(project(":country-commons"))
+
+    implementation("com.github.binarywang:weixin-java-miniapp:${weixinVersion}")
+    implementation("com.github.binarywang:weixin-java-pay:${weixinVersion}")
+
+    implementation("cn.hutool:hutool-captcha:${hutoolVersion}")
+
+    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    testImplementation "org.springframework.security:spring-security-test"
+}

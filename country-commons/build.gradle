@@ -1,0 +1,70 @@
+plugins {
+    id "java-library"
+    id 'maven-publish'
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = 'Countryside Commons Library'
+                description = 'A Countryside description of Countryside Commons library'
+                url = 'http://www.jinqiruanjian.com/library'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://packages.aliyun.com/maven/repository/2094938-release-TJduuX/'
+            def snapshotsRepoUrl = 'https://packages.aliyun.com/maven/repository/2094938-snapshot-dMCTHr/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv("PACKAGES_USERNAME")
+                password = System.getenv("PACKAGES_PASSWORD")
+            }
+
+        }
+    }
+}
+
+dependencies {
+
+    api("cn.hutool:hutool-core:${hutoolVersion}")
+    api("cn.hutool:hutool-crypto:${hutoolVersion}")
+    api("cn.hutool:hutool-json:${hutoolVersion}")
+
+    api("org.springframework.session:spring-session-data-redis")
+    api("org.springframework.security:spring-security-core")
+
+    compileOnly("org.springframework.boot:spring-boot-starter-webflux")
+    compileOnly("org.springframework.boot:spring-boot-starter-security")
+    compileOnly("org.springframework.data:spring-data-commons")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    compileOnly("org.springframework.boot:spring-boot-starter-amqp")
+    compileOnly("io.r2dbc:r2dbc-postgresql")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+
+}
+
+test {
+    useJUnitPlatform()
+}

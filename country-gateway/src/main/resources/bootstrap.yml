@@ -1,0 +1,6 @@
+spring:
+  application.name: bootiful-gateway
+  cloud:
+    nacos.config:
+      server-addr: nacos1:8848
+      file-extension: yaml

@@ -1,0 +1,9 @@
+spring:
+  autoconfigure.exclude:
+    - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+    - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
+  application.name: bootiful-oauth
+  cloud:
+    nacos.config:
+      server-addr: nacos1:8848
+      file-extension: yaml

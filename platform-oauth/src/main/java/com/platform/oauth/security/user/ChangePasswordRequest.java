@@ -1,7 +1,6 @@
 package com.platform.oauth.security.user;
 
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,7 +13,6 @@ import java.io.Serializable;
  * @date Created by 2021/8/4
  */
 @Data
-@Validated
 public class ChangePasswordRequest implements Serializable {
 
     @NotBlank(message = "登录用户名[username]不能为空!")

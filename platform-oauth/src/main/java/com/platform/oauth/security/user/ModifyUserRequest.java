@@ -2,7 +2,6 @@ package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +15,6 @@ import java.io.Serializable;
  * @date Created by 2021/7/12
  */
 @Data
-@Validated
 public class ModifyUserRequest implements Serializable {
 
     private Long id;

@@ -25,7 +25,7 @@ public class RegisterRequest extends UserRequest implements Serializable {
     private String appId;
 
     public UserRequest toUserRequest() {
-        UserRequest userRequest = UserRequest.builder().build();
+        UserRequest userRequest = new UserRequest();
         BeanUtils.copyProperties(this, userRequest);
         return userRequest;
     }

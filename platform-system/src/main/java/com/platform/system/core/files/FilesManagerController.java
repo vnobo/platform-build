@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * com.bootiful.system.core.files.FilesManagerController
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/22
  */
 @Tag(name = "上传minio处理")

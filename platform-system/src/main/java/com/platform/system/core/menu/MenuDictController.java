@@ -1,7 +1,6 @@
 package com.platform.system.core.menu;
 
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictController
@@ -26,7 +24,7 @@ public class MenuDictController {
     private final MenuDictService dictService;
 
     @GetMapping("search")
-    public Flux<MenuDictOnly> search(DictSearchRequest dictRequest) {
+    public Flux<MenuDictOnly> search(MenuDictRequest dictRequest) {
         return this.dictService.search(dictRequest);
     }
 
@@ -34,20 +32,6 @@ public class MenuDictController {
     public Flux<MenuDictOnly> me() {
         return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
                 this.dictService.loadAuthorityMenu(securityDetails.getAuthorities()));
-    }
-
-    /**
-     * 批量关联2级菜单
-     *
-     * @param id           一级菜单ID
-     * @param dictRequests 关联的二级菜单
-     * @return 成功数
-     */
-    @Operation(summary = "批量关联2级菜单")
-    @PostMapping("batch/{id}")
-    public Flux<Integer> batchAssociation(@PathVariable("id") Integer id,
-                                          @RequestBody List<MenuDictRequest> dictRequests) {
-        return this.dictService.batchAssociation(id, dictRequests);
     }
 
     @PostMapping

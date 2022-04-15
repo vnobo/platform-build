@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class TenantManager extends BaseAutoToolsUtil {
-
     private final TenantRepository tenantRepository;
 
     public Flux<Tenant> search(TenantRequest tenantRequest, Pageable pageable) {
@@ -41,7 +40,6 @@ public class TenantManager extends BaseAutoToolsUtil {
     public Mono<Tenant> loadById(Integer id) {
         return this.tenantRepository.findById(id);
     }
-
     public Mono<Tenant> loadByCode(String code) {
         return this.tenantRepository.findByCode(code);
     }
@@ -50,7 +48,6 @@ public class TenantManager extends BaseAutoToolsUtil {
         return this.loadByCode(tenantRequest.getCode())
                 .switchIfEmpty(this.operation(tenantRequest));
     }
-
     public Mono<Tenant> operation(TenantRequest groupRequest) {
         return this.save(groupRequest.toTenant());
     }

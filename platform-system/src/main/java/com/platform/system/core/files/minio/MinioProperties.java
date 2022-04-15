@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 /**
  * com.bootiful.system.core.files.minio.MinioPers
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/21
  */
 @Data

@@ -35,7 +35,6 @@ public class GroupManager extends BaseAutoToolsUtil {
     }
 
     public Flux<GroupOnly> search(GroupRequest groupRequest, Pageable pageable) {
-        log.debug("查询Group request: {}", groupRequest);
         return super.entityTemplate.select(Query.query(groupRequest.toCriteria()).with(pageable), Group.class)
                 .flatMapSequential(this::integrateAuthorities);
     }

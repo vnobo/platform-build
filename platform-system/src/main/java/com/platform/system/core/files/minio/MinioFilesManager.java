@@ -23,7 +23,7 @@ import java.util.Map;
  * com.bootiful.system.core.files.minio.MinioFilesManager
  * sss
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/21
  */
 @Log4j2
@@ -53,7 +53,9 @@ public class MinioFilesManager {
             } else {
                 log.debug("Bucket {} already exists.", bucketName);
             }
-        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException | XmlParserException e) {
+        } catch (ErrorResponseException | InsufficientDataException | InternalException
+                 | InvalidKeyException | InvalidResponseException | IOException
+                 | NoSuchAlgorithmException | ServerException | XmlParserException e) {
             log.error("Init minio bucket error, 消息: {}", e.getMessage());
         }
 

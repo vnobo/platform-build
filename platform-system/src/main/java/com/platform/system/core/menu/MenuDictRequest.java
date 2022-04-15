@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
 
 import javax.validation.Valid;
@@ -62,4 +63,28 @@ public class MenuDictRequest extends MenuDict {
         }
         return menuDict;
     }
+
+    public Criteria toCriteria() {
+
+        Criteria authorityDict = Criteria.where("system").is(getSystem());
+
+        if (!ObjectUtils.isEmpty(getPid())) {
+            authorityDict = authorityDict.and("pid").is(getPid());
+        }
+
+        if (!ObjectUtils.isEmpty(getName())) {
+            authorityDict = authorityDict.and("name").like("%" + getName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(getAuthority())) {
+            authorityDict = authorityDict.and("authority").like("%" + getName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(getId())) {
+            authorityDict = authorityDict.and("id").is(getId());
+        }
+
+        return authorityDict;
+    }
+
 }

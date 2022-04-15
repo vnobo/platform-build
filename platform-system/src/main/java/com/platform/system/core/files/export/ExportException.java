@@ -1,17 +1,16 @@
 package com.platform.system.core.files.export;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.platform.commons.annotation.RestServerException;
 
 /**
  * com.peoples.storage.export.ExportException
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/3/19
  */
 public class ExportException extends RestServerException {
 
-    public ExportException(int status, Object msg) throws JsonProcessingException {
+    public ExportException(int status, Object msg) {
         super(status, msg);
     }
 }

@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
-import org.springframework.data.relational.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static com.platform.commons.security.SecurityTokenHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
 
@@ -29,7 +27,7 @@ public class MenuDictService extends BaseAutoToolsUtil {
 
     private final MenuDictRepository menuDictRepository;
 
-    public Flux<MenuDictOnly> search(DictSearchRequest dictRequest) {
+    public Flux<MenuDictOnly> search(MenuDictRequest dictRequest) {
         return entityTemplate.select(Query.query(dictRequest.toCriteria())
                         .sort(Sort.by("sort")), MenuDict.class)
                 .map(MenuDictOnly::withAuthorityDict);
@@ -57,16 +55,7 @@ public class MenuDictService extends BaseAutoToolsUtil {
      * @return 无返回 错误异常处理
      */
     public Mono<Void> delete(Integer id) {
-        return this.menuDictRepository.deleteById(id).then();
-    }
-
-    public Flux<Integer> batchAssociation(Integer parentId, List<MenuDictRequest> dictRequests) {
-        return Flux.fromStream(dictRequests.parallelStream()).flatMap(authorityDictRequest -> {
-            assert authorityDictRequest.getId() != null;
-            return entityTemplate.update(MenuDict.class)
-                    .matching(Query.query(Criteria.where("id").is(authorityDictRequest.getId())))
-                    .apply(Update.update("pid", parentId));
-        });
+        return this.menuDictRepository.deleteById(id);
     }
 
     public Mono<MenuDictOnly> operation(MenuDictRequest dictRequest) {

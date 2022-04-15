@@ -17,6 +17,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MemberTenantRequest extends MemberTenant {
+
     @NotNull(message = "用户[userId]不能为空")
     private Long userId;
     @NotNull(message = "租户[tenantId]不能为空")

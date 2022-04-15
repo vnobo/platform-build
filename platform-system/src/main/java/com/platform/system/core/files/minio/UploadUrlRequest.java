@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * com.bootiful.system.core.files.minio.UploadFileRequest
  * 获取文件上传路径
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/21
  */
 @Data

@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +18,7 @@ import java.util.Set;
 @Schema(title = "资源菜单查询请求")
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DictSearchRequest extends AuthorityDictRequest {
+public class DictSearchRequest extends MenuDictRequest {
 
     @Schema(title = "是否查询父级菜单")
     private Boolean isParent;

@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.security.ReactiveSecurityDetailsHolder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,19 +19,19 @@ import java.util.List;
  */
 @Tag(name = "资源管理")
 @RestController
-@RequestMapping("/authority/dict/v1")
+@RequestMapping("/menu/dict/v1")
 @RequiredArgsConstructor
-public class AuthorityDictController {
+public class MenuDictController {
 
-    private final AuthorityDictService dictService;
+    private final MenuDictService dictService;
 
     @GetMapping("search")
-    public Flux<AuthorityDictOnly> search(DictSearchRequest dictRequest) {
+    public Flux<MenuDictOnly> search(DictSearchRequest dictRequest) {
         return this.dictService.search(dictRequest);
     }
 
-    @GetMapping("menu")
-    public Flux<AuthorityDictOnly> menu() {
+    @GetMapping("me")
+    public Flux<MenuDictOnly> me() {
         return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
                 this.dictService.loadAuthorityMenu(securityDetails.getAuthorities()));
     }
@@ -46,12 +46,12 @@ public class AuthorityDictController {
     @Operation(summary = "批量关联2级菜单")
     @PostMapping("batch/{id}")
     public Flux<Integer> batchAssociation(@PathVariable("id") Integer id,
-                                          @RequestBody List<AuthorityDictRequest> dictRequests) {
+                                          @RequestBody List<MenuDictRequest> dictRequests) {
         return this.dictService.batchAssociation(id, dictRequests);
     }
 
     @PostMapping
-    public Mono<AuthorityDictOnly> post(@Valid @RequestBody AuthorityDictRequest dictRequest) {
+    public Mono<MenuDictOnly> post(@Valid @RequestBody MenuDictRequest dictRequest) {
         return this.dictService.operation(dictRequest);
     }
 

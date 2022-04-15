@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

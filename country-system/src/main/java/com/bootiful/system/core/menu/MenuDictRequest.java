@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.utils.SystemType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +26,7 @@ import java.util.Set;
 @Schema(title = "资源菜单请求")
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AuthorityDictRequest extends AuthorityDict {
+public class MenuDictRequest extends MenuDict {
 
     @NotBlank(message = "权限名[authority]不能为空!")
     private String authority;
@@ -45,21 +45,21 @@ public class AuthorityDictRequest extends AuthorityDict {
     @Max(Integer.MAX_VALUE)
     private Integer pid;
 
-    public AuthorityDictRequest system(SystemType system) {
+    public MenuDictRequest system(SystemType system) {
         this.setSystem(system);
         return this;
     }
 
-    public AuthorityDict toDict() {
-        AuthorityDict authorityDict = new AuthorityDict();
-        BeanUtils.copyProperties(this, authorityDict);
+    public MenuDict toDict() {
+        MenuDict menuDict = new MenuDict();
+        BeanUtils.copyProperties(this, menuDict);
         if (!ObjectUtils.isEmpty(this.getPermissions())) {
             ObjectNode objectNode = ObjectUtils.isEmpty(this.getExtend()) ?
                     new ObjectMapper().createObjectNode() : this.getExtend().deepCopy();
             JsonNode permissions = new ObjectMapper().convertValue(this.getPermissions(), JsonNode.class);
             objectNode.set("permissions", permissions);
-            authorityDict.setExtend(objectNode);
+            menuDict.setExtend(objectNode);
         }
-        return authorityDict;
+        return menuDict;
     }
 }

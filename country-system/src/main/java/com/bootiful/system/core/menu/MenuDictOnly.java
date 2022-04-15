@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,13 +21,13 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Schema(title = "资源菜单读取")
 @Data
-public class AuthorityDictOnly extends AuthorityDict implements Serializable {
+public class MenuDictOnly extends MenuDict implements Serializable {
 
     private Set<MethodPermissions> permissions;
 
-    public static AuthorityDictOnly withAuthorityDict(AuthorityDict authorityDict) {
-        AuthorityDictOnly dictMenu = new AuthorityDictOnly();
-        BeanUtils.copyProperties(authorityDict, dictMenu);
+    public static MenuDictOnly withAuthorityDict(MenuDict menuDict) {
+        MenuDictOnly dictMenu = new MenuDictOnly();
+        BeanUtils.copyProperties(menuDict, dictMenu);
         if (!ObjectUtils.isEmpty(dictMenu.getExtend())) {
             JsonNode permissionsNode = dictMenu.getExtend().withArray("permissions");
             ObjectMapper objectMapper = new ObjectMapper();

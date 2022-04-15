@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.utils.SystemType;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/5/26
  */
-public interface AuthorityDictRepository extends R2dbcRepository<AuthorityDict, Integer> {
+public interface MenuDictRepository extends R2dbcRepository<MenuDict, Integer> {
 
 
     /**
@@ -19,5 +19,5 @@ public interface AuthorityDictRepository extends R2dbcRepository<AuthorityDict, 
      * @param system 系统类型
      * @return 资源
      */
-    Flux<AuthorityDict> findBySystemOrderBySort(SystemType system);
+    Flux<MenuDict> findBySystemOrderBySort(SystemType system);
 }

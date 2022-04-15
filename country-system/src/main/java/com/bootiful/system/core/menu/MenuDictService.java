@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.security.SecurityTokenHelper;
 import com.bootiful.commons.utils.BaseAutoToolsUtil;
@@ -24,31 +24,30 @@ import static com.bootiful.commons.security.SecurityTokenHelper.ADMINISTRATORS_G
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/6/1
  */
-@Log4j2
 @Service
 @RequiredArgsConstructor
-public class AuthorityDictService extends BaseAutoToolsUtil {
+public class MenuDictService extends BaseAutoToolsUtil {
 
-    private final AuthorityDictRepository authorityDictRepository;
+    private final MenuDictRepository menuDictRepository;
 
-    public Flux<AuthorityDictOnly> search(DictSearchRequest dictRequest) {
+    public Flux<MenuDictOnly> search(DictSearchRequest dictRequest) {
         return entityTemplate.select(Query.query(dictRequest.toCriteria())
-                        .sort(Sort.by("sort")), AuthorityDict.class)
-                .map(AuthorityDictOnly::withAuthorityDict);
+                        .sort(Sort.by("sort")), MenuDict.class)
+                .map(MenuDictOnly::withAuthorityDict);
     }
 
-    public Flux<AuthorityDictOnly> loadAuthorityMenu(String[] authorities) {
+    public Flux<MenuDictOnly> loadAuthorityMenu(String[] authorities) {
 
         if (Arrays.asList(authorities).contains(ADMINISTRATORS_GROUP_ROLE_NAME)) {
-            return Flux.deferContextual(contextView -> this.authorityDictRepository
+            return Flux.deferContextual(contextView -> this.menuDictRepository
                             .findBySystemOrderBySort(SecurityTokenHelper.systemForContext(contextView)))
-                    .map(AuthorityDictOnly::withAuthorityDict);
+                    .map(MenuDictOnly::withAuthorityDict);
         }
         return Flux.deferContextual(contextView -> entityTemplate.select(Query.query(Criteria.where("system")
                                 .is(SecurityTokenHelper.systemForContext(contextView))
                                 .and("authority").in(authorities))
-                        .sort(Sort.by("sort")), AuthorityDict.class))
-                .map(AuthorityDictOnly::withAuthorityDict);
+                        .sort(Sort.by("sort")), MenuDict.class))
+                .map(MenuDictOnly::withAuthorityDict);
     }
 
     /**
@@ -59,32 +58,32 @@ public class AuthorityDictService extends BaseAutoToolsUtil {
      * @return 无返回 错误异常处理
      */
     public Mono<Void> delete(Integer id) {
-        return this.authorityDictRepository.deleteById(id).then();
+        return this.menuDictRepository.deleteById(id).then();
     }
 
-    public Flux<Integer> batchAssociation(Integer parentId, List<AuthorityDictRequest> dictRequests) {
+    public Flux<Integer> batchAssociation(Integer parentId, List<MenuDictRequest> dictRequests) {
         return Flux.fromStream(dictRequests.parallelStream()).flatMap(authorityDictRequest -> {
             assert authorityDictRequest.getId() != null;
-            return entityTemplate.update(AuthorityDict.class)
+            return entityTemplate.update(MenuDict.class)
                     .matching(Query.query(Criteria.where("id").is(authorityDictRequest.getId())))
                     .apply(Update.update("pid", parentId));
         });
     }
 
-    public Mono<AuthorityDictOnly> operation(AuthorityDictRequest dictRequest) {
+    public Mono<MenuDictOnly> operation(MenuDictRequest dictRequest) {
         return this.save(dictRequest.toDict())
-                .map(AuthorityDictOnly::withAuthorityDict);
+                .map(MenuDictOnly::withAuthorityDict);
     }
 
-    public Mono<AuthorityDict> save(AuthorityDict authorityDict) {
-        if (authorityDict.isNew()) {
-            return this.authorityDictRepository.save(authorityDict);
+    public Mono<MenuDict> save(MenuDict menuDict) {
+        if (menuDict.isNew()) {
+            return this.menuDictRepository.save(menuDict);
         } else {
-            assert authorityDict.getId() != null;
-            return this.authorityDictRepository.findById(authorityDict.getId())
+            assert menuDict.getId() != null;
+            return this.menuDictRepository.findById(menuDict.getId())
                     .flatMap(old -> {
-                        authorityDict.setCreatedTime(old.getCreatedTime());
-                        return this.authorityDictRepository.save(authorityDict);
+                        menuDict.setCreatedTime(old.getCreatedTime());
+                        return this.menuDictRepository.save(menuDict);
                     });
         }
     }

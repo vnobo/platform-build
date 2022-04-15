@@ -1,4 +1,4 @@
-package com.bootiful.system.core.authoritydict;
+package com.bootiful.system.core.menu;
 
 import com.bootiful.commons.utils.SystemType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @Schema(title = "资源菜单")
 @Data
 @Table("sys_authority_dict")
-public class AuthorityDict implements Serializable, Persistable<Integer> {
+public class MenuDict implements Serializable, Persistable<Integer> {
 
     @Id
     private Integer id;

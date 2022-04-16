@@ -2,12 +2,11 @@ package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * com.bootiful.oauth.security.user.UserOnly

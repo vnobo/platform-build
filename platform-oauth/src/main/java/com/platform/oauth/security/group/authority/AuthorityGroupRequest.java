@@ -2,14 +2,13 @@ package com.platform.oauth.security.group.authority;
 
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * com.bootiful.oauth.security.group.GroupSearchRequest

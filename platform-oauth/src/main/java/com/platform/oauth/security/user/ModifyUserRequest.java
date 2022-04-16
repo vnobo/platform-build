@@ -1,12 +1,11 @@
 package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.Data;
-
+import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * com.bootiful.oauth.security.user.ModifyUserRequest

@@ -1,14 +1,13 @@
 package com.platform.oauth.security.group.authority;
 
 import com.platform.commons.utils.BaseAutoToolsUtil;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * com.bootiful.oauth.security.group.authority.AuthorityManger

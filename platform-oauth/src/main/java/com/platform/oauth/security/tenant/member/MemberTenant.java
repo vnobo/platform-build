@@ -1,5 +1,7 @@
 package com.platform.oauth.security.tenant.member;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -7,9 +9,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * com.bootiful.oauth.security.tenant.member.MemberTenant
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 @Data
 @Table("se_tenant_members")
 public class MemberTenant implements Serializable, Persistable<Long> {
-
   @Id private Long id;
   private Long userId;
   private Integer tenantId;

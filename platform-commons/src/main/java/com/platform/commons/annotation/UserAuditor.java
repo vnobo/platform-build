@@ -2,10 +2,9 @@ package com.platform.commons.annotation;
 
 import com.platform.commons.security.SecurityDetails;
 import com.platform.commons.utils.User;
+import java.io.Serializable;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
-
-import java.io.Serializable;
 
 /**
  * com.bootiful.commons.security.Creators 自动注册认证的用户

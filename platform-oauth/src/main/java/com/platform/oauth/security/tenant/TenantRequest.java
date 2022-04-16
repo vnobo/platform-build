@@ -1,15 +1,14 @@
 package com.platform.oauth.security.tenant;
 
 import com.platform.commons.utils.TenantLevel;
+import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.tenant.TenantRequest

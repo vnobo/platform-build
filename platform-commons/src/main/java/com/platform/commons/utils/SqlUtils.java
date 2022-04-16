@@ -1,10 +1,9 @@
 package com.platform.commons.utils;
 
 import com.google.common.base.CaseFormat;
+import java.util.StringJoiner;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-import java.util.StringJoiner;
 
 /**
  * com.bootiful.commons.utils.SqlUtils

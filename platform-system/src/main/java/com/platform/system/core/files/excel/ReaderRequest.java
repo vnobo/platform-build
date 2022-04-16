@@ -1,11 +1,10 @@
 package com.platform.system.core.files.excel;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * com.bootiful.system.core.files.excel.ReaderRequest

@@ -1,11 +1,10 @@
 package com.platform.oauth.security.group;
 
+import java.io.Serializable;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * com.bootiful.oauth.security.group.GroupOnly

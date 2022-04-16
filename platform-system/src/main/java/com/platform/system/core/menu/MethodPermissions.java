@@ -1,12 +1,11 @@
 package com.platform.system.core.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import org.springframework.http.HttpMethod;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.Data;
+import org.springframework.http.HttpMethod;
 
 /**
  * com.bootiful.oauth.core.authoritydict.MethodPermissions

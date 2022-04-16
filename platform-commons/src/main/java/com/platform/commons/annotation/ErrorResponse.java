@@ -1,13 +1,12 @@
 package com.platform.commons.annotation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ErrorResponse

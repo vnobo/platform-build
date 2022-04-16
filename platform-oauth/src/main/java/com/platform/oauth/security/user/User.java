@@ -1,6 +1,8 @@
 package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -10,13 +12,10 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
  * qinke-coupons com.alex.web.security.User
  *
- * @author Alex bob(https://github.com/vnobo)
+ * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2019/7/3
  */
 @Data

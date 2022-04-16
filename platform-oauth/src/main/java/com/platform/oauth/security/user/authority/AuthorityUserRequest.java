@@ -1,13 +1,12 @@
 package com.platform.oauth.security.user.authority;
 
 import com.platform.commons.utils.SystemType;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * com.alex.oauth.security.Authorities

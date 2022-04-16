@@ -5,6 +5,7 @@ import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.commons.security.SecurityDetails;
 import com.platform.commons.security.SecurityTokenHelper;
 import com.platform.commons.security.SimplerSecurityDetails;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
@@ -15,8 +16,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-
-import java.util.stream.Collectors;
 
 /**
  * com.bootiful.gateway.filter.SecurityDetailsWebFilter 加载用户安全险信息{@link SecurityDetails} 封装到会话中

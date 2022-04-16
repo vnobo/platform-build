@@ -1,10 +1,9 @@
 package com.platform.commons.annotation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
 
 /**
  * com.bootiful.commons.annotation.RestServerException

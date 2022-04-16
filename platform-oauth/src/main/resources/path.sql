@@ -140,7 +140,8 @@ where id not in (select min(id)
 
 insert into sys_custom_column(tenant_id, user_id, system, menu_id, prop_name,
                               label, is_fixed, is_hide, is_custom, is_sortable, is_show,
-                              icon, type, category, sort_no, width, filtration, is_edit, dictionary_type,
+                              icon, type, category, sort_no, width, filtration, is_edit,
+                              dictionary_type,
                               path, cell_style, from_type, created_time, updated_time, extend)
 select tenant_id,
        user_id,

@@ -2,16 +2,15 @@ package com.platform.commons.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * com.bootiful.commons.utils.User

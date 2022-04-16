@@ -1,12 +1,11 @@
 package com.platform.gateway.security;
 
 import com.platform.commons.utils.SystemType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * com.bootiful.oauth.core.weixin.RegRequest

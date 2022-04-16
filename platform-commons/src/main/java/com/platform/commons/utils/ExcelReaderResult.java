@@ -1,10 +1,9 @@
 package com.platform.commons.utils;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 
 /**
  * com.bootiful.commons.utils.ExcelReaderResult

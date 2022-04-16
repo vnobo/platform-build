@@ -4,6 +4,12 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
 import io.swagger.v3.oas.annotations.Hidden;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -17,12 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * com.bootiful.gateway.captcha.CaptchaController

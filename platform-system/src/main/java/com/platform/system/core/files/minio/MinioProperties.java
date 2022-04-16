@@ -1,9 +1,8 @@
 package com.platform.system.core.files.minio;
 
+import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import javax.validation.constraints.NotEmpty;
 
 /**
  * com.bootiful.system.core.files.minio.MinioPers

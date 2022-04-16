@@ -1,11 +1,10 @@
 package com.platform.gateway.security;
 
+import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.tenant.MemberTenantRequest

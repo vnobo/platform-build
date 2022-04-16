@@ -24,7 +24,6 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordService {
-
   private final AuthClient authClient;
   private final CountryClient countryClient;
 

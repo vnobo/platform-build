@@ -1,10 +1,9 @@
 package com.platform.oauth.security.user;
 
-import lombok.Data;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * com.bootiful.oauth.security.user.UserChangePasswordRequest

@@ -4,14 +4,17 @@ import com.platform.system.core.files.minio.MinioFilesManager;
 import com.platform.system.core.files.minio.UploadUrlRequest;
 import io.minio.messages.DeleteError;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * com.bootiful.system.core.files.FilesManagerController

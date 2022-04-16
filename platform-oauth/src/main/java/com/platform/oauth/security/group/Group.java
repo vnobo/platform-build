@@ -2,6 +2,8 @@ package com.platform.oauth.security.group;
 
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -9,9 +11,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * com.alex.oauth.security.Groups

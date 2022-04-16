@@ -2,11 +2,10 @@ package com.platform.oauth.security;
 
 import com.platform.oauth.security.user.UserRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
-
-import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.core.weixin.RegRequest

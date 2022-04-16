@@ -1,6 +1,8 @@
 package com.platform.commons;
 
 import io.micrometer.core.lang.NonNull;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.web.reactive.WebSessionIdResolverAutoConfiguration;
@@ -13,9 +15,6 @@ import org.springframework.web.server.session.HeaderWebSessionIdResolver;
 import org.springframework.web.server.session.WebSessionIdResolver;
 import org.springframework.web.server.session.WebSessionManager;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * com.bootiful.oauth.config.SessionConfiguration

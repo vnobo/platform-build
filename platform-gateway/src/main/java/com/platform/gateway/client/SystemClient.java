@@ -2,11 +2,10 @@ package com.platform.gateway.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.platform.commons.client.AbstractClient;
+import java.util.Map;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 /**
  * com.bootiful.gateway.client.SystemClient

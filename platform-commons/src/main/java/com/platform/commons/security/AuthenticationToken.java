@@ -1,10 +1,9 @@
 package com.platform.commons.security;
 
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.server.WebSession;
-
-import java.io.Serializable;
 
 /**
  * com.bootiful.commons.security.AuthenticationToken

@@ -5,6 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.user.UserRequest

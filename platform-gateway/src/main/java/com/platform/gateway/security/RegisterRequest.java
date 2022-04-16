@@ -3,9 +3,8 @@ package com.platform.gateway.security;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * com.bootiful.gateway.security.RegisterRequest

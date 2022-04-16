@@ -5,6 +5,7 @@ import com.platform.commons.utils.SqlUtils;
 import com.platform.oauth.security.group.GroupManager;
 import com.platform.oauth.security.user.UserOnly;
 import com.platform.oauth.security.user.UserRepository;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -13,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 /**
  * com.bootiful.oauth.security.group.MemberGroupManagerService

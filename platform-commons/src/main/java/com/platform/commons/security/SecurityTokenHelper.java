@@ -1,6 +1,10 @@
 package com.platform.commons.security;
 
 import com.platform.commons.utils.SystemType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -13,11 +17,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * com.bootiful.commons.security.SecurityDetailsDesc 安全认证token工具类

@@ -6,6 +6,9 @@ import com.platform.commons.security.SecurityTokenHelper;
 import com.platform.gateway.client.SystemClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.Duration;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,16 +19,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.reactive.result.view.CsrfRequestDataValueProcessor;
 import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.security.web.server.csrf.CsrfToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import org.springframework.web.server.session.WebSessionManager;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.time.Duration;
 
 /**
  * com.npc.oauth.security.SecurityController

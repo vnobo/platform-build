@@ -17,6 +17,13 @@ import com.platform.oauth.security.tenant.TenantRequest;
 import com.platform.oauth.security.user.User;
 import com.platform.oauth.security.user.UserManager;
 import com.platform.oauth.security.user.UserRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,14 +37,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.context.ContextView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * com.bootiful.oauth.utils.InitializingTenantUtils

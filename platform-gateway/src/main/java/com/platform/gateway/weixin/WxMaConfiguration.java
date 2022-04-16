@@ -9,6 +9,11 @@ import cn.binarywang.wx.miniapp.message.WxMaMessageHandler;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
@@ -18,12 +23,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * com.bootiful.oauth.core.weixin.WxMaConfiguration

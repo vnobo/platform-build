@@ -1,7 +1,10 @@
 package com.platform.system.core.menu;
 
+import static com.platform.commons.security.SecurityTokenHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
+
 import com.platform.commons.security.SecurityTokenHelper;
 import com.platform.commons.utils.BaseAutoToolsUtil;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.relational.core.query.Criteria;
@@ -9,10 +12,6 @@ import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-
-import static com.platform.commons.security.SecurityTokenHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictService

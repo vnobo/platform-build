@@ -12,9 +12,15 @@ import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import com.platform.oauth.security.user.authority.AuthorityUser;
 import com.platform.oauth.security.user.authority.AuthorityUserManger;
 import com.platform.oauth.security.user.authority.AuthorityUserRequest;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
@@ -25,14 +31,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.List;
-import java.util.Objects;
-
 /**
  * com.bootiful.oauth.security.user.UsersService
  *
  * @author <a href="https://github.com/vnobo">Alex bob</a>
- * @date Created by 2021/5/31
+ *     <p>Created by 2021/5/31
  */
 @Log4j2
 @Service
@@ -40,7 +43,6 @@ import java.util.Objects;
 public class UserManager extends BaseAutoToolsUtil {
 
   public static final String DEFAULT_REGISTER_USER_ROLE = "ROLE_USER";
-
   private final PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
   private final UserRepository userRepository;
   private final AuthorityUserManger authorityUserManger;

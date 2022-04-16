@@ -5,11 +5,10 @@ import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.gateway.security.RegisterRequest;
 import com.platform.gateway.security.TenantCutRequest;
+import java.util.Map;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 /**
  * com.bootiful.gateway.client.OauthClient

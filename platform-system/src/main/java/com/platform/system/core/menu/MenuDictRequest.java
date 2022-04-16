@@ -5,18 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.util.ObjectUtils;
-
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.util.ObjectUtils;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictRequest

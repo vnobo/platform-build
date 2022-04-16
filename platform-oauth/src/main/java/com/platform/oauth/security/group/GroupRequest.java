@@ -2,16 +2,15 @@ package com.platform.oauth.security.group;
 
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.user.UserRequest

@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
-
-import java.io.Serializable;
-import java.util.Set;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictOnly

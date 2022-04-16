@@ -2,11 +2,10 @@ package com.platform.gateway.weixin;
 
 import com.platform.commons.utils.SystemType;
 import com.platform.gateway.security.RegisterRequest;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * com.bootiful.oauth.core.weixin.RegRequest

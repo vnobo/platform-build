@@ -1,10 +1,9 @@
 package com.platform.system.core.files.minio;
 
-import lombok.Data;
-import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * com.bootiful.system.core.files.minio.UploadFileRequest 获取文件上传路径

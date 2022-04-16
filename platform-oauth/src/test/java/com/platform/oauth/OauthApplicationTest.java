@@ -12,10 +12,9 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
  */
 class OauthApplicationTest {
 
-
-    @Test
-    public void exampleTest() {
-        PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
-        System.out.println(passwordEncoder.encode("q1w2e3.."));
-    }
+  @Test
+  public void exampleTest() {
+    PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
+    System.out.println(passwordEncoder.encode("q1w2e3.."));
+  }
 }

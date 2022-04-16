@@ -23,35 +23,32 @@ import java.time.LocalDateTime;
 @Table("se_users")
 public class User implements Serializable, Persistable<Long> {
 
-    @Id
-    private Long id;
-    private Integer tenantId;
-    private String tenantCode;
-    private String username;
-    private String password;
-    private Boolean enabled;
-    private String email;
-    private String phone;
-    private String name;
-    private String idCard;
-    private JsonNode extend;
+  @Id private Long id;
+  private Integer tenantId;
+  private String tenantCode;
+  private String username;
+  private String password;
+  private Boolean enabled;
+  private String email;
+  private String phone;
+  private String name;
+  private String idCard;
+  private JsonNode extend;
 
-    private LocalDateTime lastLoginTime;
+  private LocalDateTime lastLoginTime;
 
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
-    @CreatedDate
-    private LocalDateTime createdTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
+  @CreatedDate private LocalDateTime createdTime;
 
-    public String affirmIdCard() {
-        if (StringUtils.hasLength(this.idCard) && this.idCard.length() > 18) {
-            return this.idCard.substring(0, 18);
-        }
-        return this.idCard;
+  public String affirmIdCard() {
+    if (StringUtils.hasLength(this.idCard) && this.idCard.length() > 18) {
+      return this.idCard.substring(0, 18);
     }
+    return this.idCard;
+  }
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 }

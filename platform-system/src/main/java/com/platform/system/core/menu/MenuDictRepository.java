@@ -12,12 +12,11 @@ import reactor.core.publisher.Flux;
  */
 public interface MenuDictRepository extends R2dbcRepository<MenuDict, Integer> {
 
-
-    /**
-     * 根据洗头工类型查找
-     *
-     * @param system 系统类型
-     * @return 资源
-     */
-    Flux<MenuDict> findBySystemOrderBySort(SystemType system);
+  /**
+   * 根据洗头工类型查找
+   *
+   * @param system 系统类型
+   * @return 资源
+   */
+  Flux<MenuDict> findBySystemOrderBySort(SystemType system);
 }

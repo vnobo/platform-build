@@ -12,22 +12,21 @@ import reactor.core.publisher.Mono;
  */
 public interface UserRepository extends R2dbcRepository<User, Long> {
 
-    /**
-     * get by username
-     *
-     * @param username user id
-     * @return user model
-     */
-    @Query("SELECT * FROM se_users WHERE username ILIKE :username ")
-    Mono<User> findByUsername(String username);
+  /**
+   * get by username
+   *
+   * @param username user id
+   * @return user model
+   */
+  @Query("SELECT * FROM se_users WHERE username ILIKE :username ")
+  Mono<User> findByUsername(String username);
 
-    /**
-     * get by username
-     *
-     * @param idCard 身份证
-     * @return user model
-     */
-    @Query("SELECT * FROM se_users WHERE left(id_card,18) ILIKE left(:idCard,18) ")
-    Mono<User> findByIdCard(String idCard);
-
+  /**
+   * get by username
+   *
+   * @param idCard 身份证
+   * @return user model
+   */
+  @Query("SELECT * FROM se_users WHERE left(id_card,18) ILIKE left(:idCard,18) ")
+  Mono<User> findByIdCard(String idCard);
 }

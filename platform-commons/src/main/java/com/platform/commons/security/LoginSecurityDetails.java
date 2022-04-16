@@ -13,25 +13,22 @@ import java.io.Serializable;
 @Data
 public class LoginSecurityDetails implements Serializable {
 
-    private String username;
-    private String password;
-    private Boolean enabled;
-    private String[] authorities;
+  private String username;
+  private String password;
+  private Boolean enabled;
+  private String[] authorities;
 
-    public static LoginSecurityDetails of(String username, String password, Boolean enabled) {
+  public static LoginSecurityDetails of(String username, String password, Boolean enabled) {
 
-        LoginSecurityDetails securityDetails = new LoginSecurityDetails();
-        securityDetails.setUsername(username);
-        securityDetails.setPassword(password);
-        securityDetails.setEnabled(enabled);
-        return securityDetails;
+    LoginSecurityDetails securityDetails = new LoginSecurityDetails();
+    securityDetails.setUsername(username);
+    securityDetails.setPassword(password);
+    securityDetails.setEnabled(enabled);
+    return securityDetails;
+  }
 
-    }
-
-    public LoginSecurityDetails authorities(String[] authorities) {
-        this.setAuthorities(authorities);
-        return this;
-    }
-
-
+  public LoginSecurityDetails authorities(String[] authorities) {
+    this.setAuthorities(authorities);
+    return this;
+  }
 }

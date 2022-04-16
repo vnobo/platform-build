@@ -24,31 +24,27 @@ import java.time.LocalDateTime;
 @Table("se_authorities")
 public class AuthorityUser implements SimpleAuthority, Persistable<Integer> {
 
-    @Id
-    private Integer id;
-    private Long userId;
-    private String authority;
+  @Id private Integer id;
+  private Long userId;
+  private String authority;
 
-    @Schema(title = "系统类型")
-    private SystemType system;
+  @Schema(title = "系统类型")
+  private SystemType system;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
+  @CreatedDate private LocalDateTime createdTime;
 
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    public static AuthorityUser of(SystemType system, Long userId, String authority) {
-        AuthorityUser authorityUser = new AuthorityUser();
-        authorityUser.setUserId(userId);
-        authorityUser.setAuthority(authority);
-        authorityUser.setSystem(system);
-        return authorityUser;
-    }
+  public static AuthorityUser of(SystemType system, Long userId, String authority) {
+    AuthorityUser authorityUser = new AuthorityUser();
+    authorityUser.setUserId(userId);
+    authorityUser.setAuthority(authority);
+    authorityUser.setSystem(system);
+    return authorityUser;
+  }
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
-
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 }

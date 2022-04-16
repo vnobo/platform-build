@@ -21,25 +21,21 @@ import java.time.LocalDateTime;
 @Table("se_tenant_members")
 public class MemberTenant implements Serializable, Persistable<Long> {
 
-    @Id
-    private Long id;
-    private Long userId;
-    private Integer tenantId;
-    private Boolean isDefault;
+  @Id private Long id;
+  private Long userId;
+  private Integer tenantId;
+  private Boolean isDefault;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @CreatedDate private LocalDateTime createdTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 
-    public MemberTenant isDefault(Boolean bool) {
-        this.setIsDefault(bool);
-        return this;
-    }
-
+  public MemberTenant isDefault(Boolean bool) {
+    this.setIsDefault(bool);
+    return this;
+  }
 }

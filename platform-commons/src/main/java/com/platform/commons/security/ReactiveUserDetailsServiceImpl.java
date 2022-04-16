@@ -16,17 +16,23 @@ import reactor.core.publisher.Mono;
 @Log4j2
 public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsService {
 
-    private final CountryClient oauthClient;
+  private final CountryClient oauthClient;
 
-    public ReactiveUserDetailsServiceImpl(CountryClient oauthClient) {
-        this.oauthClient = oauthClient;
-    }
+  public ReactiveUserDetailsServiceImpl(CountryClient oauthClient) {
+    this.oauthClient = oauthClient;
+  }
 
-    @Override
-    public Mono<UserDetails> findByUsername(String username) {
-        return this.oauthClient.login(username).map(SecurityTokenHelper::buildUserDetails)
-                .onErrorResume(throwable -> Mono.defer(() -> Mono.error(
-                        new AuthenticationServiceException(throwable.getLocalizedMessage(), throwable))));
-    }
-
+  @Override
+  public Mono<UserDetails> findByUsername(String username) {
+    return this.oauthClient
+        .login(username)
+        .map(SecurityTokenHelper::buildUserDetails)
+        .onErrorResume(
+            throwable ->
+                Mono.defer(
+                    () ->
+                        Mono.error(
+                            new AuthenticationServiceException(
+                                throwable.getLocalizedMessage(), throwable))));
+  }
 }

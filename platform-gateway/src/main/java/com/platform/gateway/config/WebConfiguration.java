@@ -14,5 +14,4 @@ import org.springframework.context.annotation.Import;
 @Configuration(proxyBeanMethods = false)
 @Import({CommonsAutoConfiguration.class})
 @RequiredArgsConstructor
-public class WebConfiguration {
-}
+public class WebConfiguration {}

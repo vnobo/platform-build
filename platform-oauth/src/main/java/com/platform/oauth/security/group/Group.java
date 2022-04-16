@@ -23,27 +23,23 @@ import java.time.LocalDateTime;
 @Table("se_groups")
 public class Group implements Serializable, Persistable<Integer> {
 
-    @Id
-    private Integer id;
-    private Integer tenantId;
-    private String tenantCode;
-    private String name;
-    private String description;
+  @Id private Integer id;
+  private Integer tenantId;
+  private String tenantCode;
+  private String name;
+  private String description;
 
-    @Schema(title = "角色类型")
-    private Integer type;
+  @Schema(title = "角色类型")
+  private Integer type;
 
-    @Schema(title = "系统类型")
-    private SystemType system;
+  @Schema(title = "系统类型")
+  private SystemType system;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @CreatedDate private LocalDateTime createdTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
-
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 }

@@ -18,29 +18,29 @@ import javax.validation.constraints.NotNull;
 @Data
 public class WxRequest extends RegisterRequest {
 
-    @NotNull(message = "微信用户绑定手机号[phone]不能为空!")
-    private String phone;
+  @NotNull(message = "微信用户绑定手机号[phone]不能为空!")
+  private String phone;
 
-    @NotBlank(message = "微信用户[openid]不能为空!")
-    private String openid;
+  @NotBlank(message = "微信用户[openid]不能为空!")
+  private String openid;
 
-    private String appId;
+  private String appId;
 
-    private SystemType system;
+  private SystemType system;
 
-    public WxRequest appId(String appId) {
-        this.setAppId(appId);
-        return this;
-    }
+  public WxRequest appId(String appId) {
+    this.setAppId(appId);
+    return this;
+  }
 
-    public WxRequest system(SystemType system) {
-        this.setSystem(system);
-        return this;
-    }
+  public WxRequest system(SystemType system) {
+    this.setSystem(system);
+    return this;
+  }
 
-    public WxRequest toRegister() {
-        this.setUsername(getPhone());
-        this.setEnabled(true);
-        return this;
-    }
+  public WxRequest toRegister() {
+    this.setUsername(getPhone());
+    this.setEnabled(true);
+    return this;
+  }
 }

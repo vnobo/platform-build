@@ -27,33 +27,38 @@ import java.util.Map;
 @AllArgsConstructor
 public class Configuration implements Serializable {
 
-    private Long id;
+  private Long id;
 
-    private Integer tenantId;
+  private Integer tenantId;
 
-    private String tenantCode;
+  private String tenantCode;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private SystemType system;
+  private SystemType system;
 
-    private JsonNode configuration;
+  private JsonNode configuration;
 
-    private LocalDateTime createdTime;
+  private LocalDateTime createdTime;
 
-    private LocalDateTime updatedTime;
+  private LocalDateTime updatedTime;
 
-    public static Configuration of(Integer tenantId, String tenantCode, String type, SystemType system) {
-        return Configuration.builder().tenantId(tenantId).tenantCode(tenantCode)
-                .type(type).system(system).build();
-    }
+  public static Configuration of(
+      Integer tenantId, String tenantCode, String type, SystemType system) {
+    return Configuration.builder()
+        .tenantId(tenantId)
+        .tenantCode(tenantCode)
+        .type(type)
+        .system(system)
+        .build();
+  }
 
-    public MultiValueMap<String, String> toQueryParams() {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
-        Map<String, Object> objectMap = BeanUtil.beanToMap(this, false, true);
-        objectMap.forEach((k, v) -> multiValueMap.set(k, String.valueOf(v)));
-        return multiValueMap;
-    }
+  public MultiValueMap<String, String> toQueryParams() {
+    MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
+    Map<String, Object> objectMap = BeanUtil.beanToMap(this, false, true);
+    objectMap.forEach((k, v) -> multiValueMap.set(k, String.valueOf(v)));
+    return multiValueMap;
+  }
 }

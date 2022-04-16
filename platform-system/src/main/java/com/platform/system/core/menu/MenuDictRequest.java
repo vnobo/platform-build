@@ -29,62 +29,62 @@ import java.util.Set;
 @Data
 public class MenuDictRequest extends MenuDict {
 
-    @NotBlank(message = "权限名[authority]不能为空!")
-    private String authority;
+  @NotBlank(message = "权限名[authority]不能为空!")
+  private String authority;
 
-    @NotBlank(message = "菜单名[name]不能为空!")
-    private String name;
+  @NotBlank(message = "菜单名[name]不能为空!")
+  private String name;
 
-    @NotNull(message = "系统类型[system]不能为空!")
-    @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
-    private SystemType system;
+  @NotNull(message = "系统类型[system]不能为空!")
+  @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
+  private SystemType system;
 
-    @Valid
-    private Set<MethodPermissions> permissions;
+  @Valid private Set<MethodPermissions> permissions;
 
-    @Min(value = 0, message = "权限父级ID[pid]最小为0!")
-    @Max(Integer.MAX_VALUE)
-    private Integer pid;
+  @Min(value = 0, message = "权限父级ID[pid]最小为0!")
+  @Max(Integer.MAX_VALUE)
+  private Integer pid;
 
-    public MenuDictRequest system(SystemType system) {
-        this.setSystem(system);
-        return this;
+  public MenuDictRequest system(SystemType system) {
+    this.setSystem(system);
+    return this;
+  }
+
+  public MenuDict toDict() {
+    MenuDict menuDict = new MenuDict();
+    BeanUtils.copyProperties(this, menuDict);
+    if (!ObjectUtils.isEmpty(this.getPermissions())) {
+      ObjectNode objectNode =
+          ObjectUtils.isEmpty(this.getExtend())
+              ? new ObjectMapper().createObjectNode()
+              : this.getExtend().deepCopy();
+      JsonNode permissions = new ObjectMapper().convertValue(this.getPermissions(), JsonNode.class);
+      objectNode.set("permissions", permissions);
+      menuDict.setExtend(objectNode);
+    }
+    return menuDict;
+  }
+
+  public Criteria toCriteria() {
+
+    Criteria authorityDict = Criteria.where("system").is(getSystem());
+
+    if (!ObjectUtils.isEmpty(getPid())) {
+      authorityDict = authorityDict.and("pid").is(getPid());
     }
 
-    public MenuDict toDict() {
-        MenuDict menuDict = new MenuDict();
-        BeanUtils.copyProperties(this, menuDict);
-        if (!ObjectUtils.isEmpty(this.getPermissions())) {
-            ObjectNode objectNode = ObjectUtils.isEmpty(this.getExtend()) ?
-                    new ObjectMapper().createObjectNode() : this.getExtend().deepCopy();
-            JsonNode permissions = new ObjectMapper().convertValue(this.getPermissions(), JsonNode.class);
-            objectNode.set("permissions", permissions);
-            menuDict.setExtend(objectNode);
-        }
-        return menuDict;
+    if (!ObjectUtils.isEmpty(getName())) {
+      authorityDict = authorityDict.and("name").like("%" + getName() + "%");
     }
 
-    public Criteria toCriteria() {
-
-        Criteria authorityDict = Criteria.where("system").is(getSystem());
-
-        if (!ObjectUtils.isEmpty(getPid())) {
-            authorityDict = authorityDict.and("pid").is(getPid());
-        }
-
-        if (!ObjectUtils.isEmpty(getName())) {
-            authorityDict = authorityDict.and("name").like("%" + getName() + "%");
-        }
-
-        if (!ObjectUtils.isEmpty(getAuthority())) {
-            authorityDict = authorityDict.and("authority").like("%" + getName() + "%");
-        }
-
-        if (!ObjectUtils.isEmpty(getId())) {
-            authorityDict = authorityDict.and("id").is(getId());
-        }
-
-        return authorityDict;
+    if (!ObjectUtils.isEmpty(getAuthority())) {
+      authorityDict = authorityDict.and("authority").like("%" + getName() + "%");
     }
 
+    if (!ObjectUtils.isEmpty(getId())) {
+      authorityDict = authorityDict.and("id").is(getId());
+    }
+
+    return authorityDict;
+  }
 }

@@ -29,35 +29,35 @@ import java.util.List;
 @EnableR2dbcAuditing
 public class R2dbcConfiguration extends AbstractR2dbcConfiguration {
 
-    protected ObjectMapper objectMapper;
+  protected ObjectMapper objectMapper;
 
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+  @Autowired
+  public void setObjectMapper(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public ReactiveAuditorAware<UserAuditor> creatorsAuditorProvider() {
-        return new ReactiveUserAuditorAware();
-    }
+  @Bean
+  @ConditionalOnMissingBean
+  public ReactiveAuditorAware<UserAuditor> creatorsAuditorProvider() {
+    return new ReactiveUserAuditorAware();
+  }
 
-    @Override
-    public ConnectionFactory connectionFactory() {
-        return ConnectionFactories.get("r2dbc:..");
-    }
+  @Override
+  public ConnectionFactory connectionFactory() {
+    return ConnectionFactories.get("r2dbc:..");
+  }
 
-    @Override
-    public List<Object> getCustomConverters() {
-        List<Object> converters = new ArrayList<>();
-        converters.add(new SetReadConverter(this.objectMapper));
-        converters.add(new SetWriteConverter(this.objectMapper));
-        converters.add(new JsonNodeReadConverter(this.objectMapper));
-        converters.add(new JsonNodeWriteConverter(this.objectMapper));
-        converters.add(new UserAuditorReadConverter());
-        converters.add(new UserAuditorWriteConverter());
-        converters.add(new SystemReadConverter());
-        converters.add(new SystemWriteConverter());
-        return converters;
-    }
+  @Override
+  public List<Object> getCustomConverters() {
+    List<Object> converters = new ArrayList<>();
+    converters.add(new SetReadConverter(this.objectMapper));
+    converters.add(new SetWriteConverter(this.objectMapper));
+    converters.add(new JsonNodeReadConverter(this.objectMapper));
+    converters.add(new JsonNodeWriteConverter(this.objectMapper));
+    converters.add(new UserAuditorReadConverter());
+    converters.add(new UserAuditorWriteConverter());
+    converters.add(new SystemReadConverter());
+    converters.add(new SystemWriteConverter());
+    return converters;
+  }
 }

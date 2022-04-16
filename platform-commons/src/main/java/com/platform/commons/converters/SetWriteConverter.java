@@ -24,17 +24,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SetWriteConverter implements Converter<Set<Object>, Json> {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public Json convert(@NonNull Set<Object> source) {
-        if (ObjectUtils.isEmpty(source)) {
-            return Json.of("[]");
-        }
-        try {
-            return Json.of(this.objectMapper.writeValueAsString(source));
-        } catch (JsonProcessingException e) {
-            throw RestJsonProcessingException.withError(e);
-        }
+  @Override
+  public Json convert(@NonNull Set<Object> source) {
+    if (ObjectUtils.isEmpty(source)) {
+      return Json.of("[]");
     }
+    try {
+      return Json.of(this.objectMapper.writeValueAsString(source));
+    } catch (JsonProcessingException e) {
+      throw RestJsonProcessingException.withError(e);
+    }
+  }
 }

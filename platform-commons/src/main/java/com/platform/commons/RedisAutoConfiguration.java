@@ -24,19 +24,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @AutoConfigureAfter(RedisReactiveAutoConfiguration.class)
 public class RedisAutoConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean
-    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(ReactiveRedisConnectionFactory factory,
-                                                                       ResourceLoader resourceLoader) {
-        StringRedisSerializer keySerializer = new StringRedisSerializer();
-        JdkSerializationRedisSerializer jdkSerializer = new JdkSerializationRedisSerializer(
-                resourceLoader.getClassLoader());
-        RedisSerializationContext.RedisSerializationContextBuilder<String, Object> builder =
-                RedisSerializationContext.newSerializationContext(keySerializer);
-        RedisSerializationContext<String, Object> context = builder.value(jdkSerializer)
-                .hashKey(jdkSerializer).hashValue(jdkSerializer).build();
-        return new ReactiveRedisTemplate<>(factory, context);
-    }
-
-
+  @Bean
+  @ConditionalOnMissingBean
+  public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(
+      ReactiveRedisConnectionFactory factory, ResourceLoader resourceLoader) {
+    StringRedisSerializer keySerializer = new StringRedisSerializer();
+    JdkSerializationRedisSerializer jdkSerializer =
+        new JdkSerializationRedisSerializer(resourceLoader.getClassLoader());
+    RedisSerializationContext.RedisSerializationContextBuilder<String, Object> builder =
+        RedisSerializationContext.newSerializationContext(keySerializer);
+    RedisSerializationContext<String, Object> context =
+        builder.value(jdkSerializer).hashKey(jdkSerializer).hashValue(jdkSerializer).build();
+    return new ReactiveRedisTemplate<>(factory, context);
+  }
 }

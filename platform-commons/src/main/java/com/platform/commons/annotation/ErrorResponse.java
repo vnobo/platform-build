@@ -20,36 +20,36 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ErrorResponse implements Serializable {
 
-    private UUID requestId;
+  private UUID requestId;
 
-    private LocalDateTime time;
+  private LocalDateTime time;
 
-    private String message;
+  private String message;
 
-    private int code;
+  private int code;
 
-    private Object errors;
+  private Object errors;
 
-    @Builder
-    public ErrorResponse(String message, Object errors) {
-        this.message = message;
-        this.errors = errors;
-        this.requestId = UUID.randomUUID();
-        this.time = LocalDateTime.now();
-    }
+  @Builder
+  public ErrorResponse(String message, Object errors) {
+    this.message = message;
+    this.errors = errors;
+    this.requestId = UUID.randomUUID();
+    this.time = LocalDateTime.now();
+  }
 
-    public static ErrorResponse withDefault(Object errors) {
-        return new ErrorResponse("服务器运行时错误!", errors);
-    }
+  public static ErrorResponse withDefault(Object errors) {
+    return new ErrorResponse("服务器运行时错误!", errors);
+  }
 
-    public static ErrorResponse withErrors(String message, Object errors) {
-        ErrorResponse response = withDefault(errors);
-        response.setMessage(message);
-        return response;
-    }
+  public static ErrorResponse withErrors(String message, Object errors) {
+    ErrorResponse response = withDefault(errors);
+    response.setMessage(message);
+    return response;
+  }
 
-    public ErrorResponse code(int status) {
-        this.code = status;
-        return this;
-    }
+  public ErrorResponse code(int status) {
+    this.code = status;
+    return this;
+  }
 }

@@ -13,8 +13,8 @@ import org.springframework.lang.NonNull;
  */
 @ReadingConverter
 public class SystemReadConverter implements Converter<String, SystemType> {
-    @Override
-    public SystemType convert(@NonNull String source) {
-        return SystemType.ofValue(source);
-    }
+  @Override
+  public SystemType convert(@NonNull String source) {
+    return SystemType.ofValue(source);
+  }
 }

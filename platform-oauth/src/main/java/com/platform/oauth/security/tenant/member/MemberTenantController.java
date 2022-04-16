@@ -20,26 +20,25 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberTenantController {
 
-    private final MemberTenantManager memberTenantManager;
+  private final MemberTenantManager memberTenantManager;
 
-    @GetMapping("search")
-    public Flux<MemberTenantOnly> search(MemberTenantRequest request) {
-        return this.memberTenantManager.search(request);
-    }
+  @GetMapping("search")
+  public Flux<MemberTenantOnly> search(MemberTenantRequest request) {
+    return this.memberTenantManager.search(request);
+  }
 
-    @PostMapping("batch")
-    public Flux<MemberTenantOnly> batch(@RequestBody MemberTenantRequest request) {
-        return this.memberTenantManager.batch(request);
-    }
+  @PostMapping("batch")
+  public Flux<MemberTenantOnly> batch(@RequestBody MemberTenantRequest request) {
+    return this.memberTenantManager.batch(request);
+  }
 
-    @PostMapping
-    public Mono<MemberTenantOnly> post(@Valid @RequestBody MemberTenantRequest request) {
-        return this.memberTenantManager.operation(request);
-    }
+  @PostMapping
+  public Mono<MemberTenantOnly> post(@Valid @RequestBody MemberTenantRequest request) {
+    return this.memberTenantManager.operation(request);
+  }
 
-    @DeleteMapping
-    public Mono<Void> delete(@RequestBody MemberTenantRequest request) {
-        return this.memberTenantManager.delete(request);
-    }
-
+  @DeleteMapping
+  public Mono<Void> delete(@RequestBody MemberTenantRequest request) {
+    return this.memberTenantManager.delete(request);
+  }
 }

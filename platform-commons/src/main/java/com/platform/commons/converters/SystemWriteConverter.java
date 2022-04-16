@@ -13,8 +13,8 @@ import org.springframework.data.convert.WritingConverter;
 @WritingConverter
 public class SystemWriteConverter implements Converter<SystemType, String> {
 
-    @Override
-    public String convert(SystemType source) {
-        return source.name();
-    }
+  @Override
+  public String convert(SystemType source) {
+    return source.name();
+  }
 }

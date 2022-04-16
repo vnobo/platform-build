@@ -25,52 +25,55 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({Session.class, WebSessionManager.class, Mono.class})
-@AutoConfigureBefore({org.springframework.boot.autoconfigure.session.SessionAutoConfiguration.class, WebSessionIdResolverAutoConfiguration.class})
+@AutoConfigureBefore({
+  org.springframework.boot.autoconfigure.session.SessionAutoConfiguration.class,
+  WebSessionIdResolverAutoConfiguration.class
+})
 public class SessionAutoConfiguration {
 
-    @Bean
-    public WebSessionIdResolver webSessionIdResolver() {
-        HeaderWebSessionIdResolver resolver = new CustomHeaderWebSessionIdResolver();
-        resolver.setHeaderName("X-Auth-Token");
-        return resolver;
+  @Bean
+  public WebSessionIdResolver webSessionIdResolver() {
+    HeaderWebSessionIdResolver resolver = new CustomHeaderWebSessionIdResolver();
+    resolver.setHeaderName("X-Auth-Token");
+    return resolver;
+  }
+
+  static class CustomHeaderWebSessionIdResolver extends HeaderWebSessionIdResolver {
+    private final String xRequestedWith = "X-Requested-With";
+    private final String xmlHttpRequest = "XMLHttpRequest";
+    private final CookieWebSessionIdResolver cookieWebSessionIdResolver =
+        new CookieWebSessionIdResolver();
+
+    @Override
+    public void setSessionId(ServerWebExchange exchange, @NonNull String id) {
+      List<String> requestedWith =
+          exchange.getRequest().getHeaders().getOrDefault(xRequestedWith, Collections.emptyList());
+      if (requestedWith.contains(xmlHttpRequest)) {
+        super.setSessionId(exchange, id);
+      } else {
+        cookieWebSessionIdResolver.setSessionId(exchange, id);
+      }
     }
 
-    static class CustomHeaderWebSessionIdResolver extends HeaderWebSessionIdResolver {
-        private final String xRequestedWith = "X-Requested-With";
-        private final String xmlHttpRequest = "XMLHttpRequest";
-        private final CookieWebSessionIdResolver cookieWebSessionIdResolver = new CookieWebSessionIdResolver();
-
-        @Override
-        public void setSessionId(ServerWebExchange exchange, @NonNull String id) {
-            List<String> requestedWith = exchange.getRequest().getHeaders()
-                    .getOrDefault(xRequestedWith, Collections.emptyList());
-            if (requestedWith.contains(xmlHttpRequest)) {
-                super.setSessionId(exchange, id);
-            } else {
-                cookieWebSessionIdResolver.setSessionId(exchange, id);
-            }
-        }
-
-        @Override
-        public List<String> resolveSessionIds(@NonNull ServerWebExchange exchange) {
-            List<String> requestedWith = exchange.getRequest().getHeaders()
-                    .getOrDefault(xRequestedWith, Collections.emptyList());
-            if (requestedWith.contains(xmlHttpRequest)) {
-                return super.resolveSessionIds(exchange);
-            }
-            return cookieWebSessionIdResolver.resolveSessionIds(exchange);
-        }
-
-        @Override
-        public void expireSession(ServerWebExchange exchange) {
-            List<String> requestedWith = exchange.getRequest().getHeaders()
-                    .getOrDefault(xRequestedWith, Collections.emptyList());
-            if (requestedWith.contains(xmlHttpRequest)) {
-                super.expireSession(exchange);
-            } else {
-                cookieWebSessionIdResolver.expireSession(exchange);
-            }
-
-        }
+    @Override
+    public List<String> resolveSessionIds(@NonNull ServerWebExchange exchange) {
+      List<String> requestedWith =
+          exchange.getRequest().getHeaders().getOrDefault(xRequestedWith, Collections.emptyList());
+      if (requestedWith.contains(xmlHttpRequest)) {
+        return super.resolveSessionIds(exchange);
+      }
+      return cookieWebSessionIdResolver.resolveSessionIds(exchange);
     }
+
+    @Override
+    public void expireSession(ServerWebExchange exchange) {
+      List<String> requestedWith =
+          exchange.getRequest().getHeaders().getOrDefault(xRequestedWith, Collections.emptyList());
+      if (requestedWith.contains(xmlHttpRequest)) {
+        super.expireSession(exchange);
+      } else {
+        cookieWebSessionIdResolver.expireSession(exchange);
+      }
+    }
+  }
 }

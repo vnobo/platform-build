@@ -17,17 +17,16 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class GroupOnly extends Group implements Serializable {
 
-    private List<String> authorities;
+  private List<String> authorities;
 
-    public static GroupOnly withGroup(Group group) {
-        GroupOnly groupOnly = new GroupOnly();
-        BeanUtils.copyProperties(group, groupOnly);
-        return groupOnly;
-    }
+  public static GroupOnly withGroup(Group group) {
+    GroupOnly groupOnly = new GroupOnly();
+    BeanUtils.copyProperties(group, groupOnly);
+    return groupOnly;
+  }
 
-    public GroupOnly authorities(List<String> authorities) {
-        this.setAuthorities(authorities);
-        return this;
-    }
-
+  public GroupOnly authorities(List<String> authorities) {
+    this.setAuthorities(authorities);
+    return this;
+  }
 }

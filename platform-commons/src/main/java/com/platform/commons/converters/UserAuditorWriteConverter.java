@@ -16,9 +16,8 @@ import org.springframework.data.convert.WritingConverter;
 @WritingConverter
 public class UserAuditorWriteConverter implements Converter<UserAuditor, Long> {
 
-    @Override
-    public Long convert(@NonNull UserAuditor source) {
-        return source.getUserId();
-    }
-
+  @Override
+  public Long convert(@NonNull UserAuditor source) {
+    return source.getUserId();
+  }
 }

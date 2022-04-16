@@ -33,6 +33,4 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass({R2dbcDataAutoConfiguration.class, ConnectionFactory.class})
 @AutoConfigureAfter(R2dbcDataAutoConfiguration.class)
 @Import({R2dbcConfiguration.class})
-public class R2dbcAutoConfiguration {
-
-}
+public class R2dbcAutoConfiguration {}

@@ -18,15 +18,15 @@ import java.io.Serializable;
 @Data
 public class RegisterRequest extends UserRequest implements Serializable {
 
-    @Schema(title = "微信注册微信用户openid")
-    private String openid;
+  @Schema(title = "微信注册微信用户openid")
+  private String openid;
 
-    @Schema(title = "微信注册微信APPID")
-    private String appId;
+  @Schema(title = "微信注册微信APPID")
+  private String appId;
 
-    public UserRequest toUserRequest() {
-        UserRequest userRequest = new UserRequest();
-        BeanUtils.copyProperties(this, userRequest);
-        return userRequest;
-    }
+  public UserRequest toUserRequest() {
+    UserRequest userRequest = new UserRequest();
+    BeanUtils.copyProperties(this, userRequest);
+    return userRequest;
+  }
 }

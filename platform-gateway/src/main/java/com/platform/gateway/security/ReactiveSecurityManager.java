@@ -25,43 +25,48 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordService {
 
-    private final AuthClient authClient;
-    private final CountryClient countryClient;
+  private final AuthClient authClient;
+  private final CountryClient countryClient;
 
-    @Override
-    public Mono<UserDetails> updatePassword(UserDetails userDetails, String newPassword) {
-        return this.authClient.changePassword(userDetails.getUsername(), userDetails.getPassword())
-                .map(SecurityTokenHelper::buildUserDetails)
-                .map(userDetails1 -> withNewPassword(userDetails1, newPassword));
-    }
+  @Override
+  public Mono<UserDetails> updatePassword(UserDetails userDetails, String newPassword) {
+    return this.authClient
+        .changePassword(userDetails.getUsername(), userDetails.getPassword())
+        .map(SecurityTokenHelper::buildUserDetails)
+        .map(userDetails1 -> withNewPassword(userDetails1, newPassword));
+  }
 
-    private UserDetails withNewPassword(UserDetails userDetails, String newPassword) {
-        // @formatter:off
-        return org.springframework.security.core.userdetails.User.withUserDetails(userDetails)
-                .password(newPassword)
-                .build();
-        // @formatter:on
-    }
+  private UserDetails withNewPassword(UserDetails userDetails, String newPassword) {
+    // @formatter:off
+    return org.springframework.security.core.userdetails.User.withUserDetails(userDetails)
+        .password(newPassword)
+        .build();
+    // @formatter:on
+  }
 
-    public Mono<Authentication> winXinLogin(WxRequest wxRequest) {
-        return this.countryClient.login(wxRequest.getPhone())
-                .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
-                .map(SecurityTokenHelper::buildUserDetails)
-                .map(userDetail -> new UsernamePasswordAuthenticationToken(userDetail,
-                        userDetail.getPassword(), userDetail.getAuthorities()));
-    }
+  public Mono<Authentication> winXinLogin(WxRequest wxRequest) {
+    return this.countryClient
+        .login(wxRequest.getPhone())
+        .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
+        .map(SecurityTokenHelper::buildUserDetails)
+        .map(
+            userDetail ->
+                new UsernamePasswordAuthenticationToken(
+                    userDetail, userDetail.getPassword(), userDetail.getAuthorities()));
+  }
 
-    public Mono<Authentication> appLogin(LoginRequest loginRequest) {
-        return this.countryClient.login(loginRequest.getPhone())
-                .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
-                .map(SecurityTokenHelper::buildUserDetails)
-                .map(userDetail -> new UsernamePasswordAuthenticationToken(userDetail,
-                        userDetail.getPassword(), userDetail.getAuthorities()));
-    }
+  public Mono<Authentication> appLogin(LoginRequest loginRequest) {
+    return this.countryClient
+        .login(loginRequest.getPhone())
+        .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
+        .map(SecurityTokenHelper::buildUserDetails)
+        .map(
+            userDetail ->
+                new UsernamePasswordAuthenticationToken(
+                    userDetail, userDetail.getPassword(), userDetail.getAuthorities()));
+  }
 
-
-    public Mono<SimplerSecurityDetails> tenantCut(TenantCutRequest cutRequest) {
-        return this.authClient.tenantCut(cutRequest);
-    }
-
+  public Mono<SimplerSecurityDetails> tenantCut(TenantCutRequest cutRequest) {
+    return this.authClient.tenantCut(cutRequest);
+  }
 }

@@ -25,19 +25,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WxMaUserService {
 
-    private final ReactiveSecurityManager reactiveUserDetailsService;
+  private final ReactiveSecurityManager reactiveUserDetailsService;
 
-    /**
-     * 微信 匿名登录用户
-     *
-     * @param session  微信 openid
-     * @param exchange 会话
-     * @return 登录token
-     */
-    public Mono<AuthenticationToken> anonymousLogin(WxMaJscode2SessionResult session, ServerWebExchange exchange) {
+  /**
+   * 微信 匿名登录用户
+   *
+   * @param session 微信 openid
+   * @param exchange 会话
+   * @return 登录token
+   */
+  public Mono<AuthenticationToken> anonymousLogin(
+      WxMaJscode2SessionResult session, ServerWebExchange exchange) {
 
-        Mono<UserDetails> userDetails = Mono.just(org.springframework.security.core.userdetails.User
-                .withUsername("anonymous#" + session.getOpenid())
+    Mono<UserDetails> userDetails =
+        Mono.just(
+            org.springframework.security.core.userdetails.User.withUsername(
+                    "anonymous#" + session.getOpenid())
                 .authorities("ROLE_GUEST")
                 .password(UUID.randomUUID().toString())
                 .disabled(false)
@@ -45,23 +48,28 @@ public class WxMaUserService {
                 .credentialsExpired(false)
                 .accountLocked(false)
                 .build());
-        return userDetails.map(userDetail -> new UsernamePasswordAuthenticationToken(userDetail, userDetail.getPassword()
-                        , userDetail.getAuthorities()))
-                .flatMap(authentication -> SecurityTokenHelper.authenticationTokenMono(exchange, authentication));
-    }
+    return userDetails
+        .map(
+            userDetail ->
+                new UsernamePasswordAuthenticationToken(
+                    userDetail, userDetail.getPassword(), userDetail.getAuthorities()))
+        .flatMap(
+            authentication ->
+                SecurityTokenHelper.authenticationTokenMono(exchange, authentication));
+  }
 
-    /**
-     * 微信注册给定默认用户组
-     *
-     * @param wxRequest 微信登录用户
-     * @param exchange  会话
-     * @return 默认登录token实力
-     */
-    public Mono<AuthenticationToken> login(WxRequest wxRequest, ServerWebExchange exchange) {
-        return this.reactiveUserDetailsService.winXinLogin(wxRequest
-                        .system(SecurityTokenHelper.systemForHeader(exchange)))
-                .flatMap(authentication -> SecurityTokenHelper.authenticationTokenMono(exchange, authentication))
-                .delayUntil(res -> SecurityTokenHelper.removeToken(exchange));
-    }
-
+  /**
+   * 微信注册给定默认用户组
+   *
+   * @param wxRequest 微信登录用户
+   * @param exchange 会话
+   * @return 默认登录token实力
+   */
+  public Mono<AuthenticationToken> login(WxRequest wxRequest, ServerWebExchange exchange) {
+    return this.reactiveUserDetailsService
+        .winXinLogin(wxRequest.system(SecurityTokenHelper.systemForHeader(exchange)))
+        .flatMap(
+            authentication -> SecurityTokenHelper.authenticationTokenMono(exchange, authentication))
+        .delayUntil(res -> SecurityTokenHelper.removeToken(exchange));
+  }
 }

@@ -26,34 +26,35 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class SecurityController {
 
-    private final SecurityManager userDetailsService;
+  private final SecurityManager userDetailsService;
 
-    @PostMapping("register")
-    public Mono<LoginSecurityDetails> register(@RequestBody RegisterRequest regRequest) {
-        Assert.isTrue(ReUtil.isMatch("^[a-zA-Z0-9_-]{5,16}$", regRequest.getUsername())
-                , "登录用户名[username]必须为5到16位（字母，数字，下划线，减号）!");
-        return this.userDetailsService.register(regRequest);
-    }
+  @PostMapping("register")
+  public Mono<LoginSecurityDetails> register(@RequestBody RegisterRequest regRequest) {
+    Assert.isTrue(
+        ReUtil.isMatch("^[a-zA-Z0-9_-]{5,16}$", regRequest.getUsername()),
+        "登录用户名[username]必须为5到16位（字母，数字，下划线，减号）!");
+    return this.userDetailsService.register(regRequest);
+  }
 
-    @GetMapping("login/{username}")
-    public Mono<LoginSecurityDetails> login(@PathVariable String username) {
-        return this.userDetailsService.login(username);
-    }
+  @GetMapping("login/{username}")
+  public Mono<LoginSecurityDetails> login(@PathVariable String username) {
+    return this.userDetailsService.login(username);
+  }
 
-    @GetMapping("load/security/{username}")
-    public Mono<SimplerSecurityDetails> loadSecurity(@PathVariable String username) {
-        return this.userDetailsService.loadSecurity(username);
-    }
+  @GetMapping("load/security/{username}")
+  public Mono<SimplerSecurityDetails> loadSecurity(@PathVariable String username) {
+    return this.userDetailsService.loadSecurity(username);
+  }
 
-    @PostMapping("tenant/cut")
-    public Mono<SimplerSecurityDetails> tenantCut(@Valid @RequestBody MemberTenantRequest request) {
-        return this.userDetailsService.tenantCut(request);
-    }
+  @PostMapping("tenant/cut")
+  public Mono<SimplerSecurityDetails> tenantCut(@Valid @RequestBody MemberTenantRequest request) {
+    return this.userDetailsService.tenantCut(request);
+  }
 
-    @GetMapping("me")
-    public Mono<SecurityDetails> me() {
-        return ReactiveSecurityDetailsHolder.getContext()
-                .delayUntil(securityDetails -> this.userDetailsService.loginSuccess(securityDetails.getUsername()));
-    }
-
+  @GetMapping("me")
+  public Mono<SecurityDetails> me() {
+    return ReactiveSecurityDetailsHolder.getContext()
+        .delayUntil(
+            securityDetails -> this.userDetailsService.loginSuccess(securityDetails.getUsername()));
+  }
 }

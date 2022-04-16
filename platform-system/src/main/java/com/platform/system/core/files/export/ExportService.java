@@ -32,62 +32,70 @@ import java.util.Locale;
 @Service
 public class ExportService {
 
-    private final Configuration configuration;
-    private final WordTemplateLoader wordTemplateLoader;
+  private final Configuration configuration;
+  private final WordTemplateLoader wordTemplateLoader;
 
-    public ExportService(ExportProperties exportProperties,
-                         Configuration configuration,
-                         WordTemplateLoader wordTemplateLoader) {
-        this.configuration = configuration;
-        this.wordTemplateLoader = wordTemplateLoader;
-        this.configuration.setTemplateLoader(new ExcelTemplateLoader(exportProperties.getTemplatePath()));
-        this.configuration.setDefaultEncoding("utf-8");
-        this.configuration.setLocale(Locale.CHINA);
+  public ExportService(
+      ExportProperties exportProperties,
+      Configuration configuration,
+      WordTemplateLoader wordTemplateLoader) {
+    this.configuration = configuration;
+    this.wordTemplateLoader = wordTemplateLoader;
+    this.configuration.setTemplateLoader(
+        new ExcelTemplateLoader(exportProperties.getTemplatePath()));
+    this.configuration.setDefaultEncoding("utf-8");
+    this.configuration.setLocale(Locale.CHINA);
+  }
+
+  public Resource processExcel(ExportRequest wordRequest) {
+    try {
+      ByteArrayOutputStream writerFile = new ByteArrayOutputStream(64);
+      Writer writer = new OutputStreamWriter(writerFile, StandardCharsets.UTF_8);
+
+      Template template;
+      try {
+        template =
+            this.configuration.getTemplate(wordRequest.getTenantId() + "/" + wordRequest.getName());
+      } catch (IOException | RestServerException e) {
+        template = this.configuration.getTemplate(wordRequest.getName());
+      }
+      template.process(wordRequest.getParams(), writer);
+
+      return new ByteArrayResource(writerFile.toByteArray());
+    } catch (TemplateException | IOException e) {
+      log.error("template request map: {},errMsg: {}", wordRequest.getParams(), e.getMessage());
+      throw ExportException.withMsg(1501, e.getMessage());
     }
+  }
 
-    public Resource processExcel(ExportRequest wordRequest) {
-        try {
-            ByteArrayOutputStream writerFile = new ByteArrayOutputStream(64);
-            Writer writer = new OutputStreamWriter(writerFile, StandardCharsets.UTF_8);
+  public Mono<Resource> processWord(ExportRequest wordRequest) {
+    return this.wordTemplateLoader
+        .loadTemplate(wordRequest.getName())
+        .map(
+            templateResource -> {
+              try {
+                LoopRowTableRenderPolicy loop = new LoopRowTableRenderPolicy();
+                ParagraphRenderPolicy paragraph = new ParagraphRenderPolicy();
+                Configure config =
+                    Configure.builder()
+                        .bind("data", loop)
+                        .bind("text", paragraph)
+                        .useSpringEL(true)
+                        .build();
+                XWPFTemplate template =
+                    XWPFTemplate.compile(templateResource.getInputStream(), config)
+                        .render(wordRequest.getParams());
 
-            Template template;
-            try {
-                template = this.configuration.getTemplate(wordRequest.getTenantId() + "/" + wordRequest.getName());
-            } catch (IOException | RestServerException e) {
-                template = this.configuration.getTemplate(wordRequest.getName());
-            }
-            template.process(wordRequest.getParams(), writer);
+                ByteArrayOutputStream writerFile = new ByteArrayOutputStream(64);
+                template.writeAndClose(writerFile);
 
-            return new ByteArrayResource(writerFile.toByteArray());
-        } catch (TemplateException | IOException e) {
-            log.error("template request map: {},errMsg: {}", wordRequest.getParams(), e.getMessage());
-            throw ExportException.withMsg(1501, e.getMessage());
-        }
-    }
+                return new ByteArrayResource(writerFile.toByteArray());
 
-    public Mono<Resource> processWord(ExportRequest wordRequest) {
-        return this.wordTemplateLoader.loadTemplate(wordRequest.getName())
-                .map(templateResource -> {
-                    try {
-                        LoopRowTableRenderPolicy loop = new LoopRowTableRenderPolicy();
-                        ParagraphRenderPolicy paragraph = new ParagraphRenderPolicy();
-                        Configure config = Configure.builder()
-                                .bind("data", loop)
-                                .bind("text", paragraph)
-                                .useSpringEL(true).build();
-                        XWPFTemplate template = XWPFTemplate.compile(templateResource.getInputStream(), config)
-                                .render(wordRequest.getParams());
-
-                        ByteArrayOutputStream writerFile = new ByteArrayOutputStream(64);
-                        template.writeAndClose(writerFile);
-
-                        return new ByteArrayResource(writerFile.toByteArray());
-
-                    } catch (IOException e) {
-                        log.error("template request map: {},errMsg: {}", wordRequest.getParams(), e.getMessage());
-                        throw ExportException.withMsg(1501, e.getMessage());
-                    }
-                });
-    }
-
+              } catch (IOException e) {
+                log.error(
+                    "template request map: {},errMsg: {}", wordRequest.getParams(), e.getMessage());
+                throw ExportException.withMsg(1501, e.getMessage());
+              }
+            });
+  }
 }

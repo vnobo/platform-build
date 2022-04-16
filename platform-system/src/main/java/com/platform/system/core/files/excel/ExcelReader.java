@@ -36,51 +36,71 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExcelReader extends BaseAutoToolsUtil {
 
-    private final MinioFilesManager minioFilesManager;
+  private final MinioFilesManager minioFilesManager;
 
-    public Flux<ExcelReaderResult> reader(ReaderRequest request, FilePart filePart) {
-        String suffixName = FileNameUtil.getSuffix(filePart.filename());
-        if (!"xls".equals(suffixName)) {
-            return Flux.error(RestServerException.withMsg(1500, "文件格式不正确!必须是:[xls]"));
-        }
-        String fileName = "/upload/excel/" + request.getPrefix() + "/" + request.getTenantCode() + "/" + request.getName();
-        if (ObjectUtils.isEmpty(filePart)) {
-            throw RestServerException.withMsg(1500, "上传的文件[file]不能为空!");
-        }
-        return filePart.content().doOnNext(dataBuffer -> {
-            DataBuffer data = DefaultDataBufferFactory.sharedInstance.wrap(dataBuffer.asByteBuffer());
-            backMinio(fileName, data.asInputStream(), dataBuffer.readableByteCount());
-        }).flatMap(data -> {
-            List<Map<String, Object>> nodeList = new ArrayList<>();
-            AtomicReference<List<String>> headerList = new AtomicReference<>();
-            ExcelUtil.readBySax(data.asInputStream(), 0, (sheetIndex, rowIndex, rowList) -> {
-                log.debug("读取表格行,当前Sheet序号: {},当前行号: {},行数据: {}", sheetIndex, rowIndex, rowList);
-                if (rowIndex == 0) {
-                    headerList.set(rowList.stream().map(String::valueOf).collect(Collectors.toList()));
-                    return;
-                }
-                Map<String, Object> rowMap = new HashMap<>(10);
-                for (int x = 0; x < headerList.get().size(); x++) {
-                    if (x < rowList.size()) {
-                        rowMap.put(String.valueOf(x + 1), rowList.get(x));
-                    } else {
-                        rowMap.put(String.valueOf(x + 1), "");
+  public Flux<ExcelReaderResult> reader(ReaderRequest request, FilePart filePart) {
+    String suffixName = FileNameUtil.getSuffix(filePart.filename());
+    if (!"xls".equals(suffixName)) {
+      return Flux.error(RestServerException.withMsg(1500, "文件格式不正确!必须是:[xls]"));
+    }
+    String fileName =
+        "/upload/excel/"
+            + request.getPrefix()
+            + "/"
+            + request.getTenantCode()
+            + "/"
+            + request.getName();
+    if (ObjectUtils.isEmpty(filePart)) {
+      throw RestServerException.withMsg(1500, "上传的文件[file]不能为空!");
+    }
+    return filePart
+        .content()
+        .doOnNext(
+            dataBuffer -> {
+              DataBuffer data =
+                  DefaultDataBufferFactory.sharedInstance.wrap(dataBuffer.asByteBuffer());
+              backMinio(fileName, data.asInputStream(), dataBuffer.readableByteCount());
+            })
+        .flatMap(
+            data -> {
+              List<Map<String, Object>> nodeList = new ArrayList<>();
+              AtomicReference<List<String>> headerList = new AtomicReference<>();
+              ExcelUtil.readBySax(
+                  data.asInputStream(),
+                  0,
+                  (sheetIndex, rowIndex, rowList) -> {
+                    log.debug(
+                        "读取表格行,当前Sheet序号: {},当前行号: {},行数据: {}", sheetIndex, rowIndex, rowList);
+                    if (rowIndex == 0) {
+                      headerList.set(
+                          rowList.stream().map(String::valueOf).collect(Collectors.toList()));
+                      return;
                     }
-                }
-                nodeList.add(rowMap);
+                    Map<String, Object> rowMap = new HashMap<>(10);
+                    for (int x = 0; x < headerList.get().size(); x++) {
+                      if (x < rowList.size()) {
+                        rowMap.put(String.valueOf(x + 1), rowList.get(x));
+                      } else {
+                        rowMap.put(String.valueOf(x + 1), "");
+                      }
+                    }
+                    nodeList.add(rowMap);
+                  });
+              return Mono.just(ExcelReaderResult.withHeader(headerList.get()).data(nodeList));
             });
-            return Mono.just(ExcelReaderResult.withHeader(headerList.get()).data(nodeList));
-        });
-    }
+  }
 
-    private void backMinio(String fileName, InputStream inputStream, long size) {
-        try {
-            ObjectWriteResponse response =
-                    minioFilesManager.putObject(fileName, inputStream, size, 1024 * 1024 * 5);
-            log.debug("上传文件成功, version: {},etag: {},object: {}",
-                    response.versionId(), response.etag(), response.object());
-        } catch (RestServerException e) {
-            log.warn("文件上传服务错误,请检查Minio是否正常: {}", e.getMsg());
-        }
+  private void backMinio(String fileName, InputStream inputStream, long size) {
+    try {
+      ObjectWriteResponse response =
+          minioFilesManager.putObject(fileName, inputStream, size, 1024 * 1024 * 5);
+      log.debug(
+          "上传文件成功, version: {},etag: {},object: {}",
+          response.versionId(),
+          response.etag(),
+          response.object());
+    } catch (RestServerException e) {
+      log.warn("文件上传服务错误,请检查Minio是否正常: {}", e.getMsg());
     }
+  }
 }

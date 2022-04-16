@@ -14,17 +14,17 @@ import java.util.Map;
  */
 @Data
 public class ExcelReaderResult implements Serializable {
-    private List<String> header;
-    private List<Map<String, Object>> data;
+  private List<String> header;
+  private List<Map<String, Object>> data;
 
-    public static ExcelReaderResult withHeader(List<String> header) {
-        ExcelReaderResult readerResult = new ExcelReaderResult();
-        readerResult.setHeader(header);
-        return readerResult;
-    }
+  public static ExcelReaderResult withHeader(List<String> header) {
+    ExcelReaderResult readerResult = new ExcelReaderResult();
+    readerResult.setHeader(header);
+    return readerResult;
+  }
 
-    public ExcelReaderResult data(List<Map<String, Object>> data) {
-        this.setData(data);
-        return this;
-    }
+  public ExcelReaderResult data(List<Map<String, Object>> data) {
+    this.setData(data);
+    return this;
+  }
 }

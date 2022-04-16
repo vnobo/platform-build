@@ -12,6 +12,4 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration(proxyBeanMethods = false)
 @Import({CommonsAutoConfiguration.class})
-public class WebConfiguration {
-
-}
+public class WebConfiguration {}

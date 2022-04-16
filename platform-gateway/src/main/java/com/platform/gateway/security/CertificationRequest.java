@@ -17,24 +17,24 @@ import java.io.Serializable;
 @Data
 public class CertificationRequest implements Serializable {
 
-    @NotBlank(message = "实名认证[name]不能为空!")
-    @Pattern(regexp = "[\\u4e00-\\u9fa5]+", message = "用户实名[name]不能有其它符号!")
-    private String name;
+  @NotBlank(message = "实名认证[name]不能为空!")
+  @Pattern(regexp = "[\\u4e00-\\u9fa5]+", message = "用户实名[name]不能有其它符号!")
+  private String name;
 
-    @NotBlank(message = "实名认证[tenantCode]不能为空!")
-    private String tenantCode;
+  @NotBlank(message = "实名认证[tenantCode]不能为空!")
+  private String tenantCode;
 
-    @NotBlank(message = "实名认证[idCard]不能为空!")
-    private String idCard;
+  @NotBlank(message = "实名认证[idCard]不能为空!")
+  private String idCard;
 
-    private JsonNode extend;
+  private JsonNode extend;
 
-    public String affirmIdCard() {
-        if (StringUtils.hasLength(this.idCard)) {
-            if (this.idCard.length() > 18) {
-                return this.idCard.substring(0, 18);
-            }
-        }
-        return this.idCard;
+  public String affirmIdCard() {
+    if (StringUtils.hasLength(this.idCard)) {
+      if (this.idCard.length() > 18) {
+        return this.idCard.substring(0, 18);
+      }
     }
+    return this.idCard;
+  }
 }

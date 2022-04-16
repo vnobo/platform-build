@@ -15,15 +15,11 @@ import javax.validation.constraints.NotEmpty;
 @ConfigurationProperties("minio")
 public class MinioProperties {
 
-    @NotEmpty
-    private String endpoint;
+  @NotEmpty private String endpoint;
 
-    @NotEmpty
-    private String accessKey;
+  @NotEmpty private String accessKey;
 
-    @NotEmpty
-    private String secretKey;
+  @NotEmpty private String secretKey;
 
-    private String bucketName;
-
+  private String bucketName;
 }

@@ -11,15 +11,16 @@ import com.platform.commons.annotation.RestServerException;
  */
 public class RestJsonProcessingException extends RestServerException {
 
-    public RestJsonProcessingException(JsonProcessingException jsonProcessingException) {
-        this(1101, jsonProcessingException);
-    }
+  public RestJsonProcessingException(JsonProcessingException jsonProcessingException) {
+    this(1101, jsonProcessingException);
+  }
 
-    public RestJsonProcessingException(int status, Object msg) {
-        super(status, msg);
-    }
+  public RestJsonProcessingException(int status, Object msg) {
+    super(status, msg);
+  }
 
-    public static RestJsonProcessingException withError(JsonProcessingException jsonProcessingException) {
-        return new RestJsonProcessingException(jsonProcessingException);
-    }
+  public static RestJsonProcessingException withError(
+      JsonProcessingException jsonProcessingException) {
+    return new RestJsonProcessingException(jsonProcessingException);
+  }
 }

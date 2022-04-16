@@ -10,7 +10,7 @@ import com.platform.commons.annotation.RestServerException;
  */
 public class ExportException extends RestServerException {
 
-    public ExportException(int status, Object msg) {
-        super(status, msg);
-    }
+  public ExportException(int status, Object msg) {
+    super(status, msg);
+  }
 }

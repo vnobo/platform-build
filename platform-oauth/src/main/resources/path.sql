@@ -21,7 +21,8 @@ alter table se_authority_dict
     add column system varchar(30) not null default 'poverty';
 
 alter table se_authority_dict
-    drop constraint se_authority_dict_authority_key;
+drop
+constraint se_authority_dict_authority_key;
 alter table se_authority_dict
     add unique (authority, system);
 
@@ -35,10 +36,12 @@ alter table sys_custom_column
     rename to sys_custom_column_bak;
 
 alter table sys_custom_column_bak
-    drop constraint sys_custom_column_pkey;
+drop
+constraint sys_custom_column_pkey;
 
 alter table sys_custom_column_bak
-    drop constraint sys_custom_column_tenant_id_user_id_prop_name_label_categor_key;
+drop
+constraint sys_custom_column_tenant_id_user_id_prop_name_label_categor_key;
 
 drop index idx_sys_custom_column_extend_gin;
 
@@ -76,36 +79,64 @@ create table sys_custom_column
 );
 
 CREATE INDEX idx_sys_custom_column_extend_gin ON sys_custom_column USING gin (extend);
-comment on column sys_custom_column.id is '主键';
-comment on column sys_custom_column.tenant_id is '租户id';
-comment on column sys_custom_column.user_id is '用户id';
-comment on column sys_custom_column.label is '列名称';
-comment on column sys_custom_column.is_fixed is '是否固定';
-comment on column sys_custom_column.is_hide is '是否换行';
-comment on column sys_custom_column.is_custom is '是否自定义内容';
-comment on column sys_custom_column.is_sortable is '是否排序';
-comment on column sys_custom_column.is_show is '是否显示';
-comment on column sys_custom_column.icon is '图标';
-comment on column sys_custom_column.type is '类型';
-comment on column sys_custom_column.category is '相同自定义列母版id';
-comment on column sys_custom_column.sort_no is '排序';
-comment on column sys_custom_column.prop_name is '字段名';
-comment on column sys_custom_column.prop_code is '字段编码';
-comment on column sys_custom_column.width is '列宽度';
-comment on column sys_custom_column.filtration is '是否过滤';
-comment on column sys_custom_column.is_edit is '是否可编辑';
-comment on column sys_custom_column.dictionary_type is '字典类型';
-comment on column sys_custom_column.path is '资源路径';
-comment on column sys_custom_column.cell_style is '单元格样式';
-comment on column sys_custom_column.from_type is '数据来源';
-comment on column sys_custom_column.created_time is '创建时间';
-comment on column sys_custom_column.updated_time is '修改时间';
-comment on column sys_custom_column.extend is '扩展JSON字段';
-comment on table sys_custom_column is '用户自定义列表';
+comment
+on column sys_custom_column.id is '主键';
+comment
+on column sys_custom_column.tenant_id is '租户id';
+comment
+on column sys_custom_column.user_id is '用户id';
+comment
+on column sys_custom_column.label is '列名称';
+comment
+on column sys_custom_column.is_fixed is '是否固定';
+comment
+on column sys_custom_column.is_hide is '是否换行';
+comment
+on column sys_custom_column.is_custom is '是否自定义内容';
+comment
+on column sys_custom_column.is_sortable is '是否排序';
+comment
+on column sys_custom_column.is_show is '是否显示';
+comment
+on column sys_custom_column.icon is '图标';
+comment
+on column sys_custom_column.type is '类型';
+comment
+on column sys_custom_column.category is '相同自定义列母版id';
+comment
+on column sys_custom_column.sort_no is '排序';
+comment
+on column sys_custom_column.prop_name is '字段名';
+comment
+on column sys_custom_column.prop_code is '字段编码';
+comment
+on column sys_custom_column.width is '列宽度';
+comment
+on column sys_custom_column.filtration is '是否过滤';
+comment
+on column sys_custom_column.is_edit is '是否可编辑';
+comment
+on column sys_custom_column.dictionary_type is '字典类型';
+comment
+on column sys_custom_column.path is '资源路径';
+comment
+on column sys_custom_column.cell_style is '单元格样式';
+comment
+on column sys_custom_column.from_type is '数据来源';
+comment
+on column sys_custom_column.created_time is '创建时间';
+comment
+on column sys_custom_column.updated_time is '修改时间';
+comment
+on column sys_custom_column.extend is '扩展JSON字段';
+comment
+on table sys_custom_column is '用户自定义列表';
 
-delete from sys_custom_column_bak where id not in(
-    select min(id) from sys_custom_column_bak group by prop_name,res_type
-);
+delete
+from sys_custom_column_bak
+where id not in (select min(id)
+                 from sys_custom_column_bak
+                 group by prop_name, res_type);
 
 insert into sys_custom_column(tenant_id, user_id, system, menu_id, prop_name,
                               label, is_fixed, is_hide, is_custom, is_sortable, is_show,
@@ -162,14 +193,22 @@ create table sys_feed_back
 );
 create index idx_sys_feed_back_ids_in on sys_feed_back (tenant_id, tenant_code, user_id, system, title);
 CREATE INDEX idx_sys_feed_back_extend_gin ON sys_feed_back USING gin (extend);
-COMMENT ON table sys_feed_back is '意见反馈';
-COMMENT ON COLUMN sys_feed_back.title is '意见反馈标题';
-COMMENT ON COLUMN sys_feed_back.type is '意见反馈类型';
-COMMENT ON COLUMN sys_feed_back.status is '意见反馈状态';
-COMMENT ON COLUMN sys_feed_back.content is '意见反馈内容';
-COMMENT ON COLUMN sys_feed_back.reply_id is '回复人id';
-COMMENT ON COLUMN sys_feed_back.reply_id is '回复时间';
-COMMENT ON COLUMN sys_feed_back.reply_content is '回复内容';
+COMMENT
+ON table sys_feed_back is '意见反馈';
+COMMENT
+ON COLUMN sys_feed_back.title is '意见反馈标题';
+COMMENT
+ON COLUMN sys_feed_back.type is '意见反馈类型';
+COMMENT
+ON COLUMN sys_feed_back.status is '意见反馈状态';
+COMMENT
+ON COLUMN sys_feed_back.content is '意见反馈内容';
+COMMENT
+ON COLUMN sys_feed_back.reply_id is '回复人id';
+COMMENT
+ON COLUMN sys_feed_back.reply_id is '回复时间';
+COMMENT
+ON COLUMN sys_feed_back.reply_content is '回复内容';
 
 drop table if exists sys_authority_dict;
 create table sys_authority_dict
@@ -189,13 +228,20 @@ create table sys_authority_dict
     unique (system, authority)
 );
 CREATE INDEX idx_sys_authority_dict_extend_gin ON sys_authority_dict USING gin (extend);
-comment on column sys_authority_dict.authority is '定义权限,如: ROLE_USER';
-comment on column sys_authority_dict.name is '定义权限显示名,如: 用户管理';
-comment on column sys_authority_dict.description is '描述';
-comment on column sys_authority_dict.path is '权限控制路径,如: /user';
-comment on column sys_authority_dict.pid is '权限树父节点ID,根节点为0';
-comment on column sys_authority_dict.type is '菜单类型: 0,菜单,其他为非菜单';
-comment on table sys_authority_dict is '权限字典,主要生成用户认证权限的基础表,所有权限在这里定义.';
+comment
+on column sys_authority_dict.authority is '定义权限,如: ROLE_USER';
+comment
+on column sys_authority_dict.name is '定义权限显示名,如: 用户管理';
+comment
+on column sys_authority_dict.description is '描述';
+comment
+on column sys_authority_dict.path is '权限控制路径,如: /user';
+comment
+on column sys_authority_dict.pid is '权限树父节点ID,根节点为0';
+comment
+on column sys_authority_dict.type is '菜单类型: 0,菜单,其他为非菜单';
+comment
+on table sys_authority_dict is '权限字典,主要生成用户认证权限的基础表,所有权限在这里定义.';
 select setval(pg_get_serial_sequence('sys_authority_dict', 'id'), 500);
 
 insert into sys_authority_dict (id, system, authority, name, sort, description, path,
@@ -216,7 +262,8 @@ alter table sys_configurations
     add column system varchar(32) not null default 'poverty';
 
 alter table sys_configurations
-    drop constraint sys_configurations_tenant_id_type_key;
+drop
+constraint sys_configurations_tenant_id_type_key;
 
 alter table sys_configurations
     add constraint sys_configurations_tenant_id_type_system_key

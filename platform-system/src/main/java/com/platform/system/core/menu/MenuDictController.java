@@ -21,26 +21,28 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MenuDictController {
 
-    private final MenuDictService dictService;
+  private final MenuDictService dictService;
 
-    @GetMapping("search")
-    public Flux<MenuDictOnly> search(MenuDictRequest dictRequest) {
-        return this.dictService.search(dictRequest);
-    }
+  @GetMapping("search")
+  public Flux<MenuDictOnly> search(MenuDictRequest dictRequest) {
+    return this.dictService.search(dictRequest);
+  }
 
-    @GetMapping("me")
-    public Flux<MenuDictOnly> me() {
-        return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
+  @GetMapping("me")
+  public Flux<MenuDictOnly> me() {
+    return ReactiveSecurityDetailsHolder.getContext()
+        .flatMapMany(
+            securityDetails ->
                 this.dictService.loadAuthorityMenu(securityDetails.getAuthorities()));
-    }
+  }
 
-    @PostMapping
-    public Mono<MenuDictOnly> post(@Valid @RequestBody MenuDictRequest dictRequest) {
-        return this.dictService.operation(dictRequest);
-    }
+  @PostMapping
+  public Mono<MenuDictOnly> post(@Valid @RequestBody MenuDictRequest dictRequest) {
+    return this.dictService.operation(dictRequest);
+  }
 
-    @DeleteMapping("{id}")
-    public Mono<Void> delete(@PathVariable Integer id) {
-        return this.dictService.delete(id);
-    }
+  @DeleteMapping("{id}")
+  public Mono<Void> delete(@PathVariable Integer id) {
+    return this.dictService.delete(id);
+  }
 }

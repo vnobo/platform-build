@@ -16,14 +16,15 @@ import java.io.Serializable;
 @Builder
 public class AuthenticationToken implements Serializable {
 
-    private String token;
-    private Long expires;
-    private Long lastAccessTime;
+  private String token;
+  private Long expires;
+  private Long lastAccessTime;
 
-    public static AuthenticationToken build(WebSession session) {
-        return AuthenticationToken.builder()
-                .token(session.getId()).expires(session.getMaxIdleTime().getSeconds())
-                .lastAccessTime(session.getLastAccessTime().getEpochSecond()).build();
-    }
-
+  public static AuthenticationToken build(WebSession session) {
+    return AuthenticationToken.builder()
+        .token(session.getId())
+        .expires(session.getMaxIdleTime().getSeconds())
+        .lastAccessTime(session.getLastAccessTime().getEpochSecond())
+        .build();
+  }
 }

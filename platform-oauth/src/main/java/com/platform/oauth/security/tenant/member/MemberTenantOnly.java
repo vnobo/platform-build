@@ -16,9 +16,8 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class MemberTenantOnly extends MemberTenant implements Serializable {
 
-    private String userName;
-    private String tenantCode;
-    private String tenantName;
-    private JsonNode tenantExtend;
-
+  private String userName;
+  private String tenantCode;
+  private String tenantName;
+  private JsonNode tenantExtend;
 }

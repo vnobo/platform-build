@@ -23,17 +23,15 @@ import org.springframework.data.convert.ReadingConverter;
 @RequiredArgsConstructor
 public class JsonNodeReadConverter implements Converter<Json, JsonNode> {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public JsonNode convert(@NonNull Json source) {
-        try {
-            return this.objectMapper.readValue(source.asString(), new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            log.error("读取 Json 为 Set 转换错误,信息: {}", e.getMessage());
-            throw RestServerException
-                    .withMsg(1101, "序列化数据Json为Set类型错误,信息: " + e.getMessage());
-        }
+  @Override
+  public JsonNode convert(@NonNull Json source) {
+    try {
+      return this.objectMapper.readValue(source.asString(), new TypeReference<>() {});
+    } catch (JsonProcessingException e) {
+      log.error("读取 Json 为 Set 转换错误,信息: {}", e.getMessage());
+      throw RestServerException.withMsg(1101, "序列化数据Json为Set类型错误,信息: " + e.getMessage());
     }
+  }
 }

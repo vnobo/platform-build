@@ -22,15 +22,15 @@ import org.springframework.data.convert.WritingConverter;
 @RequiredArgsConstructor
 public class JsonNodeWriteConverter implements Converter<JsonNode, Json> {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public Json convert(@NonNull JsonNode source) {
-        try {
-            return Json.of(this.objectMapper.writeValueAsString(source));
-        } catch (JsonProcessingException e) {
-            log.error("写入 Set 为 Json 转换错误,信息: {}", e.getMessage());
-            throw RestJsonProcessingException.withMsg("序列化数据Set为Json类型错误,信息: " + e.getMessage());
-        }
+  @Override
+  public Json convert(@NonNull JsonNode source) {
+    try {
+      return Json.of(this.objectMapper.writeValueAsString(source));
+    } catch (JsonProcessingException e) {
+      log.error("写入 Set 为 Json 转换错误,信息: {}", e.getMessage());
+      throw RestJsonProcessingException.withMsg("序列化数据Set为Json类型错误,信息: " + e.getMessage());
     }
+  }
 }

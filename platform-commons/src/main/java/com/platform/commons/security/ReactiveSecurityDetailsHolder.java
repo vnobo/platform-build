@@ -14,37 +14,35 @@ import java.util.function.Function;
  */
 public final class ReactiveSecurityDetailsHolder {
 
-    private static final Class<?> SECURITY_DETAILS_CONTEXT_KEY = SecurityDetails.class;
+  private static final Class<?> SECURITY_DETAILS_CONTEXT_KEY = SecurityDetails.class;
 
-    private ReactiveSecurityDetailsHolder() {
-    }
+  private ReactiveSecurityDetailsHolder() {}
 
-    public static Mono<SecurityDetails> getContext() {
-        // @formatter:off
-        return Mono.deferContextual(Mono::just)
-                .filter(ReactiveSecurityDetailsHolder::hasSecurityContext)
-                .flatMap(ReactiveSecurityDetailsHolder::getSecurityContext);
-        // @formatter:on
-    }
+  public static Mono<SecurityDetails> getContext() {
+    // @formatter:off
+    return Mono.deferContextual(Mono::just)
+        .filter(ReactiveSecurityDetailsHolder::hasSecurityContext)
+        .flatMap(ReactiveSecurityDetailsHolder::getSecurityContext);
+    // @formatter:on
+  }
 
-    private static boolean hasSecurityContext(ContextView context) {
-        return context.hasKey(SECURITY_DETAILS_CONTEXT_KEY);
-    }
+  private static boolean hasSecurityContext(ContextView context) {
+    return context.hasKey(SECURITY_DETAILS_CONTEXT_KEY);
+  }
 
-    private static Mono<SecurityDetails> getSecurityContext(ContextView context) {
-        return context.<Mono<SecurityDetails>>get(SECURITY_DETAILS_CONTEXT_KEY);
-    }
+  private static Mono<SecurityDetails> getSecurityContext(ContextView context) {
+    return context.<Mono<SecurityDetails>>get(SECURITY_DETAILS_CONTEXT_KEY);
+  }
 
-    public static Function<Context, Context> clearContext() {
-        return (context) -> context.delete(SECURITY_DETAILS_CONTEXT_KEY);
-    }
+  public static Function<Context, Context> clearContext() {
+    return (context) -> context.delete(SECURITY_DETAILS_CONTEXT_KEY);
+  }
 
-    public static ContextView withSecurityDetailsContext(Mono<SecurityDetails> securityDetails) {
-        return Context.of(SECURITY_DETAILS_CONTEXT_KEY, securityDetails);
-    }
+  public static ContextView withSecurityDetailsContext(Mono<SecurityDetails> securityDetails) {
+    return Context.of(SECURITY_DETAILS_CONTEXT_KEY, securityDetails);
+  }
 
-    public static ContextView withSecurityDetails(SecurityDetails securityUserDetails) {
-        return withSecurityDetailsContext(Mono.just(securityUserDetails));
-    }
-
+  public static ContextView withSecurityDetails(SecurityDetails securityUserDetails) {
+    return withSecurityDetailsContext(Mono.just(securityUserDetails));
+  }
 }

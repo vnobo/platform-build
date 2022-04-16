@@ -12,8 +12,8 @@ import java.io.Serializable;
  */
 @Data
 public class SecurityDetailsGroup implements Serializable {
-    Integer id;
-    Integer tenantId;
-    String tenantName;
-    String name;
+  Integer id;
+  Integer tenantId;
+  String tenantName;
+  String name;
 }

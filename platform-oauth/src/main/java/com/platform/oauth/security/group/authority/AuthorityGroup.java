@@ -21,19 +21,16 @@ import java.time.LocalDateTime;
 @Table("se_group_authorities")
 public class AuthorityGroup implements Persistable<Integer>, SimpleAuthority {
 
-    @Id
-    private Integer id;
-    private Integer groupId;
-    private String authority;
+  @Id private Integer id;
+  private Integer groupId;
+  private String authority;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
+  @CreatedDate private LocalDateTime createdTime;
 
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 }

@@ -29,30 +29,41 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class ExportController {
 
-    private final ExportService exportService;
+  private final ExportService exportService;
 
-    @PostMapping("template")
-    public ResponseEntity<Resource> export(@Valid @RequestBody ExportRequest exportRequest) {
-        return this.exportExcel(exportRequest);
-    }
+  @PostMapping("template")
+  public ResponseEntity<Resource> export(@Valid @RequestBody ExportRequest exportRequest) {
+    return this.exportExcel(exportRequest);
+  }
 
-    @PostMapping("excel")
-    public ResponseEntity<Resource> exportExcel(@Valid @RequestBody ExportRequest exportRequest) {
-        return ResponseEntity.ok()
-                .headers(httpHeaders -> httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                        URLEncoder.encode(exportRequest.getTitle(), StandardCharsets.UTF_8) + "\"")
-                .body(exportService.processExcel(exportRequest));
-    }
+  @PostMapping("excel")
+  public ResponseEntity<Resource> exportExcel(@Valid @RequestBody ExportRequest exportRequest) {
+    return ResponseEntity.ok()
+        .headers(httpHeaders -> httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM))
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\""
+                + URLEncoder.encode(exportRequest.getTitle(), StandardCharsets.UTF_8)
+                + "\"")
+        .body(exportService.processExcel(exportRequest));
+  }
 
-    @PostMapping("word")
-    public Mono<ResponseEntity<Resource>> exportWord(@Valid @RequestBody ExportRequest exportRequest) {
-        return exportService.processWord(exportRequest)
-                .map(resource -> ResponseEntity.ok()
-                        .headers(httpHeaders -> httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                                URLEncoder.encode(exportRequest.getTitle(), StandardCharsets.UTF_8) + "\"")
-                        .body(resource));
-    }
-
+  @PostMapping("word")
+  public Mono<ResponseEntity<Resource>> exportWord(
+      @Valid @RequestBody ExportRequest exportRequest) {
+    return exportService
+        .processWord(exportRequest)
+        .map(
+            resource ->
+                ResponseEntity.ok()
+                    .headers(
+                        httpHeaders ->
+                            httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM))
+                    .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\""
+                            + URLEncoder.encode(exportRequest.getTitle(), StandardCharsets.UTF_8)
+                            + "\"")
+                    .body(resource));
+  }
 }

@@ -23,21 +23,22 @@ import java.util.Set;
 @Data
 public class MenuDictOnly extends MenuDict implements Serializable {
 
-    private Set<MethodPermissions> permissions;
+  private Set<MethodPermissions> permissions;
 
-    public static MenuDictOnly withAuthorityDict(MenuDict menuDict) {
-        MenuDictOnly dictMenu = new MenuDictOnly();
-        BeanUtils.copyProperties(menuDict, dictMenu);
-        if (!ObjectUtils.isEmpty(dictMenu.getExtend())) {
-            JsonNode permissionsNode = dictMenu.getExtend().withArray("permissions");
-            ObjectMapper objectMapper = new ObjectMapper();
-            Set<MethodPermissions> permissions = ObjectUtils.isEmpty(permissionsNode) ? Set.of()
-                    : objectMapper.convertValue(permissionsNode, new TypeReference<>() {
-            });
-            dictMenu.setPermissions(permissions);
-        } else {
-            dictMenu.setPermissions(Set.of());
-        }
-        return dictMenu;
+  public static MenuDictOnly withAuthorityDict(MenuDict menuDict) {
+    MenuDictOnly dictMenu = new MenuDictOnly();
+    BeanUtils.copyProperties(menuDict, dictMenu);
+    if (!ObjectUtils.isEmpty(dictMenu.getExtend())) {
+      JsonNode permissionsNode = dictMenu.getExtend().withArray("permissions");
+      ObjectMapper objectMapper = new ObjectMapper();
+      Set<MethodPermissions> permissions =
+          ObjectUtils.isEmpty(permissionsNode)
+              ? Set.of()
+              : objectMapper.convertValue(permissionsNode, new TypeReference<>() {});
+      dictMenu.setPermissions(permissions);
+    } else {
+      dictMenu.setPermissions(Set.of());
     }
+    return dictMenu;
+  }
 }

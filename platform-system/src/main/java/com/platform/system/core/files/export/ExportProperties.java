@@ -15,8 +15,6 @@ import javax.validation.constraints.NotEmpty;
 @ConfigurationProperties("export")
 public class ExportProperties {
 
-    @NotEmpty(message = "导出模板路径不能为空!")
-    private String templatePath;
-
-
+  @NotEmpty(message = "导出模板路径不能为空!")
+  private String templatePath;
 }

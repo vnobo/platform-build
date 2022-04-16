@@ -16,31 +16,27 @@ import java.io.Serializable;
 @Data
 public class UserBinding implements Serializable {
 
-    private WeiXin weiXin;
+  private WeiXin weiXin;
 
-    public static UserBinding withWeiXin(String appId, String openid) {
-        UserBinding userBinding = new UserBinding();
-        userBinding.setWeiXin(WeiXin.builder().appId(appId).openid(openid)
-                .type(BindingType.WEIXIN).build());
-        return userBinding;
-    }
+  public static UserBinding withWeiXin(String appId, String openid) {
+    UserBinding userBinding = new UserBinding();
+    userBinding.setWeiXin(
+        WeiXin.builder().appId(appId).openid(openid).type(BindingType.WEIXIN).build());
+    return userBinding;
+  }
 
-    public enum BindingType {
-        /**
-         * 微信绑定
-         */
-        WEIXIN
-    }
+  public enum BindingType {
+    /** 微信绑定 */
+    WEIXIN
+  }
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class WeiXin implements Serializable {
-        private BindingType type;
-        private String appId;
-        private String openid;
-    }
-
-
+  @Data
+  @Builder
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class WeiXin implements Serializable {
+    private BindingType type;
+    private String appId;
+    private String openid;
+  }
 }

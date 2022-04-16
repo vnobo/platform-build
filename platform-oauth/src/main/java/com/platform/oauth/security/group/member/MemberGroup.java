@@ -21,19 +21,16 @@ import java.time.LocalDateTime;
 @Table("se_group_members")
 public class MemberGroup implements Serializable, Persistable<Integer> {
 
-    @Id
-    private Integer id;
-    private Integer groupId;
-    private Long userId;
+  @Id private Integer id;
+  private Integer groupId;
+  private Long userId;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
+  @CreatedDate private LocalDateTime createdTime;
 
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 }

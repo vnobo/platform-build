@@ -15,34 +15,40 @@ import java.io.Serializable;
 @Data
 public class SecurityDetailsTenant implements Serializable {
 
-    private Long userId;
-    private String userName;
-    private Integer tenantId;
-    private String tenantCode;
-    private String tenantName;
-    private Boolean isDefault;
-    private JsonNode tenantExtend;
+  private Long userId;
+  private String userName;
+  private Integer tenantId;
+  private String tenantCode;
+  private String tenantName;
+  private Boolean isDefault;
+  private JsonNode tenantExtend;
 
-    public static SecurityDetailsTenant of(Integer tenantId, String code, String tenantName, Boolean isDefault,
-                                           Long userId, String name, JsonNode extend) {
-        SecurityDetailsTenant detailsTenant = new SecurityDetailsTenant();
-        detailsTenant.setTenantId(tenantId);
-        detailsTenant.setTenantName(tenantName);
-        detailsTenant.setTenantCode(code);
-        detailsTenant.setUserName(name);
-        detailsTenant.setIsDefault(isDefault);
-        detailsTenant.setUserId(userId);
-        detailsTenant.setTenantExtend(extend);
-        return detailsTenant;
-    }
+  public static SecurityDetailsTenant of(
+      Integer tenantId,
+      String code,
+      String tenantName,
+      Boolean isDefault,
+      Long userId,
+      String name,
+      JsonNode extend) {
+    SecurityDetailsTenant detailsTenant = new SecurityDetailsTenant();
+    detailsTenant.setTenantId(tenantId);
+    detailsTenant.setTenantName(tenantName);
+    detailsTenant.setTenantCode(code);
+    detailsTenant.setUserName(name);
+    detailsTenant.setIsDefault(isDefault);
+    detailsTenant.setUserId(userId);
+    detailsTenant.setTenantExtend(extend);
+    return detailsTenant;
+  }
 
-    public static SecurityDetailsTenant withDefault() {
-        return SecurityDetailsTenant.of(-1, "0", "访客租户", true, -1L,
-                "anonymous", new ObjectMapper().createObjectNode());
-    }
+  public static SecurityDetailsTenant withDefault() {
+    return SecurityDetailsTenant.of(
+        -1, "0", "访客租户", true, -1L, "anonymous", new ObjectMapper().createObjectNode());
+  }
 
-    public static SecurityDetailsTenant withGuest() {
-        return SecurityDetailsTenant.of(-1, "0", "访客租户", true, -1L,
-                "anonymous", new ObjectMapper().createObjectNode());
-    }
+  public static SecurityDetailsTenant withGuest() {
+    return SecurityDetailsTenant.of(
+        -1, "0", "访客租户", true, -1L, "anonymous", new ObjectMapper().createObjectNode());
+  }
 }

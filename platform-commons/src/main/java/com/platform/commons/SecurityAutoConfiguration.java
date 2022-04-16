@@ -27,46 +27,47 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
  * @date Created by 2019/7/14
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({EnableWebFluxSecurity.class, ReactiveUserDetailsService.class,
-        ServerSecurityContextRepository.class})
-@AutoConfigureAfter(org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class)
+@ConditionalOnClass({
+  EnableWebFluxSecurity.class,
+  ReactiveUserDetailsService.class,
+  ServerSecurityContextRepository.class
+})
+@AutoConfigureAfter(
+    org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class)
 @RequiredArgsConstructor
 public class SecurityAutoConfiguration {
 
-    @Bean
-    public ServerSecurityContextRepository contextRepository() {
-        return new WebSessionServerSecurityContextRepository();
-    }
+  @Bean
+  public ServerSecurityContextRepository contextRepository() {
+    return new WebSessionServerSecurityContextRepository();
+  }
 
+  @Bean
+  @ConditionalOnMissingBean
+  public PasswordEncoder passwordEncoder() {
+    return new Pbkdf2PasswordEncoder();
+  }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public PasswordEncoder passwordEncoder() {
-        return new Pbkdf2PasswordEncoder();
-    }
+  @Bean
+  @ConditionalOnMissingBean
+  @ConditionalOnBean(CountryClient.class)
+  public ReactiveUserDetailsService userDetailsService(CountryClient countryClient) {
+    return new ReactiveUserDetailsServiceImpl(countryClient);
+  }
 
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnBean(CountryClient.class)
-    public ReactiveUserDetailsService userDetailsService(CountryClient countryClient) {
-        return new ReactiveUserDetailsServiceImpl(countryClient);
-    }
+  @Bean
+  @ConditionalOnMissingBean
+  public SecurityWebFilterChain springSecurityFilterChain(
+      ServerHttpSecurity http, ServerSecurityContextRepository contextRepository) {
 
-
-    @Bean
-    @ConditionalOnMissingBean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
-                                                            ServerSecurityContextRepository contextRepository) {
-
-        http
-                .authorizeExchange(exchange -> exchange.anyExchange().authenticated())
-                .securityContextRepository(contextRepository)
-                .httpBasic(httpBasicSpec -> httpBasicSpec
-                        .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
-                .csrf(csrfSpec -> csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
-        return http.build();
-
-    }
-
-
+    http.authorizeExchange(exchange -> exchange.anyExchange().authenticated())
+        .securityContextRepository(contextRepository)
+        .httpBasic(
+            httpBasicSpec ->
+                httpBasicSpec.authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
+        .csrf(
+            csrfSpec ->
+                csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
+    return http.build();
+  }
 }

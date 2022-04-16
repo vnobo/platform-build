@@ -18,31 +18,32 @@ import java.time.LocalDateTime;
 @Data
 public class UserOnly implements Serializable {
 
-    private Long id;
-    private Integer tenantId;
-    private String tenantCode;
-    private String username;
-    private Boolean enabled;
-    private String name;
-    private String idCard;
-    private String email;
-    private String phone;
-    private UserBinding binding;
-    private JsonNode extend;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
-    private LocalDateTime lastLoginTime;
+  private Long id;
+  private Integer tenantId;
+  private String tenantCode;
+  private String username;
+  private Boolean enabled;
+  private String name;
+  private String idCard;
+  private String email;
+  private String phone;
+  private UserBinding binding;
+  private JsonNode extend;
+  private LocalDateTime createdTime;
+  private LocalDateTime updatedTime;
+  private LocalDateTime lastLoginTime;
 
-    public static UserOnly withUser(User user) {
-        UserOnly userOnly = new UserOnly();
-        BeanUtils.copyProperties(user, userOnly);
-        if (!ObjectUtils.isEmpty(user.getExtend())) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode bindingNode = ObjectUtils.isEmpty(user.getExtend().get("binding")) ? objectMapper.createObjectNode() :
-                    user.getExtend().get("binding");
-            userOnly.setBinding(objectMapper.convertValue(bindingNode, UserBinding.class));
-        }
-        return userOnly;
+  public static UserOnly withUser(User user) {
+    UserOnly userOnly = new UserOnly();
+    BeanUtils.copyProperties(user, userOnly);
+    if (!ObjectUtils.isEmpty(user.getExtend())) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      JsonNode bindingNode =
+          ObjectUtils.isEmpty(user.getExtend().get("binding"))
+              ? objectMapper.createObjectNode()
+              : user.getExtend().get("binding");
+      userOnly.setBinding(objectMapper.convertValue(bindingNode, UserBinding.class));
     }
-
+    return userOnly;
+  }
 }

@@ -17,24 +17,24 @@ import java.io.Serializable;
 @Data
 public class ModifyUserRequest implements Serializable {
 
-    private Long id;
+  private Long id;
 
-    @NotBlank(message = "登录用户名[username]不能为空!")
-    private String username;
+  @NotBlank(message = "登录用户名[username]不能为空!")
+  private String username;
 
-    @NotNull(message = "租户[tenantId]不能为空!")
-    private Integer tenantId;
+  @NotNull(message = "租户[tenantId]不能为空!")
+  private Integer tenantId;
 
-    @NotNull(message = "权限组[groupId]不能为空!")
-    private Integer groupId;
+  @NotNull(message = "权限组[groupId]不能为空!")
+  private Integer groupId;
 
-    @NotNull(message = "是否启用[enabled]不能为空!")
-    private Boolean enabled;
+  @NotNull(message = "是否启用[enabled]不能为空!")
+  private Boolean enabled;
 
-    @Email(message = "电子邮箱[email]不合法!")
-    private String email;
+  @Email(message = "电子邮箱[email]不合法!")
+  private String email;
 
-    private String phone;
+  private String phone;
 
-    private JsonNode extend;
+  private JsonNode extend;
 }

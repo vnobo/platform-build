@@ -18,11 +18,12 @@ import java.io.Serializable;
 @Builder
 public class TenantCutRequest implements Serializable {
 
-    @NotNull(message = "用户[userId]不能为空")
-    private Long userId;
-    @NotNull(message = "租户[tenantId]不能为空")
-    private Integer tenantId;
-    @NotNull(message = "租户[isDefault]不能为空")
-    private Boolean isDefault;
+  @NotNull(message = "用户[userId]不能为空")
+  private Long userId;
 
+  @NotNull(message = "租户[tenantId]不能为空")
+  private Integer tenantId;
+
+  @NotNull(message = "租户[isDefault]不能为空")
+  private Boolean isDefault;
 }

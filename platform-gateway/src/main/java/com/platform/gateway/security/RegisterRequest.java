@@ -16,31 +16,30 @@ import java.io.Serializable;
 @Data
 public class RegisterRequest implements Serializable {
 
-    private String username;
+  private String username;
 
-    private String password;
+  private String password;
 
-    private Boolean enabled;
+  private Boolean enabled;
 
-    private String name;
+  private String name;
 
-    private String idCard;
+  private String idCard;
 
-    private String email;
+  private String email;
 
-    private String phone;
+  private String phone;
 
-    private String address;
+  private String address;
 
-    private Integer tenantId;
+  private Integer tenantId;
 
-    private String tenantCode;
+  private String tenantCode;
 
-    @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
-    private SystemType system;
+  @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
+  private SystemType system;
 
-    private Integer groupId;
+  private Integer groupId;
 
-    private JsonNode extend;
-
+  private JsonNode extend;
 }

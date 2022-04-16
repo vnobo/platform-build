@@ -14,9 +14,7 @@ import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 /**
- * com.bootiful.oauth.filter.AuthGlobalFilter
- * 认证后封装订阅CSRF订阅启动保护
- * 订阅登录用户SECURITY 信息封装
+ * com.bootiful.oauth.filter.AuthGlobalFilter 认证后封装订阅CSRF订阅启动保护 订阅登录用户SECURITY 信息封装
  *
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/5/28
@@ -25,34 +23,50 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AfterSecurityFilter implements WebFilter, Ordered {
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+  @Override
+  public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
-        Mono<CsrfToken> csrfTokenMono = exchange.getAttribute(CsrfToken.class.getName());
+    Mono<CsrfToken> csrfTokenMono = exchange.getAttribute(CsrfToken.class.getName());
 
-        Mono<SecurityDetails> securityDetailsMono = exchange.getAttribute(SecurityDetails.class.getName());
+    Mono<SecurityDetails> securityDetailsMono =
+        exchange.getAttribute(SecurityDetails.class.getName());
 
-        if (csrfTokenMono != null) {
-            if (securityDetailsMono != null) {
-                return exchange.getSession()
-                        .delayUntil(session -> csrfTokenMono.mapNotNull(csrfToken -> exchange.getAttributes()
-                                .put(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME, csrfToken)))
-                        .delayUntil(session -> securityDetailsMono
-                                .mapNotNull(securityDetails -> session.getAttributes()
-                                        .put(SecurityTokenHelper.SECURITY_TOKEN_CONTEXT, securityDetails)))
-                        .delayUntil(WebSession::save)
-                        .flatMap(session -> chain.filter(exchange));
-            }
-            return csrfTokenMono.doOnNext(csrfToken -> exchange.getAttributes()
-                            .put(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME, csrfToken))
-                    .flatMap(csrfToken -> chain.filter(exchange));
-        }
-        return chain.filter(exchange);
-
+    if (csrfTokenMono != null) {
+      if (securityDetailsMono != null) {
+        return exchange
+            .getSession()
+            .delayUntil(
+                session ->
+                    csrfTokenMono.mapNotNull(
+                        csrfToken ->
+                            exchange
+                                .getAttributes()
+                                .put(
+                                    CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME,
+                                    csrfToken)))
+            .delayUntil(
+                session ->
+                    securityDetailsMono.mapNotNull(
+                        securityDetails ->
+                            session
+                                .getAttributes()
+                                .put(SecurityTokenHelper.SECURITY_TOKEN_CONTEXT, securityDetails)))
+            .delayUntil(WebSession::save)
+            .flatMap(session -> chain.filter(exchange));
+      }
+      return csrfTokenMono
+          .doOnNext(
+              csrfToken ->
+                  exchange
+                      .getAttributes()
+                      .put(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME, csrfToken))
+          .flatMap(csrfToken -> chain.filter(exchange));
     }
+    return chain.filter(exchange);
+  }
 
-    @Override
-    public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE;
-    }
+  @Override
+  public int getOrder() {
+    return Ordered.LOWEST_PRECEDENCE;
+  }
 }

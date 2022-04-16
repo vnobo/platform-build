@@ -12,9 +12,8 @@ import reactor.core.publisher.Mono;
  */
 public class ReactiveUserAuditorAware implements ReactiveAuditorAware<UserAuditor> {
 
-    @Override
-    public Mono<UserAuditor> getCurrentAuditor() {
-        return ReactiveSecurityDetailsHolder.getContext()
-                .map(UserAuditor::withSecurityDetails);
-    }
+  @Override
+  public Mono<UserAuditor> getCurrentAuditor() {
+    return ReactiveSecurityDetailsHolder.getContext().map(UserAuditor::withSecurityDetails);
+  }
 }

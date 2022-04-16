@@ -25,30 +25,30 @@ import java.util.Map;
 @AllArgsConstructor
 public class User implements Serializable {
 
-    private Long id;
-    private Integer tenantId;
-    private String tenantCode;
-    private String username;
-    private Boolean enabled;
-    private String email;
-    private String phone;
-    private String name;
-    private String idCard;
-    private JsonNode extend;
-    private LocalDateTime lastLoginTime;
-    private LocalDateTime updatedTime;
-    private LocalDateTime createdTime;
+  private Long id;
+  private Integer tenantId;
+  private String tenantCode;
+  private String username;
+  private Boolean enabled;
+  private String email;
+  private String phone;
+  private String name;
+  private String idCard;
+  private JsonNode extend;
+  private LocalDateTime lastLoginTime;
+  private LocalDateTime updatedTime;
+  private LocalDateTime createdTime;
 
-    public static User withId(Long id) {
-        User user = new User();
-        user.setId(id);
-        return user;
-    }
+  public static User withId(Long id) {
+    User user = new User();
+    user.setId(id);
+    return user;
+  }
 
-    public MultiValueMap<String, String> toQueryParams() {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
-        Map<String, Object> objectMap = BeanUtil.beanToMap(this, false, true);
-        objectMap.forEach((k, v) -> multiValueMap.set(k, String.valueOf(v)));
-        return multiValueMap;
-    }
+  public MultiValueMap<String, String> toQueryParams() {
+    MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
+    Map<String, Object> objectMap = BeanUtil.beanToMap(this, false, true);
+    objectMap.forEach((k, v) -> multiValueMap.set(k, String.valueOf(v)));
+    return multiValueMap;
+  }
 }

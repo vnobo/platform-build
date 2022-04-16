@@ -26,52 +26,58 @@ import javax.validation.Valid;
 @RequestMapping("/user/manager/v1")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserManager managerService;
+  private final UserManager managerService;
 
-    @GetMapping("search")
-    public Flux<UserOnly> search(UserRequest request, Pageable pageable) {
-        return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails -> this.managerService
-                .search(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-    }
+  @GetMapping("search")
+  public Flux<UserOnly> search(UserRequest request, Pageable pageable) {
+    return ReactiveSecurityDetailsHolder.getContext()
+        .flatMapMany(
+            securityDetails ->
+                this.managerService.search(
+                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+  }
 
-    @GetMapping("page")
-    public Mono<Page<UserOnly>> page(UserRequest request, Pageable pageable) {
-        return ReactiveSecurityDetailsHolder.getContext().flatMap(securityDetails -> this.managerService
-                .page(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-    }
+  @GetMapping("page")
+  public Mono<Page<UserOnly>> page(UserRequest request, Pageable pageable) {
+    return ReactiveSecurityDetailsHolder.getContext()
+        .flatMap(
+            securityDetails ->
+                this.managerService.page(
+                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+  }
 
-    @PostMapping("/authorizing/{id}")
-    public Flux<AuthorityUser> authorizing(@PathVariable Long id, @Valid @RequestBody AuthorityUserRequest request) {
-        return this.managerService.authorizing(id, request);
-    }
+  @PostMapping("/authorizing/{id}")
+  public Flux<AuthorityUser> authorizing(
+      @PathVariable Long id, @Valid @RequestBody AuthorityUserRequest request) {
+    return this.managerService.authorizing(id, request);
+  }
 
-    @GetMapping
-    public Flux<User> get(UserRequest request) {
-        return this.managerService.loadUsers(request);
-    }
+  @GetMapping
+  public Flux<User> get(UserRequest request) {
+    return this.managerService.loadUsers(request);
+  }
 
-    @PostMapping
-    public Mono<User> post(@Valid @RequestBody UserRequest request) {
-        Assert.hasText(request.getPassword(), "登录用户密码[password]不能为空!");
-        Assert.isTrue(IdcardUtil.isValidCard(request.affirmIdCard()), "身份证[idCard]不合法!");
-        return this.managerService.register(request);
-    }
+  @PostMapping
+  public Mono<User> post(@Valid @RequestBody UserRequest request) {
+    Assert.hasText(request.getPassword(), "登录用户密码[password]不能为空!");
+    Assert.isTrue(IdcardUtil.isValidCard(request.affirmIdCard()), "身份证[idCard]不合法!");
+    return this.managerService.register(request);
+  }
 
-    @PutMapping("{id}")
-    public Mono<User> put(@PathVariable Long id, @Valid @RequestBody ModifyUserRequest request) {
-        request.setId(id);
-        return this.managerService.modify(request);
-    }
+  @PutMapping("{id}")
+  public Mono<User> put(@PathVariable Long id, @Valid @RequestBody ModifyUserRequest request) {
+    request.setId(id);
+    return this.managerService.modify(request);
+  }
 
-    @PutMapping("change/password")
-    public Mono<UserOnly> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
-        Assert.isTrue(request.getPassword().equals(request.getNewPassword()), "新密码和确认密码不相等!");
-        return this.managerService.changePassword(request);
-    }
+  @PutMapping("change/password")
+  public Mono<UserOnly> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    Assert.isTrue(request.getPassword().equals(request.getNewPassword()), "新密码和确认密码不相等!");
+    return this.managerService.changePassword(request);
+  }
 
-    @DeleteMapping("{id}")
-    public Mono<Void> delete(@PathVariable Long id) {
-        return this.managerService.delete(id);
-    }
-
+  @DeleteMapping("{id}")
+  public Mono<Void> delete(@PathVariable Long id) {
+    return this.managerService.delete(id);
+  }
 }

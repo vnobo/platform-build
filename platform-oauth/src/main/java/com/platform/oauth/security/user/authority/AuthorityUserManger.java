@@ -20,26 +20,35 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthorityUserManger extends BaseAutoToolsUtil {
 
-    private final AuthorityUserRepository authorityUserRepository;
+  private final AuthorityUserRepository authorityUserRepository;
 
-    public Flux<AuthorityUser> search(AuthorityUserRequest authorizingRequest) {
-        return super.entityTemplate.select(Query.query(authorizingRequest.toCriteria()), AuthorityUser.class);
-    }
+  public Flux<AuthorityUser> search(AuthorityUserRequest authorizingRequest) {
+    return super.entityTemplate.select(
+        Query.query(authorizingRequest.toCriteria()), AuthorityUser.class);
+  }
 
-    public Flux<AuthorityUser> authorizing(Long userId, AuthorityUserRequest authorizingRequest) {
-        return this.authorityUserRepository.deleteByUserIdAndSystem(userId, authorizingRequest.getSystem())
-                .flatMapMany(result -> this.authorityUserRepository.saveAll(authorizingRequest.getRules().parallelStream()
-                        .map(authority -> AuthorityUser.of(authorizingRequest.getSystem(), userId, authority))
+  public Flux<AuthorityUser> authorizing(Long userId, AuthorityUserRequest authorizingRequest) {
+    return this.authorityUserRepository
+        .deleteByUserIdAndSystem(userId, authorizingRequest.getSystem())
+        .flatMapMany(
+            result ->
+                this.authorityUserRepository.saveAll(
+                    authorizingRequest.getRules().parallelStream()
+                        .map(
+                            authority ->
+                                AuthorityUser.of(authorizingRequest.getSystem(), userId, authority))
                         .collect(Collectors.toList())));
-    }
+  }
 
-    public Mono<Integer> deleteByUserId(Long userId) {
-        return this.authorityUserRepository.deleteByUserId(userId);
-    }
+  public Mono<Integer> deleteByUserId(Long userId) {
+    return this.authorityUserRepository.deleteByUserId(userId);
+  }
 
-    public Flux<AuthorityUser> getAuthorities(long userId) {
-        return Flux.deferContextual(contextView -> this.search(AuthorityUserRequest.withUserId(userId)
-                .system(SecurityTokenHelper.systemForContext(contextView))));
-    }
-
+  public Flux<AuthorityUser> getAuthorities(long userId) {
+    return Flux.deferContextual(
+        contextView ->
+            this.search(
+                AuthorityUserRequest.withUserId(userId)
+                    .system(SecurityTokenHelper.systemForContext(contextView))));
+  }
 }

@@ -1,6 +1,5 @@
 package com.platform.commons.converters;
 
-
 import com.platform.commons.annotation.UserAuditor;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -17,9 +16,8 @@ import org.springframework.data.convert.ReadingConverter;
 @ReadingConverter
 public class UserAuditorReadConverter implements Converter<Long, UserAuditor> {
 
-    @Override
-    public UserAuditor convert(@NonNull Long source) {
-        return UserAuditor.withUserId(source);
-    }
-
+  @Override
+  public UserAuditor convert(@NonNull Long source) {
+    return UserAuditor.withUserId(source);
+  }
 }

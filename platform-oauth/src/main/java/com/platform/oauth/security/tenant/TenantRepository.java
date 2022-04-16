@@ -11,12 +11,11 @@ import reactor.core.publisher.Mono;
  */
 public interface TenantRepository extends R2dbcRepository<Tenant, Integer> {
 
-    /**
-     * 根据租户code查找租户
-     *
-     * @param code 租户CODE
-     * @return 租户
-     */
-    Mono<Tenant> findByCode(String code);
-
+  /**
+   * 根据租户code查找租户
+   *
+   * @param code 租户CODE
+   * @return 租户
+   */
+  Mono<Tenant> findByCode(String code);
 }

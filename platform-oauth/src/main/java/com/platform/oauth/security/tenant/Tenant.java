@@ -21,27 +21,24 @@ import java.time.LocalDateTime;
 @Data
 @Table("se_tenants")
 public class Tenant implements Serializable, Persistable<Integer> {
-    @Id
-    private Integer id;
-    private String code;
-    private String name;
-    private String address;
-    private String description;
-    private Integer pid;
-    private JsonNode extend;
+  @Id private Integer id;
+  private String code;
+  private String name;
+  private String address;
+  private String description;
+  private Integer pid;
+  private JsonNode extend;
 
-    @CreatedDate
-    private LocalDateTime createdTime;
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+  @CreatedDate private LocalDateTime createdTime;
+  @LastModifiedDate private LocalDateTime updatedTime;
 
-    @Override
-    public boolean isNew() {
-        return ObjectUtils.isEmpty(this.id);
-    }
+  @Override
+  public boolean isNew() {
+    return ObjectUtils.isEmpty(this.id);
+  }
 
-    public Integer getTier() {
-        JsonNode jsonNode = this.getExtend().get("addressCode");
-        return ObjectUtils.isEmpty(jsonNode) ? 0 : jsonNode.size();
-    }
+  public Integer getTier() {
+    JsonNode jsonNode = this.getExtend().get("addressCode");
+    return ObjectUtils.isEmpty(jsonNode) ? 0 : jsonNode.size();
+  }
 }

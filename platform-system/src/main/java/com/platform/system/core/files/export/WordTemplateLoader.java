@@ -18,24 +18,30 @@ import reactor.core.publisher.Mono;
 @Service
 public class WordTemplateLoader extends AbstractClient {
 
-    private final String templatePath;
+  private final String templatePath;
 
-    public WordTemplateLoader(ExportProperties exportProperties) {
-        this.templatePath = exportProperties.getTemplatePath();
+  public WordTemplateLoader(ExportProperties exportProperties) {
+    this.templatePath = exportProperties.getTemplatePath();
+  }
 
-    }
+  public Mono<Resource> loadTemplate(String name) {
+    return this.webClient
+        .get()
+        .uri(uriBuilder -> uriBuilder.path("word").path(name).build())
+        .retrieve()
+        .onStatus(
+            HttpStatus::isError,
+            clientResponse ->
+                clientResponse
+                    .bodyToMono(String.class)
+                    .flatMap(
+                        errMsg ->
+                            Mono.error(RestServerException.withMsg(1051, "获取Word模板错误! " + errMsg))))
+        .bodyToMono(Resource.class);
+  }
 
-    public Mono<Resource> loadTemplate(String name) {
-        return this.webClient.get().uri(uriBuilder -> uriBuilder.path("word").path(name).build())
-                .retrieve()
-                .onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(String.class)
-                        .flatMap(errMsg -> Mono.error(RestServerException.withMsg(1051,
-                                "获取Word模板错误! " + errMsg))))
-                .bodyToMono(Resource.class);
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        initializeBaseUrl(templatePath);
-    }
+  @Override
+  public void afterPropertiesSet() {
+    initializeBaseUrl(templatePath);
+  }
 }

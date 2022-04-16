@@ -17,13 +17,12 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class UploadFileRequest {
 
-    @NotBlank(message = "文件目录[module]不能为空!")
-    private String module;
+  @NotBlank(message = "文件目录[module]不能为空!")
+  private String module;
 
-    @NotBlank(message = "文件名[name]不能为空!")
-    private String name;
+  @NotBlank(message = "文件名[name]不能为空!")
+  private String name;
 
-    @NotNull(message = "文件[fileData]不能为空!")
-    private FilePart fileData;
-
+  @NotNull(message = "文件[fileData]不能为空!")
+  private FilePart fileData;
 }

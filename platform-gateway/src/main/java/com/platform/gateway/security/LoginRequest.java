@@ -18,23 +18,23 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class LoginRequest extends RegisterRequest implements Serializable {
 
-    @NotBlank(message = "手机号[phone]不能为空!")
-    private String phone;
+  @NotBlank(message = "手机号[phone]不能为空!")
+  private String phone;
 
-    @NotBlank(message = "验证码[code]不能为空!")
-    private String code;
+  @NotBlank(message = "验证码[code]不能为空!")
+  private String code;
 
-    @NotNull(message = "需要登录的系统[system]不能为空!")
-    private SystemType system;
+  @NotNull(message = "需要登录的系统[system]不能为空!")
+  private SystemType system;
 
-    public LoginRequest system(SystemType system) {
-        this.setSystem(system);
-        return this;
-    }
+  public LoginRequest system(SystemType system) {
+    this.setSystem(system);
+    return this;
+  }
 
-    public LoginRequest toRegister() {
-        this.setUsername(getPhone());
-        this.setEnabled(true);
-        return this;
-    }
+  public LoginRequest toRegister() {
+    this.setUsername(getPhone());
+    this.setEnabled(true);
+    return this;
+  }
 }

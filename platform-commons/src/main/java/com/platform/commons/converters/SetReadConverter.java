@@ -25,19 +25,18 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SetReadConverter implements Converter<Json, Set<Object>> {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public Set<Object> convert(@NonNull Json source) {
-        if (ObjectUtils.isEmpty(source)) {
-            return Set.of();
-        }
-        try {
-            return this.objectMapper.readValue(source.asString(), new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            log.error("读取 Json 为 Set 转换错误,信息: {}", e.getMessage());
-            throw RestJsonProcessingException.withMsg("序列化数据Json为Set类型错误,信息: " + e.getMessage());
-        }
+  @Override
+  public Set<Object> convert(@NonNull Json source) {
+    if (ObjectUtils.isEmpty(source)) {
+      return Set.of();
     }
+    try {
+      return this.objectMapper.readValue(source.asString(), new TypeReference<>() {});
+    } catch (JsonProcessingException e) {
+      log.error("读取 Json 为 Set 转换错误,信息: {}", e.getMessage());
+      throw RestJsonProcessingException.withMsg("序列化数据Json为Set类型错误,信息: " + e.getMessage());
+    }
+  }
 }

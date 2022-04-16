@@ -25,11 +25,12 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ExcelReaderController {
 
-    private final ExcelReader excelReader;
+  private final ExcelReader excelReader;
 
-    @Operation(summary = "Excel表格断续导入", description = "有更高的性能,处理大表格")
-    @PostMapping(value = "sax")
-    public Flux<ExcelReaderResult> readerSax(@Valid ReaderRequest request, @RequestPart("file") FilePart filePart) {
-        return excelReader.reader(request, filePart);
-    }
+  @Operation(summary = "Excel表格断续导入", description = "有更高的性能,处理大表格")
+  @PostMapping(value = "sax")
+  public Flux<ExcelReaderResult> readerSax(
+      @Valid ReaderRequest request, @RequestPart("file") FilePart filePart) {
+    return excelReader.reader(request, filePart);
+  }
 }

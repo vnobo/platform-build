@@ -22,20 +22,20 @@ import java.util.Map;
 @NoArgsConstructor
 public class ExportRequest implements Serializable {
 
-    @NotBlank(message = "模板名字[name]不能为空!")
-    private String name;
+  @NotBlank(message = "模板名字[name]不能为空!")
+  private String name;
 
-    @NotNull(message = "租户[tenantId]不能为空!")
-    private Integer tenantId;
+  @NotNull(message = "租户[tenantId]不能为空!")
+  private Integer tenantId;
 
-    @NotBlank(message = "导出文档标题[title]不能为空!")
-    private String title;
+  @NotBlank(message = "导出文档标题[title]不能为空!")
+  private String title;
 
-    @NotNull(message = "模板数据不能为空!")
-    private Map<String, Object> params;
+  @NotNull(message = "模板数据不能为空!")
+  private Map<String, Object> params;
 
-    public ExportRequest params(Map<String, Object> params) {
-        this.setParams(params);
-        return this;
-    }
+  public ExportRequest params(Map<String, Object> params) {
+    this.setParams(params);
+    return this;
+  }
 }

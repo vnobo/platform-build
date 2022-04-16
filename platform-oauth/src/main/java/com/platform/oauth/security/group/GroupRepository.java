@@ -12,17 +12,17 @@ import reactor.core.publisher.Mono;
  */
 public interface GroupRepository extends R2dbcRepository<Group, Integer> {
 
-
-    /**
-     * 根据类型查找
-     *
-     * @param tenantCode 类型
-     * @param name       类型
-     * @param type       类型
-     * @param system     类型
-     * @return 角色组
-     */
-    @Query("select * from se_groups where tenant_code=:tenantCode and name ilike :name " +
-            "and type=:type and system=:system ")
-    Mono<Group> findByPids(String tenantCode, String name, Integer type, String system);
+  /**
+   * 根据类型查找
+   *
+   * @param tenantCode 类型
+   * @param name 类型
+   * @param type 类型
+   * @param system 类型
+   * @return 角色组
+   */
+  @Query(
+      "select * from se_groups where tenant_code=:tenantCode and name ilike :name "
+          + "and type=:type and system=:system ")
+  Mono<Group> findByPids(String tenantCode, String name, Integer type, String system);
 }

@@ -25,53 +25,53 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Tenant implements Serializable {
 
-    private Integer id;
-    private String code;
-    private String name;
-    private String address;
-    private String description;
-    private Integer pid;
-    private JsonNode extend;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+  private Integer id;
+  private String code;
+  private String name;
+  private String address;
+  private String description;
+  private Integer pid;
+  private JsonNode extend;
+  private LocalDateTime createdTime;
+  private LocalDateTime updatedTime;
 
-    private TenantLevel level;
+  private TenantLevel level;
 
-    public TenantLevel getLevel() {
-        return StringUtils.hasLength(code) ? TenantLevel.valueOf(code.length()) : null;
+  public TenantLevel getLevel() {
+    return StringUtils.hasLength(code) ? TenantLevel.valueOf(code.length()) : null;
+  }
+
+  public Integer getTier() {
+    return ObjectUtils.isEmpty(this.extend) ? 0 : this.extend.withArray("addressCode").size();
+  }
+
+  public MultiValueMap<String, String> toQueryParams() {
+
+    MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
+
+    if (!ObjectUtils.isEmpty(id)) {
+      multiValueMap.set("id", String.valueOf(id));
     }
 
-    public Integer getTier() {
-        return ObjectUtils.isEmpty(this.extend) ? 0 : this.extend.withArray("addressCode").size();
+    if (!ObjectUtils.isEmpty(pid)) {
+      multiValueMap.set("id", String.valueOf(pid));
     }
 
-    public MultiValueMap<String, String> toQueryParams() {
-
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>(10);
-
-        if (!ObjectUtils.isEmpty(id)) {
-            multiValueMap.set("id", String.valueOf(id));
-        }
-
-        if (!ObjectUtils.isEmpty(pid)) {
-            multiValueMap.set("id", String.valueOf(pid));
-        }
-
-        if (!ObjectUtils.isEmpty(level)) {
-            multiValueMap.set("level", level.name());
-        }
-
-        if (StringUtils.hasLength(name)) {
-            multiValueMap.set("name", name);
-        }
-        if (StringUtils.hasLength(code)) {
-            multiValueMap.set("code", code);
-        }
-
-        if (StringUtils.hasLength(address)) {
-            multiValueMap.set("code", address);
-        }
-
-        return multiValueMap;
+    if (!ObjectUtils.isEmpty(level)) {
+      multiValueMap.set("level", level.name());
     }
+
+    if (StringUtils.hasLength(name)) {
+      multiValueMap.set("name", name);
+    }
+    if (StringUtils.hasLength(code)) {
+      multiValueMap.set("code", code);
+    }
+
+    if (StringUtils.hasLength(address)) {
+      multiValueMap.set("code", address);
+    }
+
+    return multiValueMap;
+  }
 }

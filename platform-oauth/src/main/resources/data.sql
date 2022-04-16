@@ -8,7 +8,7 @@ where system = 'country'
 union all
 select DISTINCT 1, permission, "system"
 from sys_authority_dict,
-     jsonb_to_recordset(extend -> 'permissions') as items(permission text)
+     jsonb_to_recordset(extend - > 'permissions') as items(permission text)
 where system = 'country';
 
 insert into se_groups(id, tenant_id, "name", "system", "type", description)

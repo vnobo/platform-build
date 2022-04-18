@@ -1,6 +1,5 @@
 package com.platform.oauth.security.user;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.platform.commons.utils.SystemType;
@@ -29,14 +28,13 @@ import org.springframework.util.StringUtils;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest implements Serializable {
-
-  private Long id;
+public class UserRequest extends User implements Serializable {
 
   @NotBlank(message = "登录用户名[username]不能为空!")
   @Pattern(regexp = "^[a-zA-Z0-9_-]{5,16}$", message = "登录用户名[username]必须为5到16位（字母，数字，下划线，减号）!")
   private String username;
 
+  @NotBlank(message = "用户密码[password]不能为空!")
   @Pattern(
       regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$",
       message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
@@ -44,35 +42,20 @@ public class UserRequest implements Serializable {
 
   @NotNull(message = "是否启用[enabled]不能为空!")
   private Boolean enabled;
-
-  @Pattern(regexp = "[\\u4e00-\\u9fa5]+", message = "用户实名[name]不能有其它符号!")
-  private String name;
-
-  private String idCard;
-
   @Email(message = "电子邮箱[email]不合法!")
   private String email;
-
-  private String phone;
-
-  private String address;
-
   @NotNull(message = "租户[tenantId]不能为空!")
   private Integer tenantId;
 
+  @NotNull(message = "租户编码[tenantCode]不能为空!")
   private String tenantCode;
 
-  private String securityTenantCode;
-
-  @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
+  @Schema(title = "系统类型[system]不能为空!")
   private SystemType system;
 
-  @NotNull(message = "权限组[groupId]不能为空!")
   private Integer groupId;
-
-  private JsonNode extend;
-
   private UserBinding binding;
+  private String securityTenantCode;
 
   public static UserRequest withUsername(String username) {
     UserRequest userRequest = new UserRequest();
@@ -80,32 +63,13 @@ public class UserRequest implements Serializable {
     return userRequest;
   }
 
-  public String affirmIdCard() {
-    if (StringUtils.hasLength(this.idCard)) {
-      if (this.idCard.length() > 18) {
-        return this.idCard.substring(0, 18);
-      }
-    }
-    return this.idCard;
-  }
-
   public UserRequest id(Long id) {
     this.setId(id);
     return this;
   }
 
-  public UserRequest name(String name) {
-    this.setName(name);
-    return this;
-  }
-
   public UserRequest tenantId(Integer tenantId) {
     this.setTenantId(tenantId);
-    return this;
-  }
-
-  public UserRequest address(String address) {
-    this.setAddress(address);
     return this;
   }
 
@@ -132,13 +96,12 @@ public class UserRequest implements Serializable {
     }
     return user;
   }
-
   public Criteria toCriteria() {
 
     Criteria criteria = Criteria.empty();
 
-    if (!ObjectUtils.isEmpty(this.id)) {
-      criteria = criteria.and(Criteria.where("id").is(this.id));
+    if (!ObjectUtils.isEmpty(this.getId())) {
+      criteria = criteria.and(Criteria.where("id").is(this.getId()));
     }
 
     if (!ObjectUtils.isEmpty(this.tenantId)) {
@@ -157,21 +120,10 @@ public class UserRequest implements Serializable {
       criteria = criteria.and("username").like(this.username).ignoreCase(true);
     }
 
-    if (StringUtils.hasLength(this.name)) {
-      criteria = criteria.and("name").like("%" + this.name + "%");
-    }
-
-    if (StringUtils.hasLength(this.idCard)) {
-      criteria = criteria.and("idCard").like(this.idCard + "%");
-    }
-
     if (StringUtils.hasLength(this.email)) {
       criteria = criteria.and("email").like(this.email + "%");
     }
 
-    if (StringUtils.hasLength(this.phone)) {
-      criteria = criteria.and("phone").like(this.phone + "%");
-    }
     return criteria;
   }
 }

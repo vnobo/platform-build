@@ -1,7 +1,5 @@
 package com.platform.oauth.security;
 
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.IdcardUtil;
 import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.SecurityDetailsTenant;
 import com.platform.commons.security.SimplerSecurityDetails;
@@ -109,16 +107,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
     Mono<SimplerSecurityDetails> securityDetailsMono =
         this.userManager
             .loadByUsername(username)
-            .map(
-                user ->
-                    SimplerSecurityDetails.of(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getName(),
-                        Validator.isChinese(user.getName())
-                                && IdcardUtil.isValidCard(user.affirmIdCard())
-                            ? 1
-                            : 0));
+            .map(user -> SimplerSecurityDetails.of(user.getId(), user.getUsername()));
 
     Function<SimplerSecurityDetails, Flux<SecurityDetailsTenant>> userTenantFunction =
         securityDetails ->
@@ -209,10 +198,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
     return this.memberTenantManager
         .operation(memberTenantRequest)
         .delayUntil(this::updateUserTenant)
-        .map(
-            memberTenant ->
-                SimplerSecurityDetails.of(
-                    memberTenant.getUserId(), null, memberTenant.getUserName(), 1));
+        .map(memberTenant -> SimplerSecurityDetails.of(memberTenant.getUserId(), null));
   }
 
   /**

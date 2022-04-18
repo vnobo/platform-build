@@ -19,8 +19,7 @@ public class SimplerSecurityDetails implements SecurityDetails, Serializable {
   private String username;
   private String[] authorities;
   private Long userId;
-  private String name;
-  private Integer securityLevel;
+
   private Integer tenantId;
   private String tenantName;
   private String tenantCode;
@@ -29,13 +28,11 @@ public class SimplerSecurityDetails implements SecurityDetails, Serializable {
   private JsonNode tenantAddressText;
   private Set<SecurityDetailsTenant> tenants;
 
-  public static SimplerSecurityDetails of(
-      Long userId, String username, String name, Integer securityLevel) {
+  public static SimplerSecurityDetails of(Long userId, String username) {
 
     SimplerSecurityDetails securityDetails = new SimplerSecurityDetails();
     securityDetails.setUserId(userId);
     securityDetails.setUsername(username);
-    securityDetails.setName(name);
     securityDetails.setSecurityLevel(securityLevel);
     return securityDetails;
   }

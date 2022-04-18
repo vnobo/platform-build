@@ -25,20 +25,6 @@ public interface SecurityDetails {
   String getUsername();
 
   /**
-   * 用户认证名字
-   *
-   * @return user.name
-   */
-  String getName();
-
-  /**
-   * 认证等级 如果用户填写真实姓名,和身份证为一级
-   *
-   * @return 1, 一级, 2, 二级
-   */
-  Integer getSecurityLevel();
-
-  /**
    * 租户层级
    *
    * @return int userid

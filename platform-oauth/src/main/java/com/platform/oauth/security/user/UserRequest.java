@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.relational.core.query.Criteria;
@@ -25,9 +25,10 @@ import org.springframework.util.StringUtils;
  * @date Created by 2021/6/3
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserRequest extends User implements Serializable {
 
   @NotBlank(message = "登录用户名[username]不能为空!")
@@ -42,8 +43,6 @@ public class UserRequest extends User implements Serializable {
 
   @NotNull(message = "是否启用[enabled]不能为空!")
   private Boolean enabled;
-  @Email(message = "电子邮箱[email]不合法!")
-  private String email;
   @NotNull(message = "租户[tenantId]不能为空!")
   private Integer tenantId;
 
@@ -54,6 +53,7 @@ public class UserRequest extends User implements Serializable {
   private SystemType system;
 
   private Integer groupId;
+
   private UserBinding binding;
   private String securityTenantCode;
 
@@ -118,10 +118,6 @@ public class UserRequest extends User implements Serializable {
 
     if (StringUtils.hasLength(this.username)) {
       criteria = criteria.and("username").like(this.username).ignoreCase(true);
-    }
-
-    if (StringUtils.hasLength(this.email)) {
-      criteria = criteria.and("email").like(this.email + "%");
     }
 
     return criteria;

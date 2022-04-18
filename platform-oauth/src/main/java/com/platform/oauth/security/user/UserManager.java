@@ -91,7 +91,7 @@ public class UserManager extends BaseAutoToolsUtil {
         this.tenantManager
             .loadById(userRequest.getTenantId())
             .defaultIfEmpty(TenantRequest.withId(0))
-            .map(tenant -> userRequest.tenantCode(tenant.getCode()).address(tenant.getAddress()))
+            .map(tenant -> userRequest.tenantCode(tenant.getCode()))
             .flatMap(this::operation)
             .publishOn(Schedulers.boundedElastic())
             .doOnNext(

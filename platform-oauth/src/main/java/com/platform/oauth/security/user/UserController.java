@@ -1,6 +1,5 @@
 package com.platform.oauth.security.user;
 
-import cn.hutool.core.util.IdcardUtil;
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.oauth.security.user.authority.AuthorityUser;
 import com.platform.oauth.security.user.authority.AuthorityUserRequest;
@@ -65,8 +64,6 @@ public class UserController {
 
   @PostMapping
   public Mono<User> post(@Valid @RequestBody UserRequest request) {
-    Assert.hasText(request.getPassword(), "登录用户密码[password]不能为空!");
-    Assert.isTrue(IdcardUtil.isValidCard(request.affirmIdCard()), "身份证[idCard]不合法!");
     return this.managerService.register(request);
   }
 

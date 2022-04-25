@@ -2,23 +2,18 @@ package com.platform.oauth.security.user;
 
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.oauth.security.user.authority.AuthorityUser;
+import com.platform.oauth.security.user.authority.AuthorityUserManger;
 import com.platform.oauth.security.user.authority.AuthorityUserRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 /**
  * com.bootiful.oauth.security.user.UserController
@@ -26,61 +21,55 @@ import reactor.core.publisher.Mono;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/6/3
  */
-@Tag(name = "账户管理")
+@Tag(name = "用户管理")
 @RestController
 @RequestMapping("/user/manager/v1")
 @RequiredArgsConstructor
 public class UserController {
-  private final UserManager managerService;
+    private final UserManager managerService;
+    private final AuthorityUserManger authorityUserManger;
 
-  @GetMapping("search")
-  public Flux<UserOnly> search(UserRequest request, Pageable pageable) {
-    return ReactiveSecurityDetailsHolder.getContext()
-        .flatMapMany(
-            securityDetails ->
-                this.managerService.search(
-                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-  }
+    @GetMapping("search")
+    public Flux<UserOnly> search(UserRequest request, Pageable pageable) {
+        return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
+                this.managerService.search(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+    }
 
-  @GetMapping("page")
-  public Mono<Page<UserOnly>> page(UserRequest request, Pageable pageable) {
-    return ReactiveSecurityDetailsHolder.getContext()
-        .flatMap(
-            securityDetails ->
-                this.managerService.page(
-                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-  }
+    @GetMapping("page")
+    public Mono<Page<UserOnly>> page(UserRequest request, Pageable pageable) {
+        return ReactiveSecurityDetailsHolder.getContext().flatMap(securityDetails ->
+                this.managerService.page(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+    }
 
-  @PostMapping("/authorizing/{id}")
-  public Flux<AuthorityUser> authorizing(
-      @PathVariable Long id, @Valid @RequestBody AuthorityUserRequest request) {
-    return this.managerService.authorizing(id, request);
-  }
+    @GetMapping
+    public Flux<User> get(UserRequest request) {
+        return this.managerService.loadUsers(request);
+    }
 
-  @GetMapping
-  public Flux<User> get(UserRequest request) {
-    return this.managerService.loadUsers(request);
-  }
+    @PostMapping
+    public Mono<User> post(@Valid @RequestBody UserRequest request) {
+        return this.managerService.register(request);
+    }
 
-  @PostMapping
-  public Mono<User> post(@Valid @RequestBody UserRequest request) {
-    return this.managerService.register(request);
-  }
+    @PutMapping("{id}")
+    public Mono<User> put(@PathVariable Long id, @Valid @RequestBody ModifyUserRequest request) {
+        request.setId(id);
+        return this.managerService.modify(request);
+    }
 
-  @PutMapping("{id}")
-  public Mono<User> put(@PathVariable Long id, @Valid @RequestBody ModifyUserRequest request) {
-    request.setId(id);
-    return this.managerService.modify(request);
-  }
+    @PutMapping("change/password")
+    public Mono<UserOnly> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        Assert.isTrue(request.getPassword().equals(request.getNewPassword()), "新密码和确认密码不相等!");
+        return this.managerService.changePassword(request);
+    }
 
-  @PutMapping("change/password")
-  public Mono<UserOnly> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
-    Assert.isTrue(request.getPassword().equals(request.getNewPassword()), "新密码和确认密码不相等!");
-    return this.managerService.changePassword(request);
-  }
+    @DeleteMapping("{id}")
+    public Mono<Void> delete(@PathVariable Long id) {
+        return this.managerService.delete(id);
+    }
 
-  @DeleteMapping("{id}")
-  public Mono<Void> delete(@PathVariable Long id) {
-    return this.managerService.delete(id);
-  }
+    @PostMapping("authorizing")
+    public Flux<AuthorityUser> authorizing(@Valid @RequestBody AuthorityUserRequest request) {
+        return this.authorityUserManger.authorizing(request);
+    }
 }

@@ -3,20 +3,16 @@ package com.platform.oauth.security.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.platform.commons.utils.SystemType;
-import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.user.UserRequest
@@ -36,24 +32,16 @@ public class UserRequest extends User implements Serializable {
   private String username;
 
   @NotBlank(message = "用户密码[password]不能为空!")
-  @Pattern(
-      regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$",
-      message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
+  @Pattern(regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$",
+          message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
   private String password;
 
   @NotNull(message = "是否启用[enabled]不能为空!")
   private Boolean enabled;
-  @NotNull(message = "租户[tenantId]不能为空!")
   private Integer tenantId;
-
-  @NotNull(message = "租户编码[tenantCode]不能为空!")
   private String tenantCode;
-
-  @Schema(title = "系统类型[system]不能为空!")
   private SystemType system;
-
   private Integer groupId;
-
   private UserBinding binding;
   private String securityTenantCode;
 

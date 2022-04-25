@@ -2,30 +2,25 @@ package com.platform.oauth.security.group;
 
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.oauth.security.group.authority.AuthorityGroup;
+import com.platform.oauth.security.group.authority.AuthorityGroupManger;
 import com.platform.oauth.security.group.authority.AuthorityGroupRequest;
 import com.platform.oauth.security.group.member.MemberGroupManager;
 import com.platform.oauth.security.group.member.MemberGroupOnly;
 import com.platform.oauth.security.group.member.MemberGroupRequest;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Set;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
+import java.util.Set;
 
 /**
  * com.bootiful.oauth.security.group.GroupController
@@ -39,85 +34,72 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GroupController {
 
-  private final GroupManager managerService;
-  private final MemberGroupManager memberGroupManager;
+    private final GroupManager managerService;
+    private final MemberGroupManager memberGroupManager;
+    private final AuthorityGroupManger authorityGroupManger;
 
-  @GetMapping("search")
-  public Flux<GroupOnly> search(GroupRequest request, Pageable pageable) {
-    return ReactiveSecurityDetailsHolder.getContext()
-        .flatMapMany(
-            securityDetails ->
-                this.managerService.search(
-                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-  }
+    @Operation(summary = "获取角色列表")
+    @GetMapping("search")
+    public Flux<GroupOnly> search(GroupRequest request, Pageable pageable) {
+        return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
+                this.managerService.search(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+    }
 
-  @GetMapping("page")
-  public Mono<Page<GroupOnly>> page(GroupRequest request, Pageable pageable) {
-    return ReactiveSecurityDetailsHolder.getContext()
-        .flatMap(
-            securityDetails ->
-                this.managerService.page(
-                    request.securityTenantCode(securityDetails.getTenantCode()), pageable));
-  }
+    @Operation(summary = "获取角色分页")
+    @GetMapping("page")
+    public Mono<Page<GroupOnly>> page(GroupRequest request, Pageable pageable) {
+        return ReactiveSecurityDetailsHolder.getContext().flatMap(securityDetails ->
+                this.managerService.page(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+    }
 
-  @GetMapping
-  public Flux<GroupOnly> get(GroupRequest request) {
-    return this.managerService.search(request, Pageable.ofSize(100));
-  }
+    @Hidden
+    @GetMapping
+    public Flux<GroupOnly> get(GroupRequest request) {
+        return this.managerService.search(request, Pageable.ofSize(100));
+    }
 
-  @PostMapping
-  public Mono<Group> post(@Valid @RequestBody GroupRequest request) {
-    return this.managerService.add(request);
-  }
+    @Operation(summary = "创建角色")
+    @PostMapping
+    public Mono<Group> post(@Valid @RequestBody GroupRequest request) {
+        return this.managerService.add(request);
+    }
 
-  @DeleteMapping("{id}")
-  public Mono<Void> delete(@PathVariable Integer id) {
-    return this.managerService
-        .delete(id)
-        .delayUntil(res -> this.memberGroupManager.deleteByGroupId(id));
-  }
+    @Operation(summary = "删除角色")
+    @DeleteMapping("{id}")
+    public Mono<Void> delete(@PathVariable Integer id) {
+        return this.managerService.delete(id);
+    }
 
-  @GetMapping("authority/search")
-  public Flux<AuthorityGroup> authoritiesSearch(AuthorityGroupRequest request) {
-    Assert.isTrue(request.validAllEmpty(), "查询条件不能都为空!");
-    return this.managerService.loadAuthorities(request);
-  }
+    @Operation(summary = "获取角色权限")
+    @GetMapping("authorities")
+    public Flux<AuthorityGroup> authorities(AuthorityGroupRequest request) {
+        Assert.isTrue(request.validAllEmpty(), "查询条件不能都为空!");
+        return this.authorityGroupManger.search(request);
+    }
 
-  @PostMapping("authorizing/{id}")
-  public Flux<AuthorityGroup> authorizing(
-      @PathVariable Integer id, @RequestBody AuthorityGroupRequest request) {
-    return this.managerService.authorizing(id, request);
-  }
+    @Operation(summary = "角色分配权限")
+    @PostMapping("authorizing")
+    public Flux<AuthorityGroup> authorizing(@RequestBody AuthorityGroupRequest request) {
+        return this.authorityGroupManger.authorizing(request);
+    }
 
-  @PostMapping("/member/{id}")
-  public Flux<MemberGroupOnly> addMembers(
-      @Parameter(name = "角色组ID") @PathVariable Integer id,
-      @Parameter(name = "增加用户ID集合") @Valid @RequestBody Set<Long> request) {
-    return this.memberGroupManager.addMembers(id, request);
-  }
+    @Operation(summary = "分配角色用户")
+    @PostMapping("/member/{id}")
+    public Flux<MemberGroupOnly> addMembers(@Parameter(name = "角色组ID") @PathVariable Integer id,
+                                            @Parameter(name = "增加用户ID集合") @Valid @RequestBody Set<Long> request) {
+        return this.memberGroupManager.addMembers(id, request);
+    }
 
-  @DeleteMapping("/member/{id}")
-  public Flux<Void> deleteMembers(
-      @Parameter(name = "角色组ID") @PathVariable Integer id,
-      @Parameter(name = "删除用户ID集合") @Valid @RequestBody Set<Long> request) {
-    return this.memberGroupManager.deleteMembers(id, request);
-  }
+    @Operation(summary = "删除角色用户")
+    @DeleteMapping("/member/{id}")
+    public Flux<Void> deleteMembers(@Parameter(name = "角色组ID") @PathVariable Integer id,
+                                    @Parameter(name = "删除用户ID集合") @Valid @RequestBody Set<Long> request) {
+        return this.memberGroupManager.deleteMembers(id, request);
+    }
 
-  @GetMapping("/member/{id}")
-  public Mono<Page<MemberGroupOnly>> members(
-      @Parameter(name = "角色组ID") @PathVariable Integer id,
-      @Parameter(name = "获取角色查询条件") MemberGroupRequest groupRequest,
-      @PageableDefault(sort = "se_group_members.user_id", direction = Sort.Direction.DESC)
-          Pageable pageable) {
-    return this.memberGroupManager.members(groupRequest.id(id), pageable);
-  }
-
-  @Operation(summary = "获取角色组的用户")
-  @GetMapping("members")
-  public Mono<Page<MemberGroupOnly>> members(
-      MemberGroupRequest groupRequest,
-      @PageableDefault(sort = "se_group_members.user_id", direction = Sort.Direction.DESC)
-          Pageable pageable) {
-    return this.memberGroupManager.members(groupRequest, pageable);
-  }
+    @Operation(summary = "获取角色用户")
+    @GetMapping("members")
+    public Mono<Page<MemberGroupOnly>> members(MemberGroupRequest groupRequest, Pageable pageable) {
+        return this.memberGroupManager.members(groupRequest, pageable);
+    }
 }

@@ -1,11 +1,12 @@
 package com.platform.oauth.security.group.member;
 
-import com.platform.oauth.security.group.GroupOnly;
+import com.platform.oauth.security.group.Group;
 import com.platform.oauth.security.user.UserOnly;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
+
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.group.GroupMemberOnly
@@ -40,8 +41,8 @@ public class MemberGroupOnly extends MemberGroup implements Serializable {
     return this;
   }
 
-  public MemberGroupOnly groupOnly(GroupOnly groupOnly) {
-    this.setGroupName(groupOnly.getName());
+  public MemberGroupOnly groupOnly(Group group) {
+    this.setGroupName(group.getName());
     return this;
   }
 }

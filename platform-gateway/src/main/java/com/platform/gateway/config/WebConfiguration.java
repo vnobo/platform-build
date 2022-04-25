@@ -1,7 +1,6 @@
 package com.platform.gateway.config;
 
 import com.platform.commons.CommonsAutoConfiguration;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -13,5 +12,4 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration(proxyBeanMethods = false)
 @Import({CommonsAutoConfiguration.class})
-@RequiredArgsConstructor
 public class WebConfiguration {}

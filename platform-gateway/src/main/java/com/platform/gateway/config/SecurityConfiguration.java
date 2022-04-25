@@ -21,28 +21,21 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-  private final ServerSecurityContextRepository contextRepository;
+    private final ServerSecurityContextRepository contextRepository;
 
-  @Bean
-  public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-
-    http.authorizeExchange(
-            exchange -> {
-              exchange.matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
-              exchange
-                  .pathMatchers(
-                      "/", "/wx/user/*/v1/authorize", "/oauth2/captcha/**", "/oauth2/v1/phone/*")
-                  .permitAll();
-              exchange.anyExchange().authenticated();
-            })
-        .formLogin(Customizer.withDefaults())
-        .httpBasic(
-            httpBasicSpec ->
-                httpBasicSpec.authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
-        .securityContextRepository(contextRepository)
-        .csrf(
-            csrfSpec ->
-                csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
-    return http.build();
-  }
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http.authorizeExchange(exchange -> {
+                    exchange.matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
+                    exchange.pathMatchers("/", "/wx/user/*/v1/authorize", "/oauth2/captcha/**",
+                            "/oauth2/v1/phone/*").permitAll();
+                    exchange.anyExchange().authenticated();
+                })
+                .formLogin(Customizer.withDefaults())
+                .httpBasic(httpBasicSpec -> httpBasicSpec
+                        .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
+                .securityContextRepository(contextRepository)
+                .csrf(csrfSpec -> csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
+        return http.build();
+    }
 }

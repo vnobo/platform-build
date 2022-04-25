@@ -2,12 +2,14 @@ package com.platform.oauth.security.user.authority;
 
 import com.platform.commons.security.SecurityTokenHelper;
 import com.platform.commons.utils.BaseAutoToolsUtil;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * com.bootiful.oauth.security.user.authority.AuthorityManger
@@ -19,35 +21,36 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthorityUserManger extends BaseAutoToolsUtil {
 
-  private final AuthorityUserRepository authorityUserRepository;
+    private final AuthorityUserRepository authorityUserRepository;
 
-  public Flux<AuthorityUser> search(AuthorityUserRequest authorizingRequest) {
-    return super.entityTemplate.select(
-        Query.query(authorizingRequest.toCriteria()), AuthorityUser.class);
-  }
+    public Flux<AuthorityUser> search(AuthorityUserRequest authorizingRequest) {
+        return super.entityTemplate.select(
+                Query.query(authorizingRequest.toCriteria()), AuthorityUser.class);
+    }
 
-  public Flux<AuthorityUser> authorizing(Long userId, AuthorityUserRequest authorizingRequest) {
-    return this.authorityUserRepository
-        .deleteByUserIdAndSystem(userId, authorizingRequest.getSystem())
-        .flatMapMany(
-            result ->
-                this.authorityUserRepository.saveAll(
-                    authorizingRequest.getRules().parallelStream()
-                        .map(
-                            authority ->
-                                AuthorityUser.of(authorizingRequest.getSystem(), userId, authority))
-                        .collect(Collectors.toList())));
-  }
+    public Flux<AuthorityUser> authorizing(AuthorityUserRequest authorizingRequest) {
+        return this.authorityUserRepository.findByUserIdAndSystem(authorizingRequest.getUserId(),
+                        authorizingRequest.getSystem()).collectList()
+                .flatMapMany(oldList -> {
+                    List<AuthorityUser> addList = authorizingRequest.getRules().parallelStream()
+                            .filter(a -> oldList.size() == 0 || oldList.parallelStream()
+                                    .noneMatch(o -> o.getAuthority().equals(a)))
+                            .map(a -> AuthorityUserRequest.of(authorizingRequest.getSystem(), authorizingRequest.getUserId(), a))
+                            .collect(Collectors.toList());
+                    List<AuthorityUser> deleteList = oldList.parallelStream()
+                            .filter(a -> !authorizingRequest.getRules().contains(a.getAuthority()))
+                            .collect(Collectors.toList());
+                    return this.authorityUserRepository.saveAll(addList).defaultIfEmpty(authorizingRequest)
+                            .delayUntil(res -> this.authorityUserRepository.deleteAll(deleteList));
+                });
+    }
 
-  public Mono<Integer> deleteByUserId(Long userId) {
-    return this.authorityUserRepository.deleteByUserId(userId);
-  }
+    public Mono<Integer> deleteByUserId(Long userId) {
+        return this.authorityUserRepository.deleteByUserId(userId);
+    }
 
-  public Flux<AuthorityUser> getAuthorities(long userId) {
-    return Flux.deferContextual(
-        contextView ->
-            this.search(
-                AuthorityUserRequest.withUserId(userId)
-                    .system(SecurityTokenHelper.systemForContext(contextView))));
-  }
+    public Flux<AuthorityUser> getAuthorities(long userId) {
+        return Flux.deferContextual(contextView -> this.search(AuthorityUserRequest.withUserId(userId)
+                .system(SecurityTokenHelper.systemForContext(contextView))));
+    }
 }

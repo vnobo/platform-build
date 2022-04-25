@@ -16,4 +16,5 @@ public class ReactiveUserAuditorAware implements ReactiveAuditorAware<UserAudito
   public Mono<UserAuditor> getCurrentAuditor() {
     return ReactiveSecurityDetailsHolder.getContext().map(UserAuditor::withSecurityDetails);
   }
+
 }

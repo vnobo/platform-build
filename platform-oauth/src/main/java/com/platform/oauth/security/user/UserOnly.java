@@ -2,11 +2,12 @@ package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * com.bootiful.oauth.security.user.UserOnly
@@ -37,10 +38,8 @@ public class UserOnly implements Serializable {
     BeanUtils.copyProperties(user, userOnly);
     if (!ObjectUtils.isEmpty(user.getExtend())) {
       ObjectMapper objectMapper = new ObjectMapper();
-      JsonNode bindingNode =
-          ObjectUtils.isEmpty(user.getExtend().get("binding"))
-              ? objectMapper.createObjectNode()
-              : user.getExtend().get("binding");
+      JsonNode bindingNode = ObjectUtils.isEmpty(user.getExtend().get("binding"))
+              ? objectMapper.createObjectNode() : user.getExtend().get("binding");
       userOnly.setBinding(objectMapper.convertValue(bindingNode, UserBinding.class));
     }
     return userOnly;

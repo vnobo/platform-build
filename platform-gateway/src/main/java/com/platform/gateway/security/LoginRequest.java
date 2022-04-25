@@ -1,11 +1,12 @@
 package com.platform.gateway.security;
 
 import com.platform.commons.utils.SystemType;
-import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.core.weixin.RegRequest
@@ -30,7 +31,6 @@ public class LoginRequest extends RegisterRequest implements Serializable {
     this.setSystem(system);
     return this;
   }
-
   public LoginRequest toRegister() {
     this.setUsername(getPhone());
     this.setEnabled(true);

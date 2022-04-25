@@ -1,10 +1,9 @@
 package com.platform.commons.annotation;
 
 import com.platform.commons.security.SecurityDetails;
-import com.platform.commons.utils.User;
-import java.io.Serializable;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
+
+import java.io.Serializable;
 
 /**
  * com.bootiful.commons.security.Creators 自动注册认证的用户
@@ -21,15 +20,6 @@ public class UserAuditor implements Serializable {
   private String username;
   private String email;
   private String phone;
-  private String name;
-  private String idCard;
-
-  public static UserAuditor withUser(User user) {
-    UserAuditor userAuditor = new UserAuditor();
-    BeanUtils.copyProperties(user, userAuditor);
-    userAuditor.setUserId(user.getId());
-    return userAuditor;
-  }
 
   public static UserAuditor withUserId(Long userId) {
     UserAuditor userAuditor = new UserAuditor();
@@ -40,15 +30,10 @@ public class UserAuditor implements Serializable {
   public static UserAuditor withSecurityDetails(SecurityDetails securityDetails) {
     UserAuditor userAuditor = new UserAuditor();
     userAuditor.setUserId(securityDetails.getUserId());
-    userAuditor.setName(securityDetails.getName());
     userAuditor.setTenantCode(securityDetails.getTenantCode());
     userAuditor.setUsername(securityDetails.getUsername());
     userAuditor.setTenantId(securityDetails.getTenantId());
     return userAuditor;
   }
 
-  public UserAuditor name(String name) {
-    this.setName(name);
-    return this;
-  }
 }

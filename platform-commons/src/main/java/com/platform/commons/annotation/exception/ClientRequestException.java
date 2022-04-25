@@ -12,15 +12,30 @@ import com.platform.commons.annotation.RestServerException;
  */
 public class ClientRequestException extends RestServerException {
 
-  public ClientRequestException(int code, Object msg) {
-    super(code, msg);
-  }
+    private String serviceId;
 
-  public static ClientRequestException withMsg(int code, Object msg) {
-    return new ClientRequestException(code, msg);
-  }
+    public ClientRequestException(int code, Object msg) {
+        super(code, msg);
+    }
 
-  public static ClientRequestException withMsg(Object msg) {
-    return withMsg(1503, msg);
-  }
+    public static ClientRequestException withMsg(int code, Object msg) {
+        return new ClientRequestException(code, msg);
+    }
+
+    public static ClientRequestException withMsg(Object msg) {
+        return withMsg(1503, msg);
+    }
+
+    public ClientRequestException serviceId(String serviceId) {
+        this.setServiceId(serviceId);
+        return this;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
 }

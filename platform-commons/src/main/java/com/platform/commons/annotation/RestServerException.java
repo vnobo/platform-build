@@ -1,9 +1,10 @@
 package com.platform.commons.annotation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * com.bootiful.commons.annotation.RestServerException
@@ -14,8 +15,8 @@ import lombok.EqualsAndHashCode;
  * @date Created by 2020/7/22
  */
 @Schema(title = "系统自定义错误类型")
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class RestServerException extends RuntimeException implements Serializable {
 
   protected Object msg;

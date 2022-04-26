@@ -1,54 +1,23 @@
-<nz-layout class="app-layout">
-  <nz-sider [(nzCollapsed)]="isCollapsed"
-            [nzTrigger]="null"
-            class="menu-sidebar"
-            nzBreakpoint="md"
-            nzCollapsible
-            nzWidth="256px">
-    <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img alt="logo" src="https://ng.ant.design/assets/img/logo.svg">
-        <h1>Ant Design Of Angular</h1>
-      </a>
+<div class="container">
+  <div class="d-flex justify-content-center align-items-center" style="height: 100vh">
+    <div class="text-center">
+      <img
+        class="mb-4"
+        src="https://mdbootstrap.com/img/logo/mdb-transparent-250px.png"
+        style="width: 250px; height: 90px"
+      />
+      <h5 class="mb-3">Thank you for using our product. We're glad you're with us.</h5>
+      <p class="mb-3">MDB Team</p>
+      <p>
+        PS. We'll be releasing "How to build your first project with MDB 5 Angular" tutorial soon.
+      </p>
+      <a
+        class="btn btn-primary btn-lg"
+        href=" https://mdbootstrap.com/newsletter/"
+        role="button"
+        target="_blank"
+      >Join now</a
+      >
     </div>
-    <ul [nzInlineCollapsed]="isCollapsed" nz-menu nzMode="inline" nzTheme="dark">
-      <li nz-submenu nzIcon="dashboard" nzOpen nzTitle="Dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzIcon="form" nzOpen nzTitle="Form">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nz-sider>
-  <nz-layout>
-    <nz-header>
-      <div class="app-header">
-        <span (click)="isCollapsed = !isCollapsed" class="header-trigger">
-            <i [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-               class="trigger"
-               nz-icon
-            ></i>
-        </span>
-      </div>
-    </nz-header>
-    <nz-content>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-      </div>
-    </nz-content>
-  </nz-layout>
-</nz-layout>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 package com.platform.commons.client;
 
-import com.platform.commons.annotation.CustomServerAuthenticationEntryPoint;
 import com.platform.commons.annotation.ErrorResponse;
 import com.platform.commons.annotation.exception.ClientRequestException;
+import com.platform.commons.security.CustomServerAuthenticationEntryPoint;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +223,6 @@ public abstract class AbstractClient implements InitializingBean {
         @Override
         public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
             return Mono.deferContextual(contextView -> {
-                log.debug("context size {}", contextView.size());
                 Optional<ServerWebExchange> exchangeOpt = contextView.getOrEmpty(ServerWebExchange.class);
                 if (exchangeOpt.isPresent()) {
                     ServerWebExchange exchange = exchangeOpt.get();

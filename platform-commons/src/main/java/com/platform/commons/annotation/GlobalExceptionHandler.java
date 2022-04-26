@@ -81,7 +81,6 @@ public class GlobalExceptionHandler {
         log.error("服务器自定义错误. 信息: {}", ex.getMsg());
         ErrorResponse response = ErrorResponse.withErrors("自定义服务错误!", ex.getMsg()).code(ex.getCode());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(response);
+                .contentType(MediaType.APPLICATION_JSON).body(response);
     }
 }

@@ -1,7 +1,6 @@
 package com.platform.oauth.security;
 
 import com.platform.commons.security.LoginSecurityDetails;
-import com.platform.commons.security.SecurityDetailsTenant;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.commons.utils.SystemType;
@@ -13,10 +12,6 @@ import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import com.platform.oauth.security.user.User;
 import com.platform.oauth.security.user.UserBinding;
 import com.platform.oauth.security.user.UserManager;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.relational.core.query.Criteria;
@@ -29,6 +24,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * com.alex.oauth.security.SecurityService

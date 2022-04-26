@@ -5,10 +5,11 @@ import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.gateway.security.RegisterRequest;
 import com.platform.gateway.security.TenantCutRequest;
-import java.util.Map;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 /**
  * com.bootiful.gateway.client.OauthClient
@@ -37,8 +38,7 @@ public class AuthClient extends AbstractClient {
    * @return 安全用户信息
    */
   public Mono<LoginSecurityDetails> userRegister(RegisterRequest registerRequest) {
-    return super.post(
-        "/oauth2/v1/register", registerRequest, LoginSecurityDetails.class, new Object[1]);
+    return super.post("/oauth2/v1/register", registerRequest, LoginSecurityDetails.class, new Object[1]);
   }
 
   /**

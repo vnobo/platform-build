@@ -1,7 +1,7 @@
 package com.platform.gateway.security;
 
 import com.platform.commons.client.CountryClient;
-import com.platform.commons.security.SecurityTokenHelper;
+import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.gateway.client.AuthClient;
 import com.platform.gateway.weixin.WxRequest;
@@ -30,8 +30,8 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
   @Override
   public Mono<UserDetails> updatePassword(UserDetails userDetails, String newPassword) {
     return this.authClient
-        .changePassword(userDetails.getUsername(), userDetails.getPassword())
-        .map(SecurityTokenHelper::buildUserDetails)
+            .changePassword(userDetails.getUsername(), userDetails.getPassword())
+            .map(ReactiveSecurityHelper::buildUserDetails)
         .map(userDetails1 -> withNewPassword(userDetails1, newPassword));
   }
 
@@ -45,9 +45,9 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
 
   public Mono<Authentication> winXinLogin(WxRequest wxRequest) {
     return this.countryClient
-        .login(wxRequest.getPhone())
-        .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
-        .map(SecurityTokenHelper::buildUserDetails)
+            .login(wxRequest.getPhone())
+            .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
+            .map(ReactiveSecurityHelper::buildUserDetails)
         .map(
             userDetail ->
                 new UsernamePasswordAuthenticationToken(
@@ -56,9 +56,9 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
 
   public Mono<Authentication> appLogin(LoginRequest loginRequest) {
     return this.countryClient
-        .login(loginRequest.getPhone())
-        .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
-        .map(SecurityTokenHelper::buildUserDetails)
+            .login(loginRequest.getPhone())
+            .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
+            .map(ReactiveSecurityHelper::buildUserDetails)
         .map(
             userDetail ->
                 new UsernamePasswordAuthenticationToken(

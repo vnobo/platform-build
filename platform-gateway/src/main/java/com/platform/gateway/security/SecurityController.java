@@ -2,7 +2,7 @@ package com.platform.gateway.security;
 
 import com.platform.commons.annotation.RestServerException;
 import com.platform.commons.security.AuthenticationToken;
-import com.platform.commons.security.SecurityTokenHelper;
+import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.gateway.client.SystemClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,9 +62,9 @@ public class SecurityController {
                 .doOnNext(res -> exchange.getSession().doOnNext(webSession ->
                         webSession.setMaxIdleTime(Duration.ofMinutes(5))).subscribe())
                 .flatMap(res -> detailsService.appLogin(loginRequest
-                        .system(SecurityTokenHelper.systemForHeader(exchange))))
-                .flatMap(authentication -> SecurityTokenHelper.authenticationTokenMono(exchange, authentication))
-                .delayUntil(res -> SecurityTokenHelper.removeToken(exchange));
+                        .system(ReactiveSecurityHelper.systemForHeader(exchange))))
+                .flatMap(authentication -> ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication))
+                .delayUntil(res -> ReactiveSecurityHelper.removeToken(exchange));
     }
 
     @Operation(summary = "获取用户 CSRF TOKEN", description = "返回认证信息TOKEN")
@@ -118,9 +118,9 @@ public class SecurityController {
         return this.detailsService.updatePassword((UserDetails) authentication.getPrincipal(), password)
                 .map(userDetails -> new UsernamePasswordAuthenticationToken(
                         userDetails, authentication.getCredentials(), userDetails.getAuthorities()))
-                .flatMap(authenticationToken -> SecurityTokenHelper
+                .flatMap(authenticationToken -> ReactiveSecurityHelper
                         .authenticationTokenMono(exchange, authenticationToken))
-                .delayUntil(result -> SecurityTokenHelper.removeToken(exchange));
+                .delayUntil(result -> ReactiveSecurityHelper.removeToken(exchange));
     }
 
     @PostMapping("tenant/cut")
@@ -129,6 +129,6 @@ public class SecurityController {
                                                ServerWebExchange exchange) {
         return this.detailsService.tenantCut(cutRequest)
                 .flatMap(simplerSecurityDetails -> exchange.getSession().map(AuthenticationToken::build))
-                .delayUntil(authenticationToken -> SecurityTokenHelper.removeToken(exchange));
+                .delayUntil(authenticationToken -> ReactiveSecurityHelper.removeToken(exchange));
     }
 }

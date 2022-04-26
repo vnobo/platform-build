@@ -1,6 +1,6 @@
 package com.platform.gateway.config;
 
-import com.platform.commons.annotation.CustomServerAuthenticationEntryPoint;
+import com.platform.commons.security.CustomServerAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;

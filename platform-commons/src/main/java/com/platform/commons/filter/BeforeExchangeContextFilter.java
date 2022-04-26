@@ -1,8 +1,7 @@
 package com.platform.commons.filter;
 
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
-import com.platform.commons.security.SecurityTokenHelper;
-import com.platform.commons.security.SimplerSecurityDetails;
+import com.platform.commons.security.ReactiveSecurityHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
@@ -22,27 +21,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class BeforeExchangeContextFilter implements WebFilter, Ordered {
 
-  @Override
-  public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        return exchange.getSession().flatMap(session -> chain.filter(exchange)
+                        .contextWrite(ReactiveSecurityDetailsHolder.withSecurityDetails(
+                                session.getAttribute(ReactiveSecurityHelper.SECURITY_TOKEN_CONTEXT))))
+                .contextWrite(context -> context.put("system", ReactiveSecurityHelper.systemForHeader(exchange)));
+    }
 
-    return exchange
-        .getSession()
-        .flatMap(
-            session ->
-                chain
-                    .filter(exchange)
-                    .contextWrite(
-                        ReactiveSecurityDetailsHolder.withSecurityDetails(
-                            session.getAttributeOrDefault(
-                                SecurityTokenHelper.SECURITY_TOKEN_CONTEXT,
-                                SimplerSecurityDetails.withDefault()))))
-        .contextWrite(context -> context.put(ServerWebExchange.class, exchange))
-        .contextWrite(
-            context -> context.put("system", SecurityTokenHelper.systemForHeader(exchange)));
-  }
-
-  @Override
-  public int getOrder() {
-    return Ordered.LOWEST_PRECEDENCE;
-  }
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
+    }
 }

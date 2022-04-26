@@ -15,34 +15,34 @@ import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
  */
 public abstract class BaseAutoToolsUtil {
 
-  protected ObjectMapper objectMapper;
-  protected R2dbcEntityTemplate entityTemplate;
-  protected MappingR2dbcConverter mappingR2dbcConverter;
-  protected ReactiveRedisTemplate<String, Object> redisTemplate;
-  protected ReactiveStringRedisTemplate stringRedisTemplate;
+    protected ObjectMapper objectMapper;
+    protected R2dbcEntityTemplate entityTemplate;
+    protected MappingR2dbcConverter mappingR2dbcConverter;
+    protected ReactiveRedisTemplate<String, Object> redisTemplate;
+    protected ReactiveStringRedisTemplate stringRedisTemplate;
 
-  @Autowired
-  public void setObjectMapper(ObjectMapper objectMapper) {
-    this.objectMapper = objectMapper;
-  }
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
-  @Autowired(required = false)
-  public void setEntityTemplate(R2dbcEntityTemplate entityTemplate) {
-    this.entityTemplate = entityTemplate;
-  }
+    @Autowired(required = false)
+    public void setEntityTemplate(R2dbcEntityTemplate entityTemplate) {
+        this.entityTemplate = entityTemplate;
+    }
 
-  @Autowired(required = false)
-  public void setMappingR2dbcConverter(MappingR2dbcConverter mappingR2dbcConverter) {
-    this.mappingR2dbcConverter = mappingR2dbcConverter;
-  }
+    @Autowired(required = false)
+    public void setMappingR2dbcConverter(MappingR2dbcConverter mappingR2dbcConverter) {
+        this.mappingR2dbcConverter = mappingR2dbcConverter;
+    }
 
-  @Autowired(required = false)
-  public void setRedisTemplate(ReactiveRedisTemplate<String, Object> redisTemplate) {
-    this.redisTemplate = redisTemplate;
-  }
+    @Autowired(required = false)
+    public void setRedisTemplate(ReactiveRedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
-  @Autowired(required = false)
-  public void setStringRedisTemplate(ReactiveStringRedisTemplate stringRedisTemplate) {
-    this.stringRedisTemplate = stringRedisTemplate;
-  }
+    @Autowired(required = false)
+    public void setStringRedisTemplate(ReactiveStringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 }

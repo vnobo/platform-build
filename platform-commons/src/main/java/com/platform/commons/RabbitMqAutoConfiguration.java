@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter(RabbitAutoConfiguration.class)
 public class RabbitMqAutoConfiguration {
 
-  @Bean
-  public MessageConverter rabbitMessageConverter(ObjectMapper objectMapper) {
-    return new Jackson2JsonMessageConverter(objectMapper);
-  }
+    @Bean
+    public MessageConverter rabbitMessageConverter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
+    }
 }

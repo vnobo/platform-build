@@ -2,14 +2,15 @@ package com.platform.gateway.weixin;
 
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.platform.commons.security.AuthenticationToken;
-import com.platform.commons.security.SecurityTokenHelper;
+import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.gateway.security.ReactiveSecurityManager;
-import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 /**
  * com.bootiful.oauth.core.weixin.WxMaUserService
@@ -48,7 +49,7 @@ public record WxMaUserService(ReactiveSecurityManager reactiveUserDetailsService
                                     userDetail, userDetail.getPassword(), userDetail.getAuthorities()))
             .flatMap(
                     authentication ->
-                            SecurityTokenHelper.authenticationTokenMono(exchange, authentication));
+                            ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication));
   }
 
   /**
@@ -60,9 +61,9 @@ public record WxMaUserService(ReactiveSecurityManager reactiveUserDetailsService
    */
   public Mono<AuthenticationToken> login(WxRequest wxRequest, ServerWebExchange exchange) {
     return this.reactiveUserDetailsService
-            .winXinLogin(wxRequest.system(SecurityTokenHelper.systemForHeader(exchange)))
+            .winXinLogin(wxRequest.system(ReactiveSecurityHelper.systemForHeader(exchange)))
             .flatMap(
-                    authentication -> SecurityTokenHelper.authenticationTokenMono(exchange, authentication))
-            .delayUntil(res -> SecurityTokenHelper.removeToken(exchange));
+                    authentication -> ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication))
+            .delayUntil(res -> ReactiveSecurityHelper.removeToken(exchange));
   }
 }

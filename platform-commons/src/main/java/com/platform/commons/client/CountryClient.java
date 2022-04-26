@@ -42,9 +42,8 @@ public class CountryClient extends AbstractClient {
         if (!StringUtils.hasLength(username)) {
             return Mono.empty();
         }
-
-        return this.oauthClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/oauth2/v1/login/{username}").build(username))
+        return this.oauthClient.get().uri(uriBuilder -> uriBuilder.path("/oauth2/v1/login/{username}")
+                        .build(username))
                 .retrieve()
                 .bodyToMono(LoginSecurityDetails.class);
     }

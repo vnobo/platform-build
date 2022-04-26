@@ -4,7 +4,6 @@ import com.platform.commons.client.CountryClient;
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.security.SecurityDetails;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,13 +13,14 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 /**
  * com.bootiful.gateway.filter.SecurityDetailsWebFilter 加载用户安全险信息{@link SecurityDetails} 封装到会话中
  *
  * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/7/22
  */
-@RequiredArgsConstructor
 public record BeforeSecurityFilter(CountryClient countryClient) implements WebFilter, Ordered {
 
     @Override
@@ -47,8 +47,8 @@ public record BeforeSecurityFilter(CountryClient countryClient) implements WebFi
         return ReactiveSecurityContextHolder.getContext()
                 .flatMap(securityContext -> countryClient.loadSecurity(securityContext.getAuthentication().getName())
                         .map(securityDetails -> securityDetails.authorities(securityContext
-                                .getAuthentication().getAuthorities().stream()
-                                .map(GrantedAuthority::getAuthority).toList().toArray(new String[0]))))
+                                .getAuthentication().getAuthorities().stream().distinct()
+                                .map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))))
                 .cast(SecurityDetails.class)
                 .delayUntil((securityDetails) -> ReactiveSecurityHelper.saveToken(exchange, securityDetails));
     }

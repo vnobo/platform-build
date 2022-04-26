@@ -3,7 +3,6 @@ package com.platform.commons.filter;
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.security.SecurityDetails;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.web.server.ServerWebExchange;
@@ -19,7 +18,6 @@ import reactor.core.publisher.Mono;
  * @date Created by 2021/5/28
  * @see ReactiveSecurityDetailsHolder
  */
-@RequiredArgsConstructor
 public class AfterSecurityFilter implements WebFilter, Ordered {
 
     @Override

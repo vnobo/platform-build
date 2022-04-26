@@ -1,5 +1,7 @@
 package com.platform.commons.security;
 
+import java.util.Set;
+
 /**
  * com.bootiful.commons.security.SecurityDetails
  *
@@ -30,9 +32,16 @@ public interface SecurityDetails {
     Integer getTenantId();
 
     /**
+     * 默认租户CODE
+     *
+     * @return String Tenant Code
+     */
+    String getTenantCode();
+
+    /**
      * 认证用户权限信息
      *
      * @return 权限集合
      */
-    String[] getAuthorities();
+    Set<String> getAuthorities();
 }

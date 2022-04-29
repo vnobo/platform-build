@@ -1,0 +1,50 @@
+<div *ngIf="account$ |async as account" class="card card-profile">
+  <div class="card-header" style="background-image: url(https://static.alexbob.cn/images/bg/bg6.jpg);"></div>
+  <div class="card-body text-center">
+    <img [src]="account.profile.avatar" class="card-profile-img avatar-xxl">
+    <h3 class="mb-3">{{account.profile.nickname}}</h3>
+    <div class="align-content-center py-2 my-2">
+      <!-- 邮箱验证 -->
+      <span [ngClass]="{'text-green ':account.certified?.certifiedEmail,'text-gray':!account.certified?.certifiedEmail}"
+            [nzOverlayClassName]="'my-custom-class'"
+            [nzPlacement]="'bottom'"
+            [nzTitle]="account.certified?.certifiedEmail ?'E-mail is authenticated':'E-mail is not authenticated'"
+            i18n-[nzTitle]="@@app.user-profile.tooltip-certifiedEmail"
+            nz-tooltip>
+        <i class="fas fa-envelope fa-2x"></i>
+      </span>
+      <!-- 电话验证 -->
+      <span
+        [ngClass]="{'text-green ':account.certified?.certifiedMobile,'text-gray':!account.certified?.certifiedMobile}"
+        [nzOverlayClassName]="'my-custom-class'"
+        [nzPlacement]="'bottom'"
+        [nzTitle]="account.certified?.certifiedMobile ?'Phone number is authenticated':'Phone number is not authenticated'"
+        class="mx-5" i18n-[nzTitle]="@@app.user-profile.tooltip-certifiedMobile"
+        nz-tooltip>
+        <i class="fas fa-mobile-alt fa-2x"></i>
+      </span>
+      <!-- 实名认证 -->
+      <span
+        [ngClass]="{'text-green ':account.certified?.certifiedRealname,'text-gray':!account.certified?.certifiedRealname}"
+        [nzOverlayClassName]="'my-custom-class'"
+        [nzPlacement]="'bottom'"
+        [nzTitle]="account.certified?.certifiedRealname ?'Real name is authenticated':'Real name is not authenticated'"
+        class="mr-5" i18n-[nzTitle]="@@app.user-profile.tooltip-certifiedRealname"
+        nz-tooltip>
+         <i class="fas fa-id-card fa-2x"></i>
+      </span>
+      <!-- 保证金-->
+      <span [ngClass]="{'text-green ':account.certified?.deposit,'text-gray':!account.certified?.deposit}"
+            [nzOverlayClassName]="'my-custom-class'" [nzPlacement]="'bottom'"
+            [nzTitle]="account.certified?.deposit ? 'Deposit is paid':'Deposit is not paid'"
+            i18n-[nzTitle]="@@app.user-profile.tooltip-deposit"
+            nz-tooltip>
+        <i class="fas fa-hand-holding-usd fa-2x"></i>
+      </span>
+    </div>
+    <p class="mb-4">{{account.profile.bio}}</p>
+    <a class="btn btn-outline-primary btn-sm" href="https://weibo.com/bobdongpo" target="_blank">
+      <span class="fab fa-twitter" i18n="关注我@@app.profile.text-follow"></span> Follow Me
+    </a>
+  </div>
+</div>

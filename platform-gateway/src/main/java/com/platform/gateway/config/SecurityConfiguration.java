@@ -27,8 +27,6 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(exchange -> {
                     exchange.matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
-                    exchange.pathMatchers("/", "/wx/user/*/v1/authorize", "/oauth2/captcha/**",
-                            "/oauth2/v1/phone/*").permitAll();
                     exchange.anyExchange().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())

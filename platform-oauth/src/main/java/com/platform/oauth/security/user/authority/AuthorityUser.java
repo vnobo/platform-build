@@ -11,6 +11,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -26,8 +27,13 @@ public class AuthorityUser implements SimpleAuthority, Persistable<Integer> {
 
     @Id
     private Integer id;
+
+    @NotNull(message = "授权用户[userId]不能为空!")
     private Long userId;
+
     private String authority;
+
+    @NotNull(message = "授权系统[system]不能为空!")
     private SystemType system;
 
     @CreatedDate

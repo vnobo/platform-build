@@ -4,11 +4,12 @@ import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.oauth.security.user.authority.AuthorityUser;
 import com.platform.oauth.security.user.authority.AuthorityUserManger;
 import com.platform.oauth.security.user.authority.AuthorityUserRequest;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,25 +42,25 @@ public class UserController {
                 this.managerService.page(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
     }
 
+    @Hidden
     @GetMapping
     public Flux<User> get(UserRequest request) {
         return this.managerService.loadUsers(request);
     }
 
     @PostMapping
-    public Mono<User> post(@Valid @RequestBody UserRequest request) {
+    public Mono<User> post(@Validated(UserRequest.Register.class) @RequestBody UserRequest request) {
         return this.managerService.register(request);
     }
 
     @PutMapping("{id}")
-    public Mono<User> put(@PathVariable Long id, @Valid @RequestBody ModifyUserRequest request) {
+    public Mono<User> put(@PathVariable Long id, @Validated(UserRequest.Modify.class) @RequestBody UserRequest request) {
         request.setId(id);
         return this.managerService.modify(request);
     }
 
     @PutMapping("change/password")
-    public Mono<UserOnly> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
-        Assert.isTrue(request.getPassword().equals(request.getNewPassword()), "新密码和确认密码不相等!");
+    public Mono<UserOnly> changePassword(@Validated(UserRequest.ChangePassword.class) @RequestBody UserRequest request) {
         return this.managerService.changePassword(request);
     }
 

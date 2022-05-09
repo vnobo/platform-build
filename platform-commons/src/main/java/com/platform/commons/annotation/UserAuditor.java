@@ -14,26 +14,22 @@ import java.io.Serializable;
 @Data
 public class UserAuditor implements Serializable {
 
-  private Long userId;
-  private Integer tenantId;
-  private String tenantCode;
-  private String username;
-  private String email;
-  private String phone;
+    private Long userId;
+    private Integer tenantId;
+    private String username;
 
-  public static UserAuditor withUserId(Long userId) {
-    UserAuditor userAuditor = new UserAuditor();
-    userAuditor.setUserId(userId);
-    return userAuditor;
-  }
+    public static UserAuditor withUserId(Long userId) {
+        UserAuditor userAuditor = new UserAuditor();
+        userAuditor.setUserId(userId);
+        return userAuditor;
+    }
 
-  public static UserAuditor withSecurityDetails(SecurityDetails securityDetails) {
-    UserAuditor userAuditor = new UserAuditor();
-    userAuditor.setUserId(securityDetails.getUserId());
-    userAuditor.setTenantCode(securityDetails.getTenantCode());
-    userAuditor.setUsername(securityDetails.getUsername());
-    userAuditor.setTenantId(securityDetails.getTenantId());
-    return userAuditor;
-  }
+    public static UserAuditor withSecurityDetails(SecurityDetails securityDetails) {
+        UserAuditor userAuditor = new UserAuditor();
+        userAuditor.setUserId(securityDetails.getUserId());
+        userAuditor.setUsername(securityDetails.getUsername());
+        userAuditor.setTenantId(securityDetails.getTenantId());
+        return userAuditor;
+    }
 
 }

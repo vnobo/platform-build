@@ -3,8 +3,6 @@ package com.platform.system.core.menu;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -12,6 +10,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * com.alex.oauth.security.AuthorityDict
@@ -50,7 +51,7 @@ public class MenuDict implements Serializable, Persistable<Integer> {
   @Schema(title = "扩展字段")
   private JsonNode extend;
 
-  @Schema(title = "系统类型[system]不能为空! 如:country, poverty, points, grid, homestead, toilets")
+  @Schema(title = "系统类型")
   private SystemType system;
 
   @CreatedDate private LocalDateTime createdTime;

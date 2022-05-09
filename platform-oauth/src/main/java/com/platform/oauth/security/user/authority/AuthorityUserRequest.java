@@ -19,20 +19,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class AuthorityUserRequest extends AuthorityUser {
 
-    @NotNull(message = "授权用户[userId]不能为空!")
-    private Long userId;
-
-    @NotNull(message = "授权系统[system]不能为空!")
-    private SystemType system;
-
     @NotNull(message = "授权权限[rules]不能为空!")
     private List<String> rules;
-
-    public static AuthorityUserRequest withAuthorities(List<String> authorities) {
-        AuthorityUserRequest authorizingRequest = new AuthorityUserRequest();
-        authorizingRequest.setRules(authorities);
-        return authorizingRequest;
-    }
 
     public static AuthorityUserRequest withUserId(Long userId) {
         AuthorityUserRequest groupRequest = new AuthorityUserRequest();

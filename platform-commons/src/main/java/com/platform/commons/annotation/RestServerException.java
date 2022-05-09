@@ -18,21 +18,20 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class RestServerException extends RuntimeException implements Serializable {
+    protected Object msg;
+    protected int code;
 
-  protected Object msg;
-  protected int code;
+    public RestServerException(int code, Object msg) {
+        super(msg.toString());
+        this.msg = msg;
+        this.code = code;
+    }
 
-  public RestServerException(int code, Object msg) {
-    super(msg.toString());
-    this.msg = msg;
-    this.code = code;
-  }
+    public static RestServerException withMsg(int code, Object msg) {
+        return new RestServerException(code, msg);
+    }
 
-  public static RestServerException withMsg(int code, Object msg) {
-    return new RestServerException(code, msg);
-  }
-
-  public static RestServerException withMsg(Object msg) {
-    return withMsg(1500, msg);
-  }
+    public static RestServerException withMsg(Object msg) {
+        return withMsg(1500, msg);
+    }
 }

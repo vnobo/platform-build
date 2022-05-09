@@ -12,38 +12,33 @@ import org.springframework.lang.Nullable;
  */
 @Schema(title = "系统类型")
 public enum SystemType {
+    /**
+     * 平台
+     */
+    platform;
 
-  /** 数字乡村,防返贫,积分系统 */
-  country,
-  poverty,
-  points,
-  grid,
-  homestead,
-  villages,
-  toilets;
+    private static final SystemType[] VALUES;
 
-  private static final SystemType[] VALUES;
-
-  static {
-    VALUES = values();
-  }
-
-  public static SystemType ofValue(String statusCode) {
-    SystemType status = resolve(statusCode);
-    if (status == null) {
-      throw RestServerException.withMsg(1504, "No matching constant for [" + statusCode + "]");
+    static {
+        VALUES = values();
     }
-    return status;
-  }
 
-  @Nullable
-  public static SystemType resolve(String statusCode) {
-    // Use cached VALUES instead of values() to prevent array allocation.
-    for (SystemType status : VALUES) {
-      if (status.name().equals(statusCode)) {
+    public static SystemType ofValue(String statusCode) {
+        SystemType status = resolve(statusCode);
+        if (status == null) {
+            throw RestServerException.withMsg(1504, "No matching constant for [" + statusCode + "]");
+        }
         return status;
-      }
     }
-    return null;
-  }
+
+    @Nullable
+    public static SystemType resolve(String statusCode) {
+        // Use cached VALUES instead of values() to prevent array allocation.
+        for (SystemType status : VALUES) {
+            if (status.name().equals(statusCode)) {
+                return status;
+            }
+        }
+        return null;
+    }
 }

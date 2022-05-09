@@ -2,7 +2,6 @@ package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.platform.commons.utils.SystemType;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.relational.core.query.Criteria;
@@ -10,8 +9,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.groups.Default;
 import java.io.Serializable;
 
 /**
@@ -27,87 +26,80 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserRequest extends User implements Serializable {
 
-  @NotBlank(message = "登录用户名[username]不能为空!")
-  @Pattern(regexp = "^[a-zA-Z0-9_-]{5,16}$", message = "登录用户名[username]必须为5到16位（字母，数字，下划线，减号）!")
-  private String username;
+    @NotBlank(message = "确认密码[newPassword]不能为空!", groups = ChangePassword.class)
+    @Pattern(regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$",
+            message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
+    private String newPassword;
 
-  @NotBlank(message = "用户密码[password]不能为空!")
-  @Pattern(regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$",
-          message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
-  private String password;
+    private UserBinding binding;
+    private String securityTenantCode;
 
-  @NotNull(message = "是否启用[enabled]不能为空!")
-  private Boolean enabled;
-  private Integer tenantId;
-  private String tenantCode;
-  private SystemType system;
-  private Integer groupId;
-  private UserBinding binding;
-  private String securityTenantCode;
-
-  public static UserRequest withUsername(String username) {
-    UserRequest userRequest = new UserRequest();
-    userRequest.setUsername(username);
-    return userRequest;
-  }
-
-  public UserRequest id(Long id) {
-    this.setId(id);
-    return this;
-  }
-
-  public UserRequest tenantId(Integer tenantId) {
-    this.setTenantId(tenantId);
-    return this;
-  }
-
-  public UserRequest tenantCode(String tenantCode) {
-    this.setTenantCode(tenantCode);
-    return this;
-  }
-
-  public UserRequest securityTenantCode(String tenantCode) {
-    this.setSecurityTenantCode(tenantCode);
-    return this;
-  }
-
-  public User toUser() {
-    User user = new User();
-    BeanUtils.copyProperties(this, user);
-    if (!ObjectUtils.isEmpty(this.getBinding())) {
-      ObjectNode objectNode =
-          ObjectUtils.isEmpty(this.getExtend()) || this.getExtend().isNull()
-              ? new ObjectMapper().createObjectNode()
-              : this.getExtend().deepCopy();
-      objectNode.putPOJO("binding", this.getBinding());
-      user.setExtend(objectNode);
-    }
-    return user;
-  }
-  public Criteria toCriteria() {
-
-    Criteria criteria = Criteria.empty();
-
-    if (!ObjectUtils.isEmpty(this.getId())) {
-      criteria = criteria.and(Criteria.where("id").is(this.getId()));
+    public static UserRequest withUsername(String username) {
+        UserRequest userRequest = new UserRequest();
+        userRequest.setUsername(username);
+        return userRequest;
     }
 
-    if (!ObjectUtils.isEmpty(this.tenantId)) {
-      criteria = criteria.and("tenantId").is(this.tenantId);
+    public UserRequest id(Long id) {
+        this.setId(id);
+        return this;
     }
 
-    if (StringUtils.hasLength(this.tenantCode)) {
-      criteria = criteria.and("tenantCode").like(this.tenantCode + "%");
+    public UserRequest tenantCode(String tenantCode) {
+        this.setTenantCode(tenantCode);
+        return this;
     }
 
-    if (StringUtils.hasLength(this.securityTenantCode) && !"0".equals(this.securityTenantCode)) {
-      criteria = criteria.and("tenantCode").like(this.securityTenantCode + "%");
+    public UserRequest securityTenantCode(String tenantCode) {
+        this.setSecurityTenantCode(tenantCode);
+        return this;
     }
 
-    if (StringUtils.hasLength(this.username)) {
-      criteria = criteria.and("username").like(this.username).ignoreCase(true);
+    public User toUser() {
+        User user = new User();
+        BeanUtils.copyProperties(this, user);
+        if (!ObjectUtils.isEmpty(this.getBinding())) {
+            ObjectNode objectNode = ObjectUtils.isEmpty(this.getExtend()) || this.getExtend().isNull()
+                    ? new ObjectMapper().createObjectNode() : this.getExtend().deepCopy();
+            objectNode.putPOJO("binding", this.getBinding());
+            user.setExtend(objectNode);
+        }
+        return user;
     }
 
-    return criteria;
-  }
+    public Criteria toCriteria() {
+
+        Criteria criteria = Criteria.empty();
+
+        if (!ObjectUtils.isEmpty(this.getId())) {
+            criteria = criteria.and(Criteria.where("id").is(this.getId()));
+        }
+
+        if (!ObjectUtils.isEmpty(this.getTenantId())) {
+            criteria = criteria.and("tenantId").is(this.getTenantId());
+        }
+
+        if (StringUtils.hasLength(this.getTenantCode())) {
+            criteria = criteria.and("tenantCode").like(this.getTenantCode() + "%");
+        }
+
+        if (StringUtils.hasLength(this.securityTenantCode) && !"0".equals(this.securityTenantCode)) {
+            criteria = criteria.and("tenantCode").like(this.securityTenantCode + "%");
+        }
+
+        if (StringUtils.hasLength(this.getUsername())) {
+            criteria = criteria.and("username").like(this.getUsername()).ignoreCase(true);
+        }
+
+        return criteria;
+    }
+
+    interface Register extends Default {
+    }
+
+    interface Modify extends Default {
+    }
+
+    interface ChangePassword extends Default {
+    }
 }

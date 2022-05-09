@@ -1,8 +1,8 @@
 package com.platform.commons;
 
-import com.platform.commons.annotation.CustomServerAuthenticationEntryPoint;
 import com.platform.commons.client.CountryClient;
-import com.platform.commons.security.ReactiveUserDetailsServiceImpl;
+import com.platform.commons.security.CustomServerAuthenticationEntryPoint;
+import com.platform.commons.security.ReactiveSimplerUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -28,46 +28,42 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({
-  EnableWebFluxSecurity.class,
-  ReactiveUserDetailsService.class,
-  ServerSecurityContextRepository.class
+        EnableWebFluxSecurity.class,
+        ReactiveUserDetailsService.class,
+        ServerSecurityContextRepository.class
 })
-@AutoConfigureAfter(
-    org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class)
+@AutoConfigureAfter(SecurityAutoConfiguration.class)
 @RequiredArgsConstructor
 public class SecurityAutoConfiguration {
 
-  @Bean
-  public ServerSecurityContextRepository contextRepository() {
-    return new WebSessionServerSecurityContextRepository();
-  }
+    @Bean
+    public ServerSecurityContextRepository contextRepository() {
+        return new WebSessionServerSecurityContextRepository();
+    }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public PasswordEncoder passwordEncoder() {
-    return new Pbkdf2PasswordEncoder();
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public PasswordEncoder passwordEncoder() {
+        return new Pbkdf2PasswordEncoder();
+    }
 
-  @Bean
-  @ConditionalOnMissingBean
-  @ConditionalOnBean(CountryClient.class)
-  public ReactiveUserDetailsService userDetailsService(CountryClient countryClient) {
-    return new ReactiveUserDetailsServiceImpl(countryClient);
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(CountryClient.class)
+    public ReactiveUserDetailsService userDetailsService(CountryClient countryClient) {
+        return new ReactiveSimplerUserDetailsService(countryClient);
+    }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public SecurityWebFilterChain springSecurityFilterChain(
-      ServerHttpSecurity http, ServerSecurityContextRepository contextRepository) {
-
-    http.authorizeExchange(exchange -> exchange.anyExchange().authenticated())
-        .securityContextRepository(contextRepository)
-        .httpBasic(
-            httpBasicSpec ->
-                httpBasicSpec.authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
-        .csrf(
-            csrfSpec ->
-                csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
-    return http.build();
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public SecurityWebFilterChain springSecurityFilterChain(
+            ServerHttpSecurity http, ServerSecurityContextRepository contextRepository) {
+        http.authorizeExchange(exchange -> exchange.anyExchange().authenticated())
+                .securityContextRepository(contextRepository)
+                .httpBasic(httpBasicSpec ->
+                        httpBasicSpec.authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()))
+                .csrf(csrfSpec ->
+                        csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));
+        return http.build();
+    }
 }

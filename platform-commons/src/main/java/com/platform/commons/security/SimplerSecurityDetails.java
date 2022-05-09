@@ -1,11 +1,11 @@
 package com.platform.commons.security;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import org.springframework.beans.BeanUtils;
+
 import java.io.Serializable;
 import java.util.Set;
-import lombok.Data;
-import org.springframework.util.ObjectUtils;
+import java.util.stream.Collectors;
 
 /**
  * com.bootiful.commons.security.SimplerSecurityDetails
@@ -13,68 +13,73 @@ import org.springframework.util.ObjectUtils;
  * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/10
  */
-@Data
 public class SimplerSecurityDetails implements SecurityDetails, Serializable {
+    private Long userId;
+    private String username;
+    private Set<String> authorities;
+    private Set<Tenant> tenants;
 
-  private String username;
-  private String[] authorities;
-  private Long userId;
-
-  private Integer tenantId;
-  private String tenantName;
-  private String tenantCode;
-  private Integer tier;
-  private JsonNode tenantAddressCode;
-  private JsonNode tenantAddressText;
-  private Set<SecurityDetailsTenant> tenants;
-
-  public static SimplerSecurityDetails of(Long userId, String username) {
-
-    SimplerSecurityDetails securityDetails = new SimplerSecurityDetails();
-    securityDetails.setUserId(userId);
-    securityDetails.setUsername(username);
-    securityDetails.setSecurityLevel(securityLevel);
-    return securityDetails;
-  }
-
-  public static SimplerSecurityDetails withDefault() {
-
-    return SimplerSecurityDetails.of(-1L, "anonymous", null, -1)
-        .tenants(Set.of(SecurityDetailsTenant.withGuest()));
-  }
-
-  public SimplerSecurityDetails authorities(String[] authorities) {
-    this.setAuthorities(authorities);
-    return this;
-  }
-
-  public SimplerSecurityDetails tenants(Set<SecurityDetailsTenant> tenants) {
-
-    SecurityDetailsTenant detailsTenant =
-        tenants.parallelStream()
-            .filter(SecurityDetailsTenant::getIsDefault)
-            .findAny()
-            .orElse(SecurityDetailsTenant.withDefault());
-    this.setTenants(tenants);
-
-    this.setTenantId(detailsTenant.getTenantId());
-    this.setTenantCode(detailsTenant.getTenantCode());
-    this.setTenantName(detailsTenant.getTenantName());
-
-    var node = detailsTenant.getTenantExtend();
-    this.setTenantAddressCode(
-        ObjectUtils.isEmpty(node)
-            ? new ObjectMapper().createArrayNode()
-            : node.withArray("addressCode"));
-    this.setTenantAddressText(
-        ObjectUtils.isEmpty(node)
-            ? new ObjectMapper().createArrayNode()
-            : node.withArray("addressText"));
-    this.setTier(this.getTenantAddressCode().size());
-
-    if (detailsTenant.getTenantId() > 1000) {
-      this.setSecurityLevel(this.getSecurityLevel() + 1);
+    public static SimplerSecurityDetails of(Long userId, String username) {
+        SimplerSecurityDetails securityDetails = new SimplerSecurityDetails();
+        securityDetails.setUserId(userId);
+        securityDetails.setUsername(username);
+        return securityDetails;
     }
-    return this;
-  }
+
+    public SimplerSecurityDetails authorities(Set<String> authorities) {
+        this.authorities = authorities;
+        return this;
+    }
+
+    public SimplerSecurityDetails tenants(Set<?> tenants) {
+        this.tenants = tenants.parallelStream().map(input -> {
+            Tenant tenant = Tenant.of();
+            BeanUtils.copyProperties(input, tenant);
+            return tenant;
+        }).collect(Collectors.toSet());
+        return this;
+    }
+
+    @Override
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Integer getTenantId() {
+        return this.tenants.parallelStream().filter(Tenant::getIsDefault)
+                .findAny().orElse(new Tenant()).getId();
+    }
+
+    @Override
+    public String getTenantCode() {
+        return this.tenants.parallelStream().filter(Tenant::getIsDefault)
+                .findAny().orElse(new Tenant()).getCode();
+    }
+
+    @Override
+    public Set<String> getAuthorities() {
+        return this.authorities;
+    }
+
+    @Data(staticConstructor = "of")
+    private static class Tenant {
+        private Integer id;
+        private String code;
+        private String name;
+        private Boolean isDefault;
+    }
 }

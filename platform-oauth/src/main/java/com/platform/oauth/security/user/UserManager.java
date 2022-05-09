@@ -4,13 +4,11 @@ import com.platform.commons.annotation.RestServerException;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.oauth.security.group.member.MemberGroupManager;
 import com.platform.oauth.security.tenant.TenantManager;
-import com.platform.oauth.security.tenant.TenantRequest;
 import com.platform.oauth.security.tenant.member.MemberTenantManager;
 import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import com.platform.oauth.security.user.authority.AuthorityUserManger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,23 +65,20 @@ public class UserManager extends BaseAutoToolsUtil {
 
     public Mono<User> register(UserRequest userRequest) {
         userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        Mono<User> nextStep = this.tenantManager.loadById(userRequest.getTenantId())
-                .defaultIfEmpty(TenantRequest.withId(0))
-                .map(tenant -> userRequest.tenantCode(tenant.getCode())).flatMap(this::operation);
-        return this.userRepository.findByUsername(userRequest.getUsername()).switchIfEmpty(nextStep);
+        return this.userRepository.findByUsername(userRequest.getUsername())
+                .switchIfEmpty(this.operation(userRequest));
     }
 
-    public Mono<User> modify(ModifyUserRequest modifyUserRequest) {
-        return this.userRepository.findById(modifyUserRequest.getId())
+    public Mono<User> modify(UserRequest userRequest) {
+        assert userRequest.getId() != null;
+        return this.userRepository.findById(userRequest.getId())
                 .filterWhen(old -> this.userRepository.exists(Example.of(
-                                UserRequest.withUsername(modifyUserRequest.getUsername()).toUser(),
+                                UserRequest.withUsername(userRequest.getUsername()).toUser(),
                                 ExampleMatcher.matching().withIgnoreCase("username")))
-                        .map(result -> !result || Objects.equals(old.getUsername(), modifyUserRequest.getUsername())))
+                        .map(result -> !result || Objects.equals(old.getUsername(), userRequest.getUsername())))
                 .switchIfEmpty(Mono.error(RestServerException.withMsg("登录用户名["
-                        + modifyUserRequest.getUsername() + "]已存在!")))
+                        + userRequest.getUsername() + "]已存在!")))
                 .flatMap(oldUser -> {
-                    UserRequest userRequest = new UserRequest();
-                    BeanUtils.copyProperties(modifyUserRequest, userRequest);
                     userRequest.setPassword(oldUser.getPassword());
                     return this.operation(userRequest);
                 });
@@ -98,10 +93,10 @@ public class UserManager extends BaseAutoToolsUtil {
 
     @Transactional(rollbackFor = Exception.class)
     public Mono<Void> delete(Long id) {
-        return Flux.concat(
-                        this.memberGroupManager.deleteByUserId(id),
-                        this.memberTenantManager.deleteByUserId(id),
-                        this.authorityUserManger.deleteByUserId(id))
+        return Mono.defer(() -> Mono.just("Delete go"))
+                .delayUntil(res -> this.memberGroupManager.deleteByUserId(id))
+                .delayUntil(res -> this.memberTenantManager.deleteByUserId(id))
+                .delayUntil(res -> this.authorityUserManger.deleteByUserId(id))
                 .delayUntil(res -> userRepository.deleteById(id))
                 .then();
     }
@@ -120,7 +115,7 @@ public class UserManager extends BaseAutoToolsUtil {
         }
     }
 
-    public Mono<UserOnly> changePassword(ChangePasswordRequest request) {
+    public Mono<UserOnly> changePassword(UserRequest request) {
         return this.userRepository.findByUsername(request.getUsername())
                 .flatMap(old -> {
                     old.setPassword(passwordEncoder.encode(request.getNewPassword()));

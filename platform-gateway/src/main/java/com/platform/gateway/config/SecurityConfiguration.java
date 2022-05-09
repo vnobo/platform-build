@@ -1,6 +1,6 @@
 package com.platform.gateway.config;
 
-import com.platform.commons.annotation.CustomServerAuthenticationEntryPoint;
+import com.platform.commons.security.CustomServerAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +27,6 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(exchange -> {
                     exchange.matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
-                    exchange.pathMatchers("/", "/wx/user/*/v1/authorize", "/oauth2/captcha/**",
-                            "/oauth2/v1/phone/*").permitAll();
                     exchange.anyExchange().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())

@@ -1,14 +1,14 @@
 package com.platform.oauth.security.tenant;
 
-import com.platform.commons.utils.TenantLevel;
-import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.tenant.TenantRequest
@@ -32,8 +32,6 @@ public class TenantRequest extends Tenant implements Serializable {
   @NotBlank(message = "租户地址[address]不能为空!")
   private String address;
 
-  private TenantLevel level;
-  private Integer tier;
   private String securityCode;
 
   public static Tenant withId(Integer id) {
@@ -81,10 +79,6 @@ public class TenantRequest extends Tenant implements Serializable {
 
     if (!ObjectUtils.isEmpty(this.getPid()) && this.getPid() > -1) {
       stringBuilder.append(" and pid =").append(this.getPid());
-    }
-
-    if (!ObjectUtils.isEmpty(this.getLevel())) {
-      stringBuilder.append(" and char_length(code) = ").append(this.getLevel().value());
     }
 
     if (StringUtils.hasLength(this.getName())) {

@@ -18,9 +18,6 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class LoginRequest extends RegisterRequest implements Serializable {
 
-  @NotBlank(message = "手机号[phone]不能为空!")
-  private String phone;
-
   @NotBlank(message = "验证码[code]不能为空!")
   private String code;
 
@@ -32,7 +29,6 @@ public class LoginRequest extends RegisterRequest implements Serializable {
     return this;
   }
   public LoginRequest toRegister() {
-    this.setUsername(getPhone());
     this.setEnabled(true);
     return this;
   }

@@ -42,14 +42,14 @@ public class GroupController {
     @GetMapping("search")
     public Flux<GroupOnly> search(GroupRequest request, Pageable pageable) {
         return ReactiveSecurityDetailsHolder.getContext().flatMapMany(securityDetails ->
-                this.managerService.search(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+                this.managerService.search(request, pageable));
     }
 
     @Operation(summary = "获取角色分页")
     @GetMapping("page")
     public Mono<Page<GroupOnly>> page(GroupRequest request, Pageable pageable) {
         return ReactiveSecurityDetailsHolder.getContext().flatMap(securityDetails ->
-                this.managerService.page(request.securityTenantCode(securityDetails.getTenantCode()), pageable));
+                this.managerService.page(request, pageable));
     }
 
     @Hidden

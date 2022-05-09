@@ -1,22 +1,16 @@
 package com.platform.oauth.security;
 
-import cn.hutool.core.util.ReUtil;
 import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.commons.security.SecurityDetails;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import io.swagger.v3.oas.annotations.Hidden;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 /**
  * com.npc.oauth.security.SecurityController
@@ -34,9 +28,6 @@ public class SecurityController {
 
   @PostMapping("register")
   public Mono<LoginSecurityDetails> register(@RequestBody RegisterRequest regRequest) {
-    Assert.isTrue(
-        ReUtil.isMatch("^[a-zA-Z0-9_-]{5,16}$", regRequest.getUsername()),
-        "登录用户名[username]必须为5到16位（字母，数字，下划线，减号）!");
     return this.userDetailsService.register(regRequest);
   }
 
@@ -58,7 +49,6 @@ public class SecurityController {
   @GetMapping("me")
   public Mono<SecurityDetails> me() {
     return ReactiveSecurityDetailsHolder.getContext()
-        .delayUntil(
-            securityDetails -> this.userDetailsService.loginSuccess(securityDetails.getUsername()));
+            .delayUntil(securityDetails -> this.userDetailsService.loginSuccess(securityDetails.getUsername()));
   }
 }

@@ -1,10 +1,7 @@
 package com.platform.system.core.menu;
 
-import static com.platform.commons.security.SecurityTokenHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
-
-import com.platform.commons.security.SecurityTokenHelper;
+import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.utils.BaseAutoToolsUtil;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.relational.core.query.Criteria;
@@ -12,6 +9,10 @@ import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+
+import static com.platform.commons.security.ReactiveSecurityHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictService
@@ -35,17 +36,17 @@ public class MenuDictService extends BaseAutoToolsUtil {
 
     if (Arrays.asList(authorities).contains(ADMINISTRATORS_GROUP_ROLE_NAME)) {
       return Flux.deferContextual(
-              contextView ->
-                  this.menuDictRepository.findBySystemOrderBySort(
-                      SecurityTokenHelper.systemForContext(contextView)))
+                      contextView ->
+                              this.menuDictRepository.findBySystemOrderBySort(
+                                      ReactiveSecurityHelper.systemForContext(contextView)))
           .map(MenuDictOnly::withAuthorityDict);
     }
     return Flux.deferContextual(
             contextView ->
                 entityTemplate.select(
                     Query.query(
-                            Criteria.where("system")
-                                .is(SecurityTokenHelper.systemForContext(contextView))
+                                    Criteria.where("system")
+                                            .is(ReactiveSecurityHelper.systemForContext(contextView))
                                 .and("authority")
                                 .in(authorities))
                         .sort(Sort.by("sort")),

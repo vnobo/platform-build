@@ -33,12 +33,6 @@ public class AuthorityGroupRequest extends AuthorityGroup implements Serializabl
 
     private Long userId;
 
-    public static AuthorityGroupRequest withAuthorities(List<String> authorities) {
-        AuthorityGroupRequest authorizingRequest = new AuthorityGroupRequest();
-        authorizingRequest.setRules(authorities);
-        return authorizingRequest;
-    }
-
     public static AuthorityGroup of(Integer groupId, String authority) {
         AuthorityGroup authorityGroup = new AuthorityGroup();
         authorityGroup.setGroupId(groupId);

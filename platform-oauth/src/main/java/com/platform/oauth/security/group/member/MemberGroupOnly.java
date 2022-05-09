@@ -19,12 +19,7 @@ import java.io.Serializable;
 public class MemberGroupOnly extends MemberGroup implements Serializable {
 
   private String groupName;
-  private String uname;
   private String username;
-  private String email;
-  private String phone;
-  private String idCard;
-  private Boolean enabled;
 
   public static MemberGroupOnly withMemberGroup(MemberGroup memberGroup) {
     MemberGroupOnly memberGroupOnly = new MemberGroupOnly();
@@ -33,11 +28,7 @@ public class MemberGroupOnly extends MemberGroup implements Serializable {
   }
 
   public MemberGroupOnly userOnly(UserOnly userOnly) {
-    this.setUname(userOnly.getName());
-    this.setPhone(userOnly.getPhone());
     this.setUsername(userOnly.getUsername());
-    this.setEmail(userOnly.getEmail());
-    this.setEnabled(userOnly.getEnabled());
     return this;
   }
 

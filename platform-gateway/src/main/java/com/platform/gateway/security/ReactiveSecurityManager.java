@@ -42,8 +42,7 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
     }
 
     public Mono<Authentication> winXinLogin(WxRequest wxRequest) {
-        return this.countryClient
-                .login(wxRequest.getPhone())
+        return this.countryClient.login(wxRequest.getPhone())
                 .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
                 .map(ReactiveSecurityHelper::buildUserDetails)
                 .map(userDetail -> new UsernamePasswordAuthenticationToken(
@@ -51,8 +50,7 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
     }
 
     public Mono<Authentication> appLogin(LoginRequest loginRequest) {
-        return this.countryClient
-                .login(loginRequest.getPhone())
+        return this.countryClient.login(loginRequest.getUsername())
                 .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
                 .map(ReactiveSecurityHelper::buildUserDetails)
                 .map(userDetail -> new UsernamePasswordAuthenticationToken(

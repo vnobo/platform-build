@@ -2,11 +2,12 @@ package com.platform.oauth.security.group.member;
 
 import com.platform.commons.utils.SystemType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.user.UserRequest
@@ -64,10 +65,6 @@ public class MemberGroupRequest extends MemberGroupOnly implements Serializable 
 
     if (StringUtils.hasLength(this.getName())) {
       stringBuilder.append(" and se_groups.name ilike '%").append(this.getName()).append("%'");
-    }
-
-    if (StringUtils.hasLength(this.getUname())) {
-      stringBuilder.append(" and se_users.name ilike '%").append(this.getUname()).append("%'");
     }
 
     if (!ObjectUtils.isEmpty(this.getType())) {

@@ -59,11 +59,6 @@ public class SecurityManager extends BaseAutoToolsUtil {
             request.setBinding(UserBinding.withWeiXin(request.getAppId(), request.getOpenid()));
         }
 
-        // 角色组未设置,默认给用户角色
-        if (ObjectUtils.isEmpty(request.getGroupId())) {
-            request.setGroupId(2);
-        }
-
         // 租户是否设置如果未设置,默认给0
         if (ObjectUtils.isEmpty(request.getTenantId())) {
             request.setTenantId(0);
@@ -75,8 +70,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
         return this.userManager.register(request.toUserRequest())
                 .flatMap(user -> authoritiesFunction.apply(user).map(authorities -> LoginSecurityDetails
                         .of(user.getUsername(), user.getPassword(), user.getEnabled())
-                        .authorities(authorities)))
-                .contextWrite(context -> context.put("system", request.getSystem()));
+                        .authorities(authorities)));
     }
 
     public Mono<LoginSecurityDetails> login(String username) {

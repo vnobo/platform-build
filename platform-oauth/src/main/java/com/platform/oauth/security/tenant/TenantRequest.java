@@ -6,8 +6,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -20,25 +18,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class TenantRequest extends Tenant implements Serializable {
 
-  @NotBlank(message = "租户[Code]不能为空!取地址CODE码")
-  private String code;
-
-  @NotBlank(message = "租户名[name]不能为空!")
-  private String name;
-
-  @NotNull(message = "租户父级[ID]不能为空!")
-  private Integer pid;
-
-  @NotBlank(message = "租户地址[address]不能为空!")
-  private String address;
-
   private String securityCode;
-
-  public static Tenant withId(Integer id) {
-    Tenant tenant = new Tenant();
-    tenant.setId(id);
-    return tenant;
-  }
 
   public Tenant toTenant() {
     Tenant tenant = new Tenant();
@@ -51,8 +31,8 @@ public class TenantRequest extends Tenant implements Serializable {
     return this;
   }
 
-  public TenantRequest pid(Integer pid) {
-    this.setPid(pid);
+  public TenantRequest pid(String pid) {
+    this.setPCode(pid);
     return this;
   }
 
@@ -77,8 +57,8 @@ public class TenantRequest extends Tenant implements Serializable {
       stringBuilder.append(" and id =").append(this.getId());
     }
 
-    if (!ObjectUtils.isEmpty(this.getPid()) && this.getPid() > -1) {
-      stringBuilder.append(" and pid =").append(this.getPid());
+    if (!ObjectUtils.isEmpty(this.getCode())) {
+      stringBuilder.append(" and p_code =").append(this.getPCode());
     }
 
     if (StringUtils.hasLength(this.getName())) {

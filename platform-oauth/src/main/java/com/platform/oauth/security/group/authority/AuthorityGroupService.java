@@ -2,6 +2,7 @@ package com.platform.oauth.security.group.authority;
 
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -16,27 +17,24 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthorityGroupManger extends BaseAutoToolsUtil {
+public class AuthorityGroupService extends BaseAutoToolsUtil {
 
     private final AuthorityGroupRepository authorityGroupRepository;
 
     public Flux<AuthorityGroup> search(AuthorityGroupRequest request) {
-        String querySql = "select * from se_group_authorities " + request.toWhereSql();
-        return entityTemplate.getDatabaseClient().sql(querySql)
-                .map(row -> mappingR2dbcConverter.read(AuthorityGroup.class, row))
-                .all();
+        return entityTemplate.select(Query.query(request.toCriteria()), AuthorityGroup.class);
     }
 
     public Flux<AuthorityGroup> authorizing(AuthorityGroupRequest authorityGroupRequest) {
-        return this.authorityGroupRepository.findByGroupId(authorityGroupRequest.getGroupId())
+        return this.authorityGroupRepository.findByGroupCode(authorityGroupRequest.getGroupCode())
                 .collectList().flatMapMany(oldList -> {
-                    List<AuthorityGroup> addList = authorityGroupRequest.getRules().parallelStream()
+                    List<AuthorityGroup> addList = authorityGroupRequest.getAuthorities().parallelStream()
                             .filter(a -> oldList.size() == 0 || oldList.parallelStream()
                                     .noneMatch(o -> o.getAuthority().equals(a)))
-                            .map(a -> AuthorityGroupRequest.of(authorityGroupRequest.getGroupId(), a))
+                            .map(a -> AuthorityGroupRequest.of(authorityGroupRequest.getGroupCode(), a))
                             .collect(Collectors.toList());
                     List<AuthorityGroup> deleteList = oldList.parallelStream()
-                            .filter(a -> !authorityGroupRequest.getRules().contains(a.getAuthority()))
+                            .filter(a -> !authorityGroupRequest.getAuthorities().contains(a.getAuthority()))
                             .collect(Collectors.toList());
                     return this.authorityGroupRepository.saveAll(addList).defaultIfEmpty(authorityGroupRequest)
                             .delayUntil(res -> this.authorityGroupRepository.deleteAll(deleteList));

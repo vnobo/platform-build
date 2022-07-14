@@ -12,19 +12,19 @@ import reactor.core.publisher.Mono;
  */
 public interface AuthorityGroupRepository extends R2dbcRepository<AuthorityGroup, Integer> {
 
-  /**
-   * 根据权限ID 查找所有关联权限
-   *
-   * @param groupId 权限组ID
-   * @return 所有权限
-   */
-  Flux<AuthorityGroup> findByGroupId(Integer groupId);
+    /**
+     * 根据权限ID 查找所有关联权限
+     *
+     * @param groupCode 角色
+     * @return 所有权限
+     */
+    Flux<AuthorityGroup> findByGroupCode(String groupCode);
 
-  /**
-   * 删除权限
-   *
-   * @param groupId 要删除的权限组id
-   * @return 组权限集合
-   */
-  Mono<Integer> deleteByGroupId(Integer groupId);
+    /**
+     * 根据权限ID 查找所有关联权限
+     *
+     * @param groupCode 角色
+     * @return 所有权限
+     */
+    Mono<Integer> deleteByGroupCode(String groupCode);
 }

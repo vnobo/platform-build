@@ -1,9 +1,10 @@
 package com.platform.oauth.security.tenant.member;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.tenant.member.MemberTenantOnly
@@ -14,8 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MemberTenantOnly extends MemberTenant implements Serializable {
-  private String userName;
-  private String tenantCode;
-  private String tenantName;
-  private JsonNode tenantExtend;
+    private String userName;
+    private String tenantName;
+    private JsonNode tenantExtend;
 }

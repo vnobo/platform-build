@@ -1,16 +1,15 @@
 package com.platform.oauth.security.group.authority;
 
-import com.platform.commons.utils.SystemType;
+import com.platform.commons.utils.CriteriaUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.beans.BeanUtils;
-import org.springframework.util.Assert;
+import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.util.ObjectUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 /**
  * com.bootiful.oauth.security.group.GroupSearchRequest
@@ -18,87 +17,33 @@ import java.util.List;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2022/1/7
  */
+@Schema(name = "角色权限请求")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AuthorityGroupRequest extends AuthorityGroup implements Serializable {
-    @Schema(title = "角色类型")
-    @NotNull(message = "角色类型:[type]不能为空!")
-    private Integer type;
 
-    @NotNull(message = "授权系统[system]名称不能为空!")
-    private SystemType system;
+    @NotNull(message = "权限[authorities]不能为空!", groups = Authority.class)
+    private Set<String> authorities;
 
-    @NotNull(message = "授权的权限[rules]不能为空!")
-    private List<String> rules;
-
-    private Long userId;
-
-    public static AuthorityGroup of(Integer groupId, String authority) {
+    public static AuthorityGroup of(String groupCode, String authority) {
         AuthorityGroup authorityGroup = new AuthorityGroup();
-        authorityGroup.setGroupId(groupId);
+        authorityGroup.setGroupCode(groupCode);
         authorityGroup.setAuthority(authority);
-        return authorityGroup;
-    }
-
-    public static AuthorityGroupRequest withUserId(Long userId) {
-        AuthorityGroupRequest groupRequest = new AuthorityGroupRequest();
-        groupRequest.setUserId(userId);
-        return groupRequest;
-    }
-
-    public AuthorityGroup toAuthorityGroup() {
-        AuthorityGroup authorityGroup = new AuthorityGroup();
-        BeanUtils.copyProperties(this, authorityGroup);
         return authorityGroup;
     }
 
     public boolean validAllEmpty() {
         int valid = 0;
-        if (!ObjectUtils.isEmpty(getGroupId())) {
+        if (!ObjectUtils.isEmpty(getGroupCode())) {
             valid++;
         }
-
-        if (!ObjectUtils.isEmpty(getType())) {
-            valid++;
-        }
-
-        if (!ObjectUtils.isEmpty(getUserId())) {
-            valid++;
-        }
-
         return valid == 0;
     }
 
-    public String toWhereSql() {
-        StringBuilder whereSql = new StringBuilder(" where id > 0 ");
-        if (!ObjectUtils.isEmpty(getGroupId())) {
-            whereSql.append(" and group_id =").append(getGroupId());
-        }
-        if (!ObjectUtils.isEmpty(type)) {
-            Assert.notNull(system, "系统类型[system]不能为空!");
-            whereSql
-                    .append(" and group_id in (select id from se_groups where tenant_id=0 and " + "type=")
-                    .append(type)
-                    .append(" and system='")
-                    .append(system.name())
-                    .append("')");
-        }
+    public Criteria toCriteria() {
+        return CriteriaUtils.build(this);
+    }
 
-        if (!ObjectUtils.isEmpty(userId)) {
-            Assert.notNull(system, "系统类型[system]不能为空!");
-            whereSql
-                    .append(
-                            " and group_id in (select se_group_members.group_id "
-                                    + "from se_group_members,se_users,se_groups  "
-                                    + "where se_group_members.user_id=se_users.id "
-                                    + "and se_group_members.group_id=se_groups.id "
-                                    + "and se_users.tenant_id=se_groups.tenant_id "
-                                    + "and se_group_members.user_id = ")
-                    .append(userId)
-                    .append(" and se_groups.system='")
-                    .append(system.name())
-                    .append("')");
-        }
-        return whereSql.toString();
+    public interface Authority {
     }
 }

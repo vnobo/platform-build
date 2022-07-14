@@ -1,6 +1,7 @@
 package com.platform.oauth.security.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
  * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2019/7/3
  */
+@Schema(name = "用户")
 @Data
 @Table("se_users")
 public class User implements Serializable, Persistable<Long> {
@@ -28,7 +30,7 @@ public class User implements Serializable, Persistable<Long> {
     @Id
     private Long id;
 
-    private Integer tenantId;
+    private String code;
 
     private String tenantCode;
 

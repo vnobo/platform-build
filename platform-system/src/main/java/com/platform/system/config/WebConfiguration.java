@@ -1,9 +1,6 @@
 package com.platform.system.config;
 
 import com.platform.commons.CommonsAutoConfiguration;
-import com.platform.system.core.files.export.ExportProperties;
-import com.platform.system.core.files.minio.MinioProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -15,5 +12,4 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration(proxyBeanMethods = false)
 @Import({CommonsAutoConfiguration.class})
-@EnableConfigurationProperties({MinioProperties.class, ExportProperties.class})
 public class WebConfiguration {}

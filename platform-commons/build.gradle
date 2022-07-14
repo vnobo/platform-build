@@ -21,7 +21,7 @@ dependencies {
     compileOnly("org.springframework.data:spring-data-commons")
     compileOnly("org.springframework.boot:spring-boot-starter-data-r2dbc")
     compileOnly("org.springframework.boot:spring-boot-starter-amqp")
-    compileOnly("io.r2dbc:r2dbc-postgresql")
+    compileOnly("org.postgresql:r2dbc-postgresql")
     compileOnly("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 
 }

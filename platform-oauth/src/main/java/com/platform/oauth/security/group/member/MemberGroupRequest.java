@@ -1,13 +1,14 @@
 package com.platform.oauth.security.group.member;
 
-import com.platform.commons.utils.SystemType;
+import com.platform.commons.utils.CriteriaUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.data.relational.core.query.Criteria;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * com.bootiful.oauth.security.user.UserRequest
@@ -15,74 +16,30 @@ import java.io.Serializable;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/6/3
  */
-@Schema(title = "角色用户请求参数")
+@Schema(name = "角色用户请求")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class MemberGroupRequest extends MemberGroupOnly implements Serializable {
+public class MemberGroupRequest extends MemberGroup implements Serializable {
 
-  private Integer tenantId;
-  private String tenantCode;
-  private String securityTenantCode;
+    @NotNull(message = "用户[users]不能为空!", groups = Users.class)
+    private Set<String> users;
 
-  @Schema(title = "角色名")
-  private String name;
-
-  @Schema(title = "角色类型")
-  private Integer type;
-
-  @Schema(title = "系统类型")
-  private SystemType system;
-
-  public static MemberGroup of(Integer groupId, Long userId) {
-    MemberGroup memberGroup = new MemberGroup();
-    memberGroup.setGroupId(groupId);
-    memberGroup.setUserId(userId);
-    return memberGroup;
-  }
-
-  public MemberGroupRequest id(Integer id) {
-    this.setId(id);
-    return this;
-  }
-
-  public String toMemberWhere() {
-
-    StringBuilder stringBuilder = new StringBuilder(" where se_group_members.id > 0");
-
-    if (StringUtils.hasLength(this.securityTenantCode)) {
-      stringBuilder
-          .append(" and se_groups.tenant_code ilike '")
-          .append(this.securityTenantCode)
-          .append("%'");
+    public static MemberGroup of(String groupCode, String userCode) {
+        MemberGroup request = new MemberGroup();
+        request.setGroupCode(groupCode);
+        request.setUserCode(userCode);
+        return request;
     }
 
-    if (StringUtils.hasLength(this.tenantCode)) {
-      stringBuilder
-          .append(" and se_groups.tenant_code ilike '")
-          .append(this.tenantCode)
-          .append("%'");
+    public MemberGroupRequest id(Long id) {
+        this.setId(id);
+        return this;
     }
 
-    if (StringUtils.hasLength(this.getName())) {
-      stringBuilder.append(" and se_groups.name ilike '%").append(this.getName()).append("%'");
+    public Criteria toCriteria() {
+        return CriteriaUtils.build(this);
     }
 
-    if (!ObjectUtils.isEmpty(this.getType())) {
-      stringBuilder.append(" and se_groups.type = ").append(this.type);
+    public interface Users {
     }
-
-    if (!ObjectUtils.isEmpty(this.tenantId)) {
-      stringBuilder.append(" and se_groups.tenant_id = ").append(this.tenantId);
-    }
-
-    if (!ObjectUtils.isEmpty(this.getId())) {
-      stringBuilder.append(" and se_groups.id = ").append(this.getId());
-    }
-
-    if (!ObjectUtils.isEmpty(this.system)) {
-      stringBuilder.append(" and se_groups.system = '").append(this.system.name()).append("'");
-    }
-
-    return stringBuilder.toString();
-  }
 }

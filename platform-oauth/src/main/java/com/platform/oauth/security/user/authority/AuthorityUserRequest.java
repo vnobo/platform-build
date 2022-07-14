@@ -1,10 +1,9 @@
 package com.platform.oauth.security.user.authority;
 
-import com.platform.commons.utils.SystemType;
+import com.platform.commons.utils.CriteriaUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.util.ObjectUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -19,40 +18,25 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class AuthorityUserRequest extends AuthorityUser {
 
-    @NotNull(message = "授权权限[rules]不能为空!")
-    private List<String> rules;
+    @NotNull(message = "权限[authorities]不能为空!", groups = Authorities.class)
+    private List<String> authorities;
 
-    public static AuthorityUserRequest withUserId(Long userId) {
+    public static AuthorityUserRequest withUserCode(String userCode) {
         AuthorityUserRequest groupRequest = new AuthorityUserRequest();
-        groupRequest.setUserId(userId);
+        groupRequest.setUserCode(userCode);
         return groupRequest;
     }
 
-    public static AuthorityUser of(SystemType system, Long userId, String authority) {
-        AuthorityUser authorityUser = new AuthorityUser();
-        authorityUser.setUserId(userId);
+    public static AuthorityUser of(String userCode, String authority) {
+        AuthorityUser authorityUser = withUserCode(userCode);
         authorityUser.setAuthority(authority);
-        authorityUser.setSystem(system);
         return authorityUser;
     }
 
-    public AuthorityUserRequest system(SystemType system) {
-        this.setSystem(system);
-        return this;
+    public Criteria toCriteria() {
+        return CriteriaUtils.build(this);
     }
 
-    public Criteria toCriteria() {
-
-        Criteria criteria = Criteria.empty();
-
-        if (!ObjectUtils.isEmpty(this.getAuthority())) {
-            criteria = criteria.and("userId").is(this.getUserId());
-        }
-
-        if (!ObjectUtils.isEmpty(this.getSystem())) {
-            criteria = criteria.and("system").is(this.getSystem());
-        }
-
-        return criteria;
+    public interface Authorities {
     }
 }

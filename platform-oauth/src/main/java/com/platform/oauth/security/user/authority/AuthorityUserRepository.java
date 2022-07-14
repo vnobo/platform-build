@@ -1,6 +1,5 @@
 package com.platform.oauth.security.user.authority;
 
-import com.platform.commons.utils.SystemType;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,17 +15,16 @@ public interface AuthorityUserRepository extends R2dbcRepository<AuthorityUser, 
     /**
      * 根据用户ID删除
      *
-     * @param userId 用户ID
+     * @param userCode 用户ID
      * @return 删除用户租户
      */
-    Mono<Integer> deleteByUserId(Long userId);
+    Mono<Integer> deleteByUserCode(String userCode);
 
     /**
-     * 根据用户ID 和 系统类型 获取用户权限
+     * 根据用户ID删除
      *
-     * @param userId 用户ID
-     * @param system 系统类型
-     * @return 记录
+     * @param userCode 用户ID
+     * @return 删除用户租户
      */
-    Flux<AuthorityUser> findByUserIdAndSystem(Long userId, SystemType system);
+    Flux<AuthorityUser> findByUserCode(String userCode);
 }

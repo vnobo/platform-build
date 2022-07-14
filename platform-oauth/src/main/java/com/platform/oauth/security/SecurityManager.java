@@ -4,15 +4,15 @@ import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.commons.utils.SystemType;
-import com.platform.oauth.security.group.authority.AuthorityGroupManger;
 import com.platform.oauth.security.group.authority.AuthorityGroupRequest;
-import com.platform.oauth.security.tenant.member.MemberTenantManager;
+import com.platform.oauth.security.group.authority.AuthorityGroupService;
 import com.platform.oauth.security.tenant.member.MemberTenantOnly;
 import com.platform.oauth.security.tenant.member.MemberTenantRequest;
+import com.platform.oauth.security.tenant.member.MemberTenantService;
 import com.platform.oauth.security.user.User;
 import com.platform.oauth.security.user.UserBinding;
-import com.platform.oauth.security.user.UserManager;
-import com.platform.oauth.security.user.authority.AuthorityUserManger;
+import com.platform.oauth.security.user.UsersService;
+import com.platform.oauth.security.user.authority.AuthorityUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.relational.core.query.Criteria;
@@ -41,10 +41,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SecurityManager extends BaseAutoToolsUtil {
-    private final UserManager userManager;
-    private final AuthorityUserManger authorityUserManger;
-    private final AuthorityGroupManger authorityGroupManger;
-    private final MemberTenantManager memberTenantManager;
+    private final UsersService usersService;
+    private final AuthorityUserService authorityUserService;
+    private final AuthorityGroupService authorityGroupService;
+    private final MemberTenantService memberTenantService;
 
     public Mono<LoginSecurityDetails> register(RegisterRequest request) {
 
@@ -67,7 +67,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
         Function<User, Mono<String[]>> authoritiesFunction = user ->
                 this.authorities(Optional.ofNullable(user.getId()).orElse(-1L));
 
-        return this.userManager.register(request.toUserRequest())
+        return this.usersService.register(request.toUserRequest())
                 .flatMap(user -> authoritiesFunction.apply(user).map(authorities -> LoginSecurityDetails
                         .of(user.getUsername(), user.getPassword(), user.getEnabled())
                         .authorities(authorities)));
@@ -75,7 +75,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
 
     public Mono<LoginSecurityDetails> login(String username) {
 
-        Mono<User> userMono = this.userManager.loadByUsername(username);
+        Mono<User> userMono = this.usersService.loadByUsername(username);
 
         Function<User, Mono<String[]>> authoritiesFunction = user ->
                 this.authorities(Optional.ofNullable(user.getId()).orElse(-1L));
@@ -87,11 +87,11 @@ public class SecurityManager extends BaseAutoToolsUtil {
 
     public Mono<SimplerSecurityDetails> loadSecurity(String username) {
 
-        Mono<SimplerSecurityDetails> securityDetailsMono = this.userManager.loadByUsername(username)
+        Mono<SimplerSecurityDetails> securityDetailsMono = this.usersService.loadByUsername(username)
                 .map(user -> SimplerSecurityDetails.of(user.getId(), user.getUsername()));
 
         Function<SimplerSecurityDetails, Flux<MemberTenantOnly>> userTenantFunction = securityDetails ->
-                this.memberTenantManager.search(MemberTenantRequest.withUserId(securityDetails.getUserId()));
+                this.memberTenantService.search(MemberTenantRequest.withUserCode(securityDetails.getUserId()));
 
         return securityDetailsMono.flatMap(securityDetails -> userTenantFunction.apply(securityDetails)
                 .distinct().collectList().map(tenants -> securityDetails.tenants(
@@ -119,7 +119,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
      * @return 返回用户单独授权的权限
      */
     private Flux<SimpleAuthority> getAuthorities(long userId) {
-        return this.authorityUserManger.getAuthorities(userId).cast(SimpleAuthority.class);
+        return this.authorityUserService.getAuthorities(userId).cast(SimpleAuthority.class);
     }
 
     /**
@@ -133,7 +133,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
             AuthorityGroupRequest groupRequest = AuthorityGroupRequest.withUserId(userId);
             Optional<SystemType> optSystemStr = contextView.getOrEmpty("system");
             optSystemStr.ifPresent(groupRequest::setSystem);
-            return this.authorityGroupManger.search(groupRequest);
+            return this.authorityGroupService.search(groupRequest);
         }).cast(SimpleAuthority.class);
     }
 
@@ -145,7 +145,7 @@ public class SecurityManager extends BaseAutoToolsUtil {
      */
     @Transactional(rollbackFor = Exception.class)
     public Mono<SimplerSecurityDetails> tenantCut(MemberTenantRequest memberTenantRequest) {
-        return this.memberTenantManager.operation(memberTenantRequest)
+        return this.memberTenantService.operation(memberTenantRequest)
                 .delayUntil(this::updateUserTenant)
                 .map(memberTenant -> SimplerSecurityDetails.of(memberTenant.getUserId(), null));
     }

@@ -2,11 +2,10 @@ package com.platform.oauth.security.user;
 
 import com.platform.commons.annotation.RestServerException;
 import com.platform.commons.utils.BaseAutoToolsUtil;
-import com.platform.oauth.security.group.member.MemberGroupManager;
-import com.platform.oauth.security.tenant.TenantManager;
-import com.platform.oauth.security.tenant.member.MemberTenantManager;
+import com.platform.oauth.security.group.member.MemberGroupRepository;
+import com.platform.oauth.security.tenant.member.MemberTenantRepository;
 import com.platform.oauth.security.tenant.member.MemberTenantRequest;
-import com.platform.oauth.security.user.authority.AuthorityUserManger;
+import com.platform.oauth.security.user.authority.AuthorityUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.*;
@@ -30,14 +29,13 @@ import java.util.Objects;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class UserManager extends BaseAutoToolsUtil {
+public class UsersService extends BaseAutoToolsUtil {
 
     private final PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
     private final UserRepository userRepository;
-    private final AuthorityUserManger authorityUserManger;
-    private final MemberGroupManager memberGroupManager;
-    private final TenantManager tenantManager;
-    private final MemberTenantManager memberTenantManager;
+    private final AuthorityUserRepository authorityUserRepository;
+    private final MemberGroupRepository memberGroupRepository;
+    private final MemberTenantRepository memberTenantRepository;
 
     public Flux<UserOnly> search(UserRequest userRequest, Pageable pageable) {
         return super.entityTemplate.select(Query.query(userRequest.toCriteria()).with(pageable), User.class)
@@ -63,7 +61,7 @@ public class UserManager extends BaseAutoToolsUtil {
         return Mono.just(UserOnly.withUser(user));
     }
 
-    public Mono<User> register(UserRequest userRequest) {
+    public Mono<User> operate(UserRequest userRequest) {
         userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         return this.userRepository.findByUsername(userRequest.getUsername())
                 .switchIfEmpty(this.operation(userRequest));
@@ -86,19 +84,18 @@ public class UserManager extends BaseAutoToolsUtil {
 
     public Mono<User> operation(UserRequest userRequest) {
         return this.save(userRequest.toUser()).publishOn(Schedulers.boundedElastic())
-                .doOnNext(userOnly -> this.memberTenantManager.operation(MemberTenantRequest
+                .doOnNext(userOnly -> this.memberTenantService.operation(MemberTenantRequest
                                 .of(userOnly.getTenantId(), userOnly.getId()).isDefault(true))
                         .subscribe(result -> log.debug("关联租户信息成功! {}", result)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     public Mono<Void> delete(Long id) {
-        return Mono.defer(() -> Mono.just("Delete go"))
-                .delayUntil(res -> this.memberGroupManager.deleteByUserId(id))
-                .delayUntil(res -> this.memberTenantManager.deleteByUserId(id))
-                .delayUntil(res -> this.authorityUserManger.deleteByUserId(id))
-                .delayUntil(res -> userRepository.deleteById(id))
-                .then();
+        return userRepository.findById(id)
+                .delayUntil(res -> this.memberGroupRepository.deleteByUserCode(res.getCode()))
+                .delayUntil(res -> this.memberTenantRepository.deleteByUserCode(res.getCode()))
+                .delayUntil(res -> this.authorityUserRepository.deleteByUserCode(res.getCode()))
+                .flatMap(userRepository::delete);
     }
 
     public Mono<User> save(User user) {
@@ -115,13 +112,4 @@ public class UserManager extends BaseAutoToolsUtil {
         }
     }
 
-    public Mono<UserOnly> changePassword(UserRequest request) {
-        return this.userRepository.findByUsername(request.getUsername())
-                .flatMap(old -> {
-                    old.setPassword(passwordEncoder.encode(request.getNewPassword()));
-                    return this.userRepository.save(old);
-                })
-                .flatMap(this::integrateOnly)
-                .switchIfEmpty(Mono.error(RestServerException.withMsg("你要修改用户不存在!")));
-    }
 }

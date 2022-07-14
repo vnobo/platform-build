@@ -1,14 +1,13 @@
 package com.platform.oauth.security.tenant.member;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.ObjectUtils;
+
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
  * com.bootiful.oauth.security.tenant.member.MemberTenant
@@ -19,21 +18,21 @@ import org.springframework.util.ObjectUtils;
 @Data
 @Table("se_tenant_members")
 public class MemberTenant implements Serializable, Persistable<Long> {
-  @Id private Long id;
-  private Long userId;
-  private Integer tenantId;
-  private Boolean isDefault;
+    @Id
+    private Long id;
 
-  @CreatedDate private LocalDateTime createdTime;
-  @LastModifiedDate private LocalDateTime updatedTime;
+    @NotBlank(message = "用户[userCode]不能为空!")
+    private String userCode;
 
-  @Override
-  public boolean isNew() {
-    return ObjectUtils.isEmpty(this.id);
-  }
+    @NotBlank(message = "租户[tenantCode]不能为空!")
+    private String tenantCode;
 
-  public MemberTenant isDefault(Boolean bool) {
-    this.setIsDefault(bool);
-    return this;
-  }
+    private Boolean isDefault;
+
+    @Override
+    public boolean isNew() {
+        return ObjectUtils.isEmpty(this.id);
+    }
+
+
 }

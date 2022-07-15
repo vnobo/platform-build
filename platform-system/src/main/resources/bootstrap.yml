@@ -2,7 +2,8 @@ spring:
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
     - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
-  application.name: bootiful-system
+  application.name: platform-system
   cloud.nacos.config:
-    server-addr: nacos1:8848
+    server-addr: 192.168.1.2:8848
     file-extension: yaml
+  config.import: nacos:platform-system.yaml

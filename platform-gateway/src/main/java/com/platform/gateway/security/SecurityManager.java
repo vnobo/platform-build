@@ -1,6 +1,7 @@
 package com.platform.gateway.security;
 
-import com.platform.commons.client.CountryClient;
+import com.platform.commons.client.Oauth2Client;
+import com.platform.commons.security.LoginSecurityDetails;
 import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.security.SimplerSecurityDetails;
 import com.platform.gateway.client.AuthClient;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -21,14 +23,14 @@ import reactor.core.publisher.Mono;
  */
 @Service
 @RequiredArgsConstructor
-public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordService {
+public class SecurityManager implements ReactiveUserDetailsPasswordService {
     private final AuthClient authClient;
-    private final CountryClient countryClient;
+    private final Oauth2Client oauth2Client;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Mono<UserDetails> updatePassword(UserDetails userDetails, String newPassword) {
-        return this.authClient
-                .changePassword(userDetails.getUsername(), userDetails.getPassword())
+        return this.authClient.changePassword(userDetails.getUsername(), userDetails.getPassword())
                 .map(ReactiveSecurityHelper::buildUserDetails)
                 .map(userDetails1 -> withNewPassword(userDetails1, newPassword));
     }
@@ -41,20 +43,18 @@ public class ReactiveSecurityManager implements ReactiveUserDetailsPasswordServi
         // @formatter:on
     }
 
-    public Mono<Authentication> winXinLogin(WxRequest wxRequest) {
-        return this.countryClient.login(wxRequest.getPhone())
-                .switchIfEmpty(authClient.userRegister(wxRequest.toRegister()))
+
+    public Mono<Authentication> login(LoginRequest loginRequest) {
+        return this.oauth2Client.login(loginRequest.getUsername())
+                .switchIfEmpty(register(loginRequest.toRegister()))
                 .map(ReactiveSecurityHelper::buildUserDetails)
                 .map(userDetail -> new UsernamePasswordAuthenticationToken(
                         userDetail, userDetail.getPassword(), userDetail.getAuthorities()));
     }
 
-    public Mono<Authentication> appLogin(LoginRequest loginRequest) {
-        return this.countryClient.login(loginRequest.getUsername())
-                .switchIfEmpty(authClient.userRegister(loginRequest.toRegister()))
-                .map(ReactiveSecurityHelper::buildUserDetails)
-                .map(userDetail -> new UsernamePasswordAuthenticationToken(
-                        userDetail, userDetail.getPassword(), userDetail.getAuthorities()));
+    public Mono<LoginSecurityDetails> register(RegisterRequest request) {
+        request.setPassword(passwordEncoder.encode("A123456a"));
+        return this.authClient.operate(request);
     }
 
     public Mono<SimplerSecurityDetails> tenantCut(TenantCutRequest cutRequest) {

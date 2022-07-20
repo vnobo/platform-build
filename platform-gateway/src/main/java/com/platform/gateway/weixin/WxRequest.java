@@ -20,10 +20,6 @@ public class WxRequest extends RegisterRequest {
   @NotNull(message = "微信用户绑定手机号[phone]不能为空!")
   private String phone;
 
-  @NotBlank(message = "微信用户[openid]不能为空!")
-  private String openid;
-
-  private String appId;
 
   private SystemType system;
 

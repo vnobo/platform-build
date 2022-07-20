@@ -113,7 +113,7 @@ public class ReactiveSecurityHelper {
      * @param securityDetails 用户认证信息
      */
     private static void putToken(Map<String, Object> attributes, SecurityDetails securityDetails) {
-        if (securityDetails.getUserId() == -1) {
+        if (ObjectUtils.isEmpty(securityDetails.getUserCode())) {
             attributes.remove(SECURITY_TOKEN_CONTEXT);
         } else {
             attributes.put(SECURITY_TOKEN_CONTEXT, securityDetails);

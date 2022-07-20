@@ -20,35 +20,31 @@ import javax.validation.Valid;
  */
 @Hidden
 @RestController
-@RequestMapping("oauth2/v1/")
+@RequestMapping("/security/v1/")
 @RequiredArgsConstructor
 public class SecurityController {
 
-  private final SecurityManager userDetailsService;
+    private final SecurityManager securityManager;
 
-  @PostMapping("register")
-  public Mono<LoginSecurityDetails> register(@RequestBody RegisterRequest regRequest) {
-    return this.userDetailsService.register(regRequest);
-  }
 
-  @GetMapping("login/{username}")
-  public Mono<LoginSecurityDetails> login(@PathVariable String username) {
-    return this.userDetailsService.login(username);
-  }
+    @GetMapping("login/{username}")
+    public Mono<LoginSecurityDetails> login(@PathVariable String username) {
+        return this.securityManager.login(username);
+    }
 
-  @GetMapping("load/security/{username}")
-  public Mono<SimplerSecurityDetails> loadSecurity(@PathVariable String username) {
-    return this.userDetailsService.loadSecurity(username);
-  }
+    @GetMapping("load/security/{username}")
+    public Mono<SimplerSecurityDetails> loadSecurity(@PathVariable String username) {
+        return this.securityManager.loadSecurity(username);
+    }
 
-  @PostMapping("tenant/cut")
-  public Mono<SimplerSecurityDetails> tenantCut(@Valid @RequestBody MemberTenantRequest request) {
-    return this.userDetailsService.tenantCut(request);
-  }
+    @PostMapping("tenant/cut")
+    public Mono<SimplerSecurityDetails> tenantCut(@Valid @RequestBody MemberTenantRequest request) {
+        return this.securityManager.tenantCut(request);
+    }
 
-  @GetMapping("me")
-  public Mono<SecurityDetails> me() {
-    return ReactiveSecurityDetailsHolder.getContext()
-            .delayUntil(securityDetails -> this.userDetailsService.loginSuccess(securityDetails.getUsername()));
-  }
+    @GetMapping("me")
+    public Mono<SecurityDetails> me() {
+        return ReactiveSecurityDetailsHolder.getContext()
+                .delayUntil(securityDetails -> this.securityManager.loginSuccess(securityDetails.getUsername()));
+    }
 }

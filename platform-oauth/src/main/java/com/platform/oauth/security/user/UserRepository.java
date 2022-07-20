@@ -1,6 +1,5 @@
 package com.platform.oauth.security.user;
 
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +17,6 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
      * @param username user id
      * @return user model
      */
-    @Query("SELECT * FROM se_users WHERE username ILIKE :username ")
-    Mono<User> findByUsername(String username);
+    Mono<User> findByUsernameIgnoreCase(String username);
 
 }

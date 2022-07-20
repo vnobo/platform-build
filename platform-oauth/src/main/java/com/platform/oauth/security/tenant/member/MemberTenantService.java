@@ -22,9 +22,13 @@ import reactor.core.publisher.Mono;
 public class MemberTenantService extends BaseAutoToolsUtil {
     private final MemberTenantRepository memberTenantRepository;
 
+    public Flux<MemberTenant> search(MemberTenantRequest request, Pageable pageable) {
+        return super.entityTemplate.select(Query.query(request.toCriteria()).with(pageable), MemberTenant.class);
+    }
+
     public Mono<Page<MemberTenant>> page(MemberTenantRequest request, Pageable pageable) {
-        return super.entityTemplate.select(Query.query(request.toCriteria()).with(pageable), MemberTenant.class)
-                .collectList().zipWith(entityTemplate.count(Query.query(request.toCriteria()), MemberTenant.class))
+        return search(request, pageable).collectList()
+                .zipWith(entityTemplate.count(Query.query(request.toCriteria()), MemberTenant.class))
                 .map(entityTuples -> new PageImpl<>(entityTuples.getT1(), pageable, entityTuples.getT2()));
     }
 
@@ -45,14 +49,14 @@ public class MemberTenantService extends BaseAutoToolsUtil {
 
         Flux<MemberTenant> updateFalse = source.filter(old -> !old.getTenantCode().equals(memberTenant.getTenantCode()))
                 .flatMap(old -> {
-                    old.setIsDefault(false);
+                    old.setEnabled(false);
                     return this.memberTenantRepository.save(old);
                 });
 
         Flux<MemberTenant> updateTrue = source.filter(old -> old.getTenantCode().equals(memberTenant.getTenantCode()));
 
         return updateTrue.delayUntil(result -> updateFalse).flatMap(old -> {
-            old.setIsDefault(true);
+            old.setEnabled(true);
             return this.memberTenantRepository.save(old);
         }).singleOrEmpty().switchIfEmpty(this.memberTenantRepository.save(memberTenant));
     }

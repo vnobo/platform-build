@@ -27,7 +27,7 @@ import java.util.Map;
  * @date Created by 2021/5/28
  */
 @Log4j2
-@Tag(name = "微信认证管理")
+@Tag(name = "微信认证")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wx/user/{appId}/v1")
@@ -45,8 +45,7 @@ public class WxMaUserController {
      */
     @Operation(summary = "根据CODE获取微信token", description = "返回微信TOKEN")
     @GetMapping("authorize")
-    public Mono<Object> authorize(
-            @PathVariable String appId, String code, ServerWebExchange exchange) {
+    public Mono<Object> authorize(@PathVariable String appId, String code, ServerWebExchange exchange) {
         log.debug("请求[AppId]: {}", appId);
         if (StringUtils.isBlank(code)) {
             return Mono.defer(() -> Mono.error(RestServerException.withMsg(1401, "请求[CODE]不能为空!")));
@@ -73,23 +72,15 @@ public class WxMaUserController {
      */
     @Operation(summary = "微信用户登录", description = "返回认证信息需要更新当前TOKEN")
     @PostMapping("login")
-    public Mono<AuthenticationToken> login(
-            @PathVariable String appId,
-            @Valid @RequestBody WxRequest regRequest,
-            ServerWebExchange exchange) {
+    public Mono<AuthenticationToken> login( @PathVariable String appId,@Valid @RequestBody WxRequest regRequest,ServerWebExchange exchange) {
         log.debug("请求[AppId]: {}", appId);
         return this.maUserService.login(regRequest.appId(appId), exchange);
     }
 
     @Operation(summary = "获取微信用户信息")
     @GetMapping("info")
-    public Mono<WxMaUserInfo> info(
-            @PathVariable String appId,
-            String sessionKey,
-            String signature,
-            String rawData,
-            String encryptedData,
-            String iv) {
+    public Mono<WxMaUserInfo> info(@PathVariable String appId, String sessionKey,
+                                   String signature, String rawData, String encryptedData, String iv) {
 
         log.debug("请求[AppId]: {}", appId);
         // 用户信息校验
@@ -110,8 +101,7 @@ public class WxMaUserController {
 
     @Operation(summary = "获取微信用户手机号")
     @PostMapping("phone")
-    public Mono<WxMaPhoneNumberInfo> phone(
-            @PathVariable String appId, @RequestBody Map<String, String> params) {
+    public Mono<WxMaPhoneNumberInfo> phone(@PathVariable String appId, @RequestBody Map<String, String> params) {
 
         try {
             WxMaPhoneNumberInfo wxMaPhoneNumberInfo =

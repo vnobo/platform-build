@@ -1,8 +1,7 @@
 package com.platform.commons.security;
 
-import com.platform.commons.client.CountryClient;
+import com.platform.commons.client.Oauth2Client;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
 
@@ -12,11 +11,11 @@ import reactor.core.publisher.Mono;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/4/25
  */
-public class ReactiveSimplerUserDetailsService implements ReactiveUserDetailsService {
+public class ReactiveSecurityUserService implements org.springframework.security.core.userdetails.ReactiveUserDetailsService {
 
-    private final CountryClient oauthClient;
+    private final Oauth2Client oauthClient;
 
-    public ReactiveSimplerUserDetailsService(CountryClient oauthClient) {
+    public ReactiveSecurityUserService(Oauth2Client oauthClient) {
         this.oauthClient = oauthClient;
     }
 

@@ -13,15 +13,17 @@ import java.util.stream.Collectors;
  * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/6/10
  */
+@Data
 public class SimplerSecurityDetails implements SecurityDetails, Serializable {
-    private Long userId;
+    private String userCode;
     private String username;
     private Set<String> authorities;
     private Set<Tenant> tenants;
+    private Set<Group> groups;
 
-    public static SimplerSecurityDetails of(Long userId, String username) {
+    public static SimplerSecurityDetails of(String userCode, String username) {
         SimplerSecurityDetails securityDetails = new SimplerSecurityDetails();
-        securityDetails.setUserId(userId);
+        securityDetails.setUserCode(userCode);
         securityDetails.setUsername(username);
         return securityDetails;
     }
@@ -33,7 +35,16 @@ public class SimplerSecurityDetails implements SecurityDetails, Serializable {
 
     public SimplerSecurityDetails tenants(Set<?> tenants) {
         this.tenants = tenants.parallelStream().map(input -> {
-            Tenant tenant = Tenant.of();
+            Tenant tenant = TenantImpl.of(null, null, null);
+            BeanUtils.copyProperties(input, tenant);
+            return tenant;
+        }).collect(Collectors.toSet());
+        return this;
+    }
+
+    public SimplerSecurityDetails groups(Set<?> groups) {
+        this.groups = groups.parallelStream().map(input -> {
+            Group tenant = GroupImpl.of(null, null);
             BeanUtils.copyProperties(input, tenant);
             return tenant;
         }).collect(Collectors.toSet());
@@ -41,45 +52,26 @@ public class SimplerSecurityDetails implements SecurityDetails, Serializable {
     }
 
     @Override
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public Integer getTenantId() {
-        return this.tenants.parallelStream().filter(Tenant::getIsDefault)
-                .findAny().orElse(new Tenant()).getId();
-    }
-
-    @Override
     public String getTenantCode() {
-        return this.tenants.parallelStream().filter(Tenant::getIsDefault)
-                .findAny().orElse(new Tenant()).getCode();
-    }
-
-    @Override
-    public Set<String> getAuthorities() {
-        return this.authorities;
+        return this.tenants.parallelStream().filter(Tenant::isEnabled)
+                .findAny().orElse(TenantImpl.of("0", null, false)).getCode();
     }
 
     @Data(staticConstructor = "of")
-    private static class Tenant {
-        private Integer id;
-        private String code;
-        private String name;
-        private Boolean isDefault;
+    static class TenantImpl implements Tenant {
+        private final String code;
+        private final String name;
+        private final Boolean enabled;
+
+        @Override
+        public Boolean isEnabled() {
+            return enabled;
+        }
+    }
+
+    @Data(staticConstructor = "of")
+    static class GroupImpl implements Group {
+        private final String code;
+        private final String name;
     }
 }

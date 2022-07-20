@@ -27,7 +27,7 @@ public class MemberTenant implements Serializable, Persistable<Long> {
     @NotBlank(message = "租户[tenantCode]不能为空!")
     private String tenantCode;
 
-    private Boolean isDefault;
+    private Boolean enabled;
 
     @Override
     public boolean isNew() {

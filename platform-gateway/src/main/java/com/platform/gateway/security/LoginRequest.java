@@ -1,11 +1,9 @@
 package com.platform.gateway.security;
 
-import com.platform.commons.utils.SystemType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -18,18 +16,16 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class LoginRequest extends RegisterRequest implements Serializable {
 
-  @NotBlank(message = "验证码[code]不能为空!")
-  private String code;
+    @NotBlank(message = "验证码[code]不能为空!")
+    private String code;
 
-  @NotNull(message = "需要登录的系统[system]不能为空!")
-  private SystemType system;
+    @NotBlank(message = "微信用户[openid]不能为空!")
+    private String openid;
 
-  public LoginRequest system(SystemType system) {
-    this.setSystem(system);
-    return this;
-  }
-  public LoginRequest toRegister() {
-    this.setEnabled(true);
-    return this;
-  }
+    private String appId;
+
+    public LoginRequest toRegister() {
+        this.setEnabled(true);
+        return this;
+    }
 }

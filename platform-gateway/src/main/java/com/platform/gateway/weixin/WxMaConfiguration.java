@@ -162,30 +162,15 @@ public class WxMaConfiguration {
 
     private WxMaMessageRouter newRouter(WxMaService service) {
         final WxMaMessageRouter router = new WxMaMessageRouter(service);
-        router
-                .rule()
-                .handler(logHandler)
-                .next()
-                .rule()
-                .async(false)
+        router.rule().handler(logHandler).next().rule().async(false)
                 .content("订阅消息")
-                .handler(subscribeMsgHandler)
-                .end()
-                .rule()
-                .async(false)
+                .handler(subscribeMsgHandler).end().rule().async(false)
                 .content("文本")
-                .handler(textHandler)
-                .end()
-                .rule()
-                .async(false)
+                .handler(textHandler).end().rule().async(false)
                 .content("图片")
-                .handler(picHandler)
-                .end()
-                .rule()
-                .async(false)
+                .handler(picHandler).end().rule().async(false)
                 .content("二维码")
-                .handler(qrcodeHandler)
-                .end();
+                .handler(qrcodeHandler).end();
         return router;
     }
 }

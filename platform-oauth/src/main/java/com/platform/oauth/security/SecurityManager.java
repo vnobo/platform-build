@@ -6,23 +6,21 @@ import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.commons.utils.SystemType;
 import com.platform.oauth.security.group.authority.AuthorityGroupRequest;
 import com.platform.oauth.security.group.authority.AuthorityGroupService;
+import com.platform.oauth.security.tenant.member.MemberTenant;
 import com.platform.oauth.security.tenant.member.MemberTenantOnly;
 import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import com.platform.oauth.security.tenant.member.MemberTenantService;
 import com.platform.oauth.security.user.User;
-import com.platform.oauth.security.user.UserBinding;
 import com.platform.oauth.security.user.UsersService;
 import com.platform.oauth.security.user.authority.AuthorityUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.data.relational.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -46,33 +44,6 @@ public class SecurityManager extends BaseAutoToolsUtil {
     private final AuthorityGroupService authorityGroupService;
     private final MemberTenantService memberTenantService;
 
-    public Mono<LoginSecurityDetails> register(RegisterRequest request) {
-
-        Assert.notNull(request.getUsername(), "登录用户名[username]不能为空!");
-        // 用户密码为空,默认用户密码
-        if (!StringUtils.hasLength(request.getPassword())) {
-            request.setPassword("A123456a");
-        }
-
-        if (StringUtils.hasLength(request.getAppId()) && StringUtils.hasLength(request.getOpenid())) {
-            log.debug("微信注册用户信息!");
-            request.setBinding(UserBinding.withWeiXin(request.getAppId(), request.getOpenid()));
-        }
-
-        // 租户是否设置如果未设置,默认给0
-        if (ObjectUtils.isEmpty(request.getTenantId())) {
-            request.setTenantId(0);
-        }
-
-        Function<User, Mono<String[]>> authoritiesFunction = user ->
-                this.authorities(Optional.ofNullable(user.getId()).orElse(-1L));
-
-        return this.usersService.register(request.toUserRequest())
-                .flatMap(user -> authoritiesFunction.apply(user).map(authorities -> LoginSecurityDetails
-                        .of(user.getUsername(), user.getPassword(), user.getEnabled())
-                        .authorities(authorities)));
-    }
-
     public Mono<LoginSecurityDetails> login(String username) {
 
         Mono<User> userMono = this.usersService.loadByUsername(username);
@@ -88,10 +59,11 @@ public class SecurityManager extends BaseAutoToolsUtil {
     public Mono<SimplerSecurityDetails> loadSecurity(String username) {
 
         Mono<SimplerSecurityDetails> securityDetailsMono = this.usersService.loadByUsername(username)
-                .map(user -> SimplerSecurityDetails.of(user.getId(), user.getUsername()));
+                .map(user -> SimplerSecurityDetails.of(user.getCode(), user.getUsername()));
 
-        Function<SimplerSecurityDetails, Flux<MemberTenantOnly>> userTenantFunction = securityDetails ->
-                this.memberTenantService.search(MemberTenantRequest.withUserCode(securityDetails.getUserId()));
+        Function<SimplerSecurityDetails, Flux<MemberTenant>> userTenantFunction = securityDetails ->
+                this.memberTenantService.search(MemberTenantRequest.withUserCode(securityDetails.getUserCode()),
+                        Pageable.ofSize(Integer.MAX_VALUE));
 
         return securityDetailsMono.flatMap(securityDetails -> userTenantFunction.apply(securityDetails)
                 .distinct().collectList().map(tenants -> securityDetails.tenants(

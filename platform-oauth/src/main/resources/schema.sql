@@ -90,7 +90,7 @@ create table se_tenant_members
     id          serial8 primary key,
     tenant_code varchar(128) not null,
     user_code   varchar(128) not null,
-    is_default  boolean      not null default true,
+    "enabled"   boolean      not null default true,
     unique (tenant_code, user_code)
 );
 comment on table se_tenant_members is '租户用户表';

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.platform.commons.annotation.GlobalExceptionHandler;
-import com.platform.commons.client.CountryClient;
+import com.platform.commons.client.Oauth2Client;
 import com.platform.commons.filter.AfterSecurityFilter;
 import com.platform.commons.filter.BeforeExchangeContextFilter;
 import com.platform.commons.filter.BeforeSecurityFilter;
@@ -36,7 +36,7 @@ import java.time.format.DateTimeFormatter;
         GlobalExceptionHandler.class,
         R2dbcAutoConfiguration.class,
         RabbitMqAutoConfiguration.class,
-        CountryClient.class,
+        Oauth2Client.class,
         RedisAutoConfiguration.class,
         SecurityAutoConfiguration.class,
         SessionAutoConfiguration.class
@@ -47,12 +47,6 @@ public class CommonsAutoConfiguration implements WebFluxConfigurer {
     private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
-    @ConditionalOnMissingBean(CountryClient.class)
-    public CountryClient countryClient() {
-        return new CountryClient();
-    }
-
-    @Bean
     @ConditionalOnBean(SecurityWebFilterChain.class)
     public AfterSecurityFilter authGlobalFilter() {
         return new AfterSecurityFilter();
@@ -60,7 +54,7 @@ public class CommonsAutoConfiguration implements WebFluxConfigurer {
 
     @Bean
     @ConditionalOnBean(SecurityWebFilterChain.class)
-    public BeforeSecurityFilter beforeSecurityDetailsFilter(CountryClient oauthClient) {
+    public BeforeSecurityFilter beforeSecurityDetailsFilter(Oauth2Client oauthClient) {
         return new BeforeSecurityFilter(oauthClient);
     }
 

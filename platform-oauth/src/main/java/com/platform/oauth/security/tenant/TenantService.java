@@ -1,5 +1,6 @@
 package com.platform.oauth.security.tenant;
 
+import cn.hutool.core.util.IdUtil;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

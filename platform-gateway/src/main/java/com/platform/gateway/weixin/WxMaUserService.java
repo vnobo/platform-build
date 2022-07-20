@@ -3,7 +3,7 @@ package com.platform.gateway.weixin;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.platform.commons.security.AuthenticationToken;
 import com.platform.commons.security.ReactiveSecurityHelper;
-import com.platform.gateway.security.ReactiveSecurityManager;
+import com.platform.gateway.security.SecurityManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * @date Created by 2021/5/31
  */
 @Service
-public record WxMaUserService(ReactiveSecurityManager reactiveUserDetailsService) {
+public record WxMaUserService(SecurityManager reactiveUserDetailsService) {
 
   /**
    * 微信 匿名登录用户
@@ -60,10 +60,8 @@ public record WxMaUserService(ReactiveSecurityManager reactiveUserDetailsService
    * @return 默认登录token实力
    */
   public Mono<AuthenticationToken> login(WxRequest wxRequest, ServerWebExchange exchange) {
-    return this.reactiveUserDetailsService
-            .winXinLogin(wxRequest.system(ReactiveSecurityHelper.systemForHeader(exchange)))
-            .flatMap(
-                    authentication -> ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication))
+    return this.reactiveUserDetailsService.login(wxRequest)
+            .flatMap( authentication -> ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication))
             .delayUntil(res -> ReactiveSecurityHelper.removeToken(exchange));
   }
 }

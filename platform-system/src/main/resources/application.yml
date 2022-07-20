@@ -2,12 +2,13 @@ logging:
   register-shutdown-hook: true
   level:
     web: debug
-    com.bootiful.oauth.*: debug
-    com.bootiful.commons.*: debug
+    org.springframework.web: debug
+    com.platform.system.*: debug
     org.springframework.r2dbc: debug
     io.r2dbc.postgresql:
-      PARAM: info
-
+      #QUERY: debug
+      PARAM: debug
+      #client: debug
 server:
   port: 0
   shutdown: graceful
@@ -16,18 +17,15 @@ spring:
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
     - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
-  application.name: platform-oauth
+  application.name: platform-system
   cloud.nacos.config:
-    server-addr: 192.168.1.2:8848
+    server-addr: 127.0.0.1:8848
     file-extension: yaml
-  config.import: nacos:platform-oauth.yaml
+  config.import: nacos:platform-system.yaml
   r2dbc:
-    #url: r2dbc:postgres://47.92.173.123:15432/countryside
-    url: r2dbc:postgres://192.168.1.2:5432/platform
+    url: r2dbc:postgres://127.0.0.1:5432/country
     username: farmer
     password: q1w2e3..
   sql.init.mode: never
-  task.execution.pool:
-    max-size: 16
-    queue-capacity: 100
-    keep-alive: 10S
+
+springdoc.swagger-ui.path: /swagger-ui

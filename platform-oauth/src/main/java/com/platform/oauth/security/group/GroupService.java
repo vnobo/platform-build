@@ -1,5 +1,6 @@
 package com.platform.oauth.security.group;
 
+import cn.hutool.core.util.IdUtil;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.oauth.security.group.authority.AuthorityGroupRepository;
 import com.platform.oauth.security.group.member.MemberGroupRepository;
@@ -55,6 +56,7 @@ public class GroupService extends BaseAutoToolsUtil {
 
     public Mono<Group> save(Group group) {
         if (group.isNew()) {
+            group.setCode(IdUtil.fastSimpleUUID());
             return this.groupRepository.save(group);
         } else {
             assert group.getId() != null;

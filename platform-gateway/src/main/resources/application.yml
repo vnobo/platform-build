@@ -2,8 +2,8 @@ logging:
   register-shutdown-hook: true
   level:
     web: debug
+    org.springframework.web: debug
     com.platform.gateway.*: debug
-    org.springframework.security: debug
 
 server:
   port: 9000
@@ -12,6 +12,8 @@ server:
 spring:
   application.name: platform-gateway
   cloud.nacos.config:
-    server-addr: 192.168.1.2:8848
+    server-addr: 127.0.0.1:8848
     file-extension: yaml
   config.import: nacos:platform-gateway.yaml
+
+springdoc.swagger-ui.path: /swagger-ui

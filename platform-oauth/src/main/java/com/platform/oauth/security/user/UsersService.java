@@ -1,24 +1,20 @@
 package com.platform.oauth.security.user;
 
-import com.platform.commons.annotation.RestServerException;
+import cn.hutool.core.util.IdUtil;
 import com.platform.commons.utils.BaseAutoToolsUtil;
 import com.platform.oauth.security.group.member.MemberGroupRepository;
 import com.platform.oauth.security.tenant.member.MemberTenantRepository;
-import com.platform.oauth.security.tenant.member.MemberTenantRequest;
 import com.platform.oauth.security.user.authority.AuthorityUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.relational.core.query.Query;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.Objects;
 
 /**
  * com.bootiful.oauth.security.user.UsersService
@@ -31,14 +27,14 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UsersService extends BaseAutoToolsUtil {
 
-    private final PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
     private final UserRepository userRepository;
     private final AuthorityUserRepository authorityUserRepository;
     private final MemberGroupRepository memberGroupRepository;
     private final MemberTenantRepository memberTenantRepository;
 
     public Flux<UserOnly> search(UserRequest userRequest, Pageable pageable) {
-        return super.entityTemplate.select(Query.query(userRequest.toCriteria()).with(pageable), User.class)
+        return super.entityTemplate.select(Query.query(userRequest.toCriteria()).with(pageable),
+                        User.class)
                 .flatMapSequential(this::integrateOnly);
     }
 
@@ -49,44 +45,18 @@ public class UsersService extends BaseAutoToolsUtil {
                 .map(entityTuples -> new PageImpl<>(entityTuples.getT1(), pageable, entityTuples.getT2()));
     }
 
-    public Flux<User> loadUsers(UserRequest userRequest) {
-        return super.entityTemplate.select(Query.query(userRequest.toCriteria()), User.class);
-    }
-
-    public Mono<User> loadByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     private Mono<UserOnly> integrateOnly(User user) {
         return Mono.just(UserOnly.withUser(user));
     }
 
+    public Mono<User> loadByUsername(String username) {
+        return userRepository.findByUsernameIgnoreCase(username);
+    }
+
     public Mono<User> operate(UserRequest userRequest) {
-        userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        return this.userRepository.findByUsername(userRequest.getUsername())
-                .switchIfEmpty(this.operation(userRequest));
-    }
-
-    public Mono<User> modify(UserRequest userRequest) {
-        assert userRequest.getId() != null;
-        return this.userRepository.findById(userRequest.getId())
-                .filterWhen(old -> this.userRepository.exists(Example.of(
-                                UserRequest.withUsername(userRequest.getUsername()).toUser(),
-                                ExampleMatcher.matching().withIgnoreCase("username")))
-                        .map(result -> !result || Objects.equals(old.getUsername(), userRequest.getUsername())))
-                .switchIfEmpty(Mono.error(RestServerException.withMsg("登录用户名["
-                        + userRequest.getUsername() + "]已存在!")))
-                .flatMap(oldUser -> {
-                    userRequest.setPassword(oldUser.getPassword());
-                    return this.operation(userRequest);
-                });
-    }
-
-    public Mono<User> operation(UserRequest userRequest) {
-        return this.save(userRequest.toUser()).publishOn(Schedulers.boundedElastic())
-                .doOnNext(userOnly -> this.memberTenantService.operation(MemberTenantRequest
-                                .of(userOnly.getTenantId(), userOnly.getId()).isDefault(true))
-                        .subscribe(result -> log.debug("关联租户信息成功! {}", result)));
+        return this.userRepository.findByUsernameIgnoreCase(userRequest.getUsername())
+                .flatMap(old -> this.save(userRequest.id(old.getId()).toUser()))
+                .switchIfEmpty(this.save(userRequest.toUser()));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -100,6 +70,7 @@ public class UsersService extends BaseAutoToolsUtil {
 
     public Mono<User> save(User user) {
         if (user.isNew()) {
+            user.setCode(IdUtil.fastSimpleUUID());
             return this.userRepository.save(user);
         } else {
             assert user.getId() != null;

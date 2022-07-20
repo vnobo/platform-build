@@ -1,8 +1,8 @@
 package com.platform.commons;
 
-import com.platform.commons.client.CountryClient;
+import com.platform.commons.client.Oauth2Client;
 import com.platform.commons.security.CustomServerAuthenticationEntryPoint;
-import com.platform.commons.security.ReactiveSimplerUserDetailsService;
+import com.platform.commons.security.ReactiveSecurityUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -29,7 +28,7 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({
         EnableWebFluxSecurity.class,
-        ReactiveUserDetailsService.class,
+        org.springframework.security.core.userdetails.ReactiveUserDetailsService.class,
         ServerSecurityContextRepository.class
 })
 @AutoConfigureAfter(SecurityAutoConfiguration.class)
@@ -49,9 +48,9 @@ public class SecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(CountryClient.class)
-    public ReactiveUserDetailsService userDetailsService(CountryClient countryClient) {
-        return new ReactiveSimplerUserDetailsService(countryClient);
+    @ConditionalOnBean(Oauth2Client.class)
+    public org.springframework.security.core.userdetails.ReactiveUserDetailsService userDetailsService(Oauth2Client oauth2Client) {
+        return new ReactiveSecurityUserService(oauth2Client);
     }
 
     @Bean

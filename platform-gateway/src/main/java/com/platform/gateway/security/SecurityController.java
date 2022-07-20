@@ -1,9 +1,6 @@
 package com.platform.gateway.security;
 
-import com.platform.commons.annotation.RestServerException;
-import com.platform.commons.security.AuthenticationToken;
-import com.platform.commons.security.ReactiveSecurityHelper;
-import com.platform.gateway.client.SystemClient;
+import com.platform.commons.security.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +18,9 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import org.springframework.web.server.session.WebSessionManager;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import java.time.Duration;
 
 /**
  * com.npc.oauth.security.SecurityController
@@ -33,54 +28,30 @@ import java.time.Duration;
  * @author <a href="https://github.com/vnobo">Alex bob</a>
  * @date Created by 2021/5/14
  */
-@Tag(name = "用户操作管理")
+@Tag(name = "登录认证")
 @RestController
 @RequestMapping("/oauth2/v1/")
 @RequiredArgsConstructor
 public class SecurityController {
-    private final ReactiveSecurityManager detailsService;
+    private final SecurityManager securityManager;
     private final ReactiveUserDetailsService userDetailsService;
     private final WebSessionManager webSessionManager;
-    private final SystemClient systemClient;
 
-    @Operation(summary = "手机验证码发送", description = "返回认证信息TOKEN")
-    @GetMapping("phone/code")
-    public Mono<CsrfToken> phoneCode(String phone, ServerWebExchange exchange) {
-        CsrfToken csrfToken =
-                exchange.getRequiredAttribute(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME);
-        return systemClient.smsSend(phone).flatMap(code -> Mono.defer(() -> Mono.just(csrfToken)));
-    }
 
-    @Operation(summary = "手机登录", description = "返回认证信息TOKEN")
-    @PostMapping("phone/login")
-    public Mono<AuthenticationToken> phoneLogin(@Valid @RequestBody LoginRequest loginRequest,
-                                                ServerWebExchange exchange) {
-        return systemClient.smsCheck(loginRequest).filter(res -> res)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(RestServerException
-                        .withMsg(1401, "验证码错误,请重试!"))))
-                .publishOn(Schedulers.boundedElastic())
-                .doOnNext(res -> exchange.getSession().doOnNext(webSession ->
-                        webSession.setMaxIdleTime(Duration.ofMinutes(5))).subscribe())
-                .flatMap(res -> detailsService.appLogin(loginRequest
-                        .system(ReactiveSecurityHelper.systemForHeader(exchange))))
-                .flatMap(authentication -> ReactiveSecurityHelper.authenticationTokenMono(exchange, authentication))
-                .delayUntil(res -> ReactiveSecurityHelper.removeToken(exchange));
-    }
-
-    @Operation(summary = "获取用户 CSRF TOKEN", description = "返回认证信息TOKEN")
+    @Operation(summary = "获取 CSRF TOKEN", description = "返回认证信息TOKEN")
     @GetMapping("csrf")
     public Mono<CsrfToken> csrfToken(ServerWebExchange exchange) {
         CsrfToken csrfToken = exchange.getRequiredAttribute(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME);
         return Mono.defer(() -> Mono.just(csrfToken));
     }
 
-    @Operation(summary = "用户登录,获取会话TOKEN", description = "返回认证信息TOKEN")
+    @Operation(summary = "登录 获取会话TOKEN", description = "返回认证信息TOKEN")
     @GetMapping("token")
     public Mono<AuthenticationToken> token(WebSession session) {
         return Mono.just(AuthenticationToken.build(session));
     }
 
-    @Operation(summary = "用户刷新当前TOKEN", description = "返回认证信息TOKEN")
+    @Operation(summary = "刷新 当前会话TOKEN", description = "返回认证信息TOKEN")
     @GetMapping("refresh")
     public Mono<AuthenticationToken> refresh(ServerWebExchange exchange, Authentication authentication) {
         ServerWebExchange exchangeNew = exchange.mutate().request(exchange.getRequest().mutate()
@@ -100,6 +71,16 @@ public class SecurityController {
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
     }
 
+    @GetMapping("me")
+    public Mono<SecurityDetails> me() {
+        return securityManager.
+    }
+
+    @PostMapping("register")
+    public Mono<LoginSecurityDetails> register(@Valid @RequestBody RegisterRequest regRequest) {
+        return this.securityManager.register(regRequest);
+    }
+
     /**
      * 修改密码
      *
@@ -115,7 +96,7 @@ public class SecurityController {
             message = "登录密码[password]必须为,最少6位,包括至少1个大写字母，1个小写字母，1个数字.")
                                                     String password, ServerWebExchange exchange,
                                                     Authentication authentication) {
-        return this.detailsService.updatePassword((UserDetails) authentication.getPrincipal(), password)
+        return this.securityManager.updatePassword((UserDetails) authentication.getPrincipal(), password)
                 .map(userDetails -> new UsernamePasswordAuthenticationToken(
                         userDetails, authentication.getCredentials(), userDetails.getAuthorities()))
                 .flatMap(authenticationToken -> ReactiveSecurityHelper
@@ -124,10 +105,10 @@ public class SecurityController {
     }
 
     @PostMapping("tenant/cut")
-    @Operation(summary = "用户切换租户", description = "返回新的认证信息需要更新当前TOKEN")
+    @Operation(summary = "切换租户", description = "返回新的认证信息需要更新当前TOKEN")
     public Mono<AuthenticationToken> tenantCut(@Valid @RequestBody TenantCutRequest cutRequest,
                                                ServerWebExchange exchange) {
-        return this.detailsService.tenantCut(cutRequest)
+        return this.securityManager.tenantCut(cutRequest)
                 .flatMap(simplerSecurityDetails -> exchange.getSession().map(AuthenticationToken::build))
                 .delayUntil(authenticationToken -> ReactiveSecurityHelper.removeToken(exchange));
     }

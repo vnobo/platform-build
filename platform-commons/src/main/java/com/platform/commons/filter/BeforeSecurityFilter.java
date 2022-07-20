@@ -1,6 +1,6 @@
 package com.platform.commons.filter;
 
-import com.platform.commons.client.CountryClient;
+import com.platform.commons.client.Oauth2Client;
 import com.platform.commons.security.ReactiveSecurityDetailsHolder;
 import com.platform.commons.security.ReactiveSecurityHelper;
 import com.platform.commons.security.SecurityDetails;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author Alex bob(<a href="https://github.com/vnobo">https://github.com/vnobo</a>)
  * @date Created by 2021/7/22
  */
-public record BeforeSecurityFilter(CountryClient countryClient) implements WebFilter, Ordered {
+public record BeforeSecurityFilter(Oauth2Client oauth2Client) implements WebFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -45,7 +45,7 @@ public record BeforeSecurityFilter(CountryClient countryClient) implements WebFi
 
     private Mono<SecurityDetails> generateToken(ServerWebExchange exchange) {
         return ReactiveSecurityContextHolder.getContext()
-                .flatMap(securityContext -> countryClient.loadSecurity(securityContext.getAuthentication().getName())
+                .flatMap(securityContext -> oauth2Client.loadSecurity(securityContext.getAuthentication().getName())
                         .map(securityDetails -> securityDetails.authorities(securityContext
                                 .getAuthentication().getAuthorities().stream().distinct()
                                 .map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))))

@@ -11,11 +11,11 @@ import java.util.Set;
 public interface SecurityDetails {
 
     /**
-     * 用户user id
+     * 用户user code
      *
-     * @return int userid
+     * @return user code
      */
-    Long getUserId();
+    String getUserCode();
 
     /**
      * 用户登录名
@@ -23,13 +23,6 @@ public interface SecurityDetails {
      * @return user.username
      */
     String getUsername();
-
-    /**
-     * 默认租户ID
-     *
-     * @return int tenant id
-     */
-    Integer getTenantId();
 
     /**
      * 默认租户CODE
@@ -44,4 +37,57 @@ public interface SecurityDetails {
      * @return 权限集合
      */
     Set<String> getAuthorities();
+
+    /**
+     * 认证用户权限信息
+     *
+     * @return 权限集合
+     */
+    Set<Group> getGroups();
+
+    /**
+     * 认证用户权限信息
+     *
+     * @return 权限集合
+     */
+    Set<Tenant> getTenants();
+
+    interface Tenant {
+        /**
+         * 租户code
+         *
+         * @return code
+         */
+        String getCode();
+
+        /**
+         * 租户名称
+         *
+         * @return name
+         */
+        String getName();
+
+        /**
+         * 是否启用
+         *
+         * @return 是否启用
+         */
+        Boolean isEnabled();
+    }
+
+    interface Group {
+        /**
+         * 租户code
+         *
+         * @return code
+         */
+        String getCode();
+
+        /**
+         * 租户名称
+         *
+         * @return name
+         */
+        String getName();
+    }
 }

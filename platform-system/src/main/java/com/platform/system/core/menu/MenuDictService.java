@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 
-import static com.platform.commons.security.ReactiveSecurityHelper.ADMINISTRATORS_GROUP_ROLE_NAME;
 
 /**
  * com.bootiful.oauth.core.authoritydict.AuthorityDictService

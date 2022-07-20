@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PlatformLayoutComponent} from './platform-layout.component';
+import {LayoutComponent} from './layout.component';
 
-describe('PlatformLayoutComponent', () => {
-  let component: PlatformLayoutComponent;
-  let fixture: ComponentFixture<PlatformLayoutComponent>;
+describe('LayoutComponent', () => {
+  let component: LayoutComponent;
+  let fixture: ComponentFixture<LayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PlatformLayoutComponent]
+      declarations: [LayoutComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(PlatformLayoutComponent);
+    fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

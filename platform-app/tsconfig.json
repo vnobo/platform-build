@@ -16,17 +16,6 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "paths": {
-      "platform-components": [
-        "dist/platform-components"
-      ],
-      "platform-layout": [
-        "dist/platform-layout"
-      ],
-      "platform-lib": [
-        "dist/platform-lib"
-      ]
-    },
     "target": "es2020",
     "module": "es2020",
     "lib": [
